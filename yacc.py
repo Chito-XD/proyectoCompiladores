@@ -20,8 +20,12 @@ class Yacc(Parser):
         return p
 
     ######## DEC_VARS ########
-    @_('VARIABLES dec_vars_aux DOTS tipo SEMICOLON dec_vars', 'VARIABLES dec_vars_aux DOTS tipo SEMICOLON')
+    @_('VARIABLES dec_vars_cicle')
     def dec_vars(self, p):
+        return p
+    
+    @_('dec_vars_aux DOTS tipo SEMICOLON dec_vars_cicle', 'dec_vars_aux DOTS tipo SEMICOLON')
+    def dec_vars_cicle(self, p):
         return p
     
     @_('ID COMMA dec_vars_aux', 'ID')
@@ -29,7 +33,7 @@ class Yacc(Parser):
         return p
 
     ######## PARAMETROS ########
-    @_('ID COMMA tipo COMMA parametros', 'ID COMMA tipo')
+    @_('ID DOTS tipo COMMA parametros', 'ID DOTS tipo')
     def parametros(self, p):
         return p
     
@@ -53,11 +57,11 @@ class Yacc(Parser):
         return p
 
     ######## ASIGNACION ########
-    @_('ID ASSIGN expresion SEMICOLON', 'ID ASSIGN funcion asignacion_aux', 'ID ASSIGN funcion')
+    @_('ID ASSIGN super_exp SEMICOLON', 'ID ASSIGN funcion asignacion_aux', 'ID ASSIGN funcion')
     def asignacion(self, p):
         return p
     
-    @_('expresion asignacion_aux', 'expresion')
+    @_('super_exp asignacion_aux', 'super_exp')
     def asignacion_aux(self, p):
         return p
     
@@ -66,12 +70,12 @@ class Yacc(Parser):
     def funcion(self, p):
         return p
     
-    @_('expresion COMMA funcion_aux', 'expresion')
+    @_('super_exp COMMA funcion_aux', 'super_exp')
     def funcion_aux(self, p):
         return p
 
     ######## RETORNO ########
-    @_('REGRESA LP expresion RP SEMICOLON')
+    @_('REGRESA LP super_exp RP SEMICOLON')
     def retorno(self, p):
         return p
     
@@ -80,7 +84,7 @@ class Yacc(Parser):
     def escritura(self, p):
         return p
     
-    @_('expresion COMMA escritura_aux', 'CTE_STRING COMMA escritura_aux', 'expresion', 'CTE_STRING',)
+    @_('super_exp COMMA escritura_aux', 'CTE_STRING COMMA escritura_aux', 'super_exp', 'CTE_STRING',)
     def escritura_aux(self, p):
         return p
     
@@ -94,13 +98,13 @@ class Yacc(Parser):
         return p
 
     ####### DECISION ########
-    @_('SI LP expresion RP bloque SINO bloque', 'SI LP expresion RP bloque SEMICOLON')
+    @_('SI LP super_exp RP ENTONCES bloque SINO bloque', 'SI LP super_exp RP ENTONCES bloque SEMICOLON')
     def decision(self, p):
         return p
     
     ####### REPETICION ######## 
     # revisar el desde
-    @_('MIENTRAS LP expresion RP HACER bloque', 'DESDE ID ASSIGN expresion HASTA expresion HACER bloque')
+    @_('MIENTRAS LP super_exp RP HACER bloque', 'DESDE ID ASSIGN super_exp HASTA super_exp HACER bloque')
     def repeticion(self, p):
         return p
     

@@ -1,4 +1,16 @@
-Programa test1 ;
-principal () {
-    
+programa test1 ;
+
+variables i , j : entero ; a : entero ; b : entero ;
+
+flotante funcion metodo1 (c : entero ) ; 
+variables i , j : entero ;
+{ 
+    i = c + 1 ;
+    j = i ;
+
+    regresa ( j ) ;
+}
+
+principal ( ) {
+
 }

@@ -3,7 +3,7 @@ from sly import Lexer
 class Lex(Lexer):
 
     tokens = {
-        PROGRAMA, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, FUNCTION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, VARIABLES, ID, SEMICOLON, COMMA, LP, RP, LB, RB, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS
+        PROGRAMA, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, FUNCION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, VARIABLES, ID, SEMICOLON, COMMA, LP, RP, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS
     }
         
     ID = r'[a-zA-Z_][a-zA-Z_0-9]*(\[\d+,\d+\])?'
@@ -15,7 +15,7 @@ class Lex(Lexer):
     ID['flotante'] = FLOTANTE
     ID['char'] = CHAR
     ID['void'] = VOID
-    ID['funcion'] = FUNCTION
+    ID['funcion'] = FUNCION
     ID['lee'] = LEE
     ID['regresa'] = REGRESA
     ID['escribe'] = ESCRIBE
@@ -32,8 +32,6 @@ class Lex(Lexer):
     COMMA = r'\,'
     LP = r'\('
     RP = r'\)'
-    LB = r'\['
-    RB = r'\]'
     LK = r'\{'
     RK = r'\}'
     ASSIGN = r'\='
@@ -49,9 +47,10 @@ class Lex(Lexer):
     DOTS = r'\:'
     
     
-    ignore = '\t'
-    ignore_newline = r'\n+'
+    ignore = ' \t'
+    # ignore_newline = r' \n+'
     
+    @_(r'\n+')
     def ignore_newline(self, t):
         self.lineno += t.value.count('\n')
 
