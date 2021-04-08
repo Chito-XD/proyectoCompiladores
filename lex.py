@@ -3,12 +3,14 @@ from sly import Lexer
 class Lex(Lexer):
 
     tokens = {
-        PROGRAMA, ENTERO, FLOTANTE, CHAR, VOID, FUNCTION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, , VARIABLES, ID, SEMICOLON, COMMA, LP, RP, LB, RB, LK, RK, ASSIGN, OP_REL, OP_ARIT, OP_LOG, CTE_F, CTE_I, CTE_STRING
+        PROGRAMA, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, FUNCTION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, , VARIABLES, ID, SEMICOLON, COMMA, LP, RP, LB, RB, LK, RK, ASSIGN, OP_REL, OP_ARIT, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS
     }
         
     ID = r'[a-zA-Z_][a-zA-Z_0-9]*(\[\d+,\d+\])?'
 
     ID['programa'] = PROGRAMA
+    ID['principal'] = PRINCIPAL
+    ID['variables'] = VARIABLES
     ID['entero'] = ENTERO
     ID['flotante'] = FLOTANTE
     ID['char'] = CHAR
@@ -43,6 +45,7 @@ class Lex(Lexer):
     CTE_F = r'([0-9]+)(\.)([0-9]+)'
     CTE_I = r'[0-9]+'
     CTE_STRING = r'\".*\"'
+    DOTS = r'\:'
     
     
     ignore = '\t'
