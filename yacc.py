@@ -55,8 +55,22 @@ class Yacc(Parser):
         return p
 
     ######## ESTATUTO ########
-    @_('asignacion', 'funcion_void', 'retorno', 'lectura', 'escritura'  'decision', 'repeticion')
+    @_('asignacion', 'llamada_funcion', 'retorno', 'lectura', 'escritura'  'decision', 'repeticion')
     def estatuto(self, p):
+        return p
+
+    ######## ASIGNACION ########
+    @_('ID ASSIGN expresion SEMICOLON', 'ID ASSIGN llamada_funcion', 'ID ASSIGN llamada_funcion expresion')
+    def asignacion(self, p):
+        return p
+    
+    ######## LLAMADA FUNCION ########
+    @_('ID LP fun_aux RP SEMICOLON', 'ID LP RP SEMICOLON')
+    def llamada_funcion(self, p):
+        return p
+    
+    @_('var_simple', 'var_simple COMMA fun_aux')
+    def fun_aux(self, p):
         return p
     
     ######## RETORNO ########
