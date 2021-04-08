@@ -1,0 +1,4 @@
+Programa test1 ;
+principal () {
+    
+}

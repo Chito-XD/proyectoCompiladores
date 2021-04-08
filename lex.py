@@ -3,7 +3,7 @@ from sly import Lexer
 class Lex(Lexer):
 
     tokens = {
-        PROGRAMA, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, FUNCTION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, , VARIABLES, ID, SEMICOLON, COMMA, LP, RP, LB, RB, LK, RK, ASSIGN, OP_REL, OP_ARIT, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS
+        PROGRAMA, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, FUNCTION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, VARIABLES, ID, SEMICOLON, COMMA, LP, RP, LB, RB, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS
     }
         
     ID = r'[a-zA-Z_][a-zA-Z_0-9]*(\[\d+,\d+\])?'
@@ -39,7 +39,8 @@ class Lex(Lexer):
     ASSIGN = r'\='
 
     OP_REL = r'(<>|<=|>=|<|>|==|!=)'
-    OP_ARIT = r'(\+|-|\*|\/|)'
+    OP_ARIT_SEC = r'(\+|-)'
+    OP_ARIT_PRIM = r'(\*|\/)'
     OP_LOG = r'(&|\|)'
 
     CTE_F = r'([0-9]+)(\.)([0-9]+)'

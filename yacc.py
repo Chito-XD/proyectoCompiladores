@@ -20,28 +20,21 @@ class Yacc(Parser):
         return p
 
     ######## DEC_VARS ########
-    @_('VARIABLES var')
+    @_('VARIABLES dec_vars_aux DOTS tipo SEMICOLON dec_vars', 'VARIABLES dec_vars_aux DOTS tipo SEMICOLON')
     def dec_vars(self, p):
         return p
     
-    @_('var_simple COMMA var', 'var_lista COMMA var', 'var_simple', 'var_lista')
-    def var(self, p):
+    @_('ID COMMA dec_vars_aux', 'ID')
+    def dec_vars_aux(self, p):
         return p
-    
-    @_('ID DOTS tipo')
-    def var_simple(self, p):
-        return p
-    
-    @_('var_lista_aux DOTS tipo')
-    def var_lista(self, p):
-        return p
-    
-    @_('ID COMMA var_lista_aux', 'ID')
-    def var_lista_aux(self, p):
+
+    ######## PARAMETROS ########
+    @_('ID COMMA tipo COMMA parametros', 'ID COMMA tipo')
+    def parametros(self, p):
         return p
     
     ######## DEC_FUNC ########
-    @_('tipo FUNCION ID LP var_simple RP SEMICOLON dec_vars bloque', 'tipo FUNCION ID LP RP SEMICOLON dec_vars bloque', 'tipo FUNCION ID LP var_simple RP SEMICOLON bloque', 'tipo FUNCION ID LP RP SEMICOLON bloque')
+    @_('tipo FUNCION ID LP parametros RP SEMICOLON dec_vars bloque', 'tipo FUNCION ID LP parametros RP SEMICOLON bloque','tipo FUNCION ID LP RP SEMICOLON dec_vars bloque','tipo FUNCION ID LP RP SEMICOLON bloque')
     def dec_func(self, p):
         return p
 
@@ -50,32 +43,45 @@ class Yacc(Parser):
     def bloque(self, p):
         return p
     
-    @_('estatuto', 'estatuto bloque_aux')
+    @_('estatuto bloque_aux', 'estatuto')
     def bloque_aux(self, p):
         return p
 
     ######## ESTATUTO ########
-    @_('asignacion', 'llamada_funcion', 'retorno', 'lectura', 'escritura'  'decision', 'repeticion')
+    @_('asignacion', 'funcion', 'retorno', 'lectura', 'escritura', 'decision', 'repeticion')
     def estatuto(self, p):
         return p
 
     ######## ASIGNACION ########
-    @_('ID ASSIGN expresion SEMICOLON', 'ID ASSIGN llamada_funcion', 'ID ASSIGN llamada_funcion expresion')
+    @_('ID ASSIGN expresion SEMICOLON', 'ID ASSIGN funcion asignacion_aux', 'ID ASSIGN funcion')
     def asignacion(self, p):
         return p
     
+    @_('expresion asignacion_aux', 'expresion')
+    def asignacion_aux(self, p):
+        return p
+    
     ######## LLAMADA FUNCION ########
-    @_('ID LP fun_aux RP SEMICOLON', 'ID LP RP SEMICOLON')
-    def llamada_funcion(self, p):
+    @_('ID LP funcion_aux RP SEMICOLON')
+    def funcion(self, p):
         return p
     
-    @_('var_simple', 'var_simple COMMA fun_aux')
-    def fun_aux(self, p):
+    @_('expresion COMMA funcion_aux', 'expresion')
+    def funcion_aux(self, p):
         return p
-    
+
     ######## RETORNO ########
     @_('REGRESA LP expresion RP SEMICOLON')
     def retorno(self, p):
+        return p
+    
+    ####### ESCRITURA ########
+    @_('ESCRIBE LP escritura_aux RP SEMICOLON')
+    def escritura(self, p):
+        return p
+    
+    @_('expresion COMMA escritura_aux', 'CTE_STRING COMMA escritura_aux', 'expresion', 'CTE_STRING',)
+    def escritura_aux(self, p):
         return p
     
     ######## LECTURA ########
@@ -83,56 +89,53 @@ class Yacc(Parser):
     def lectura(self, p):
         return p
 
-    @_('ID', 'ID COMMA lectura_aux')
+    @_('ID COMMA lectura_aux', 'ID')
     def lectura_aux(self, p):
         return p
 
-    ####### ESCRITURA ########
-    @_('ESCRIBE LP escritura_aux RP SEMICOLON')
-    def escritura(self, p):
-        return p
-    
-    @_('expresion', 'CTE_STRING', 'expresion COMMA escritura_aux', 'CTE_STRING COMMA escritura_aux')
-    def escritura_aux(self, p):
-        return p
-
     ####### DECISION ########
-    @_('SI LP expresion RP bloque SEMICOLON', 'SI LP expresion RP bloque SINO bloque')
+    @_('SI LP expresion RP bloque SINO bloque', 'SI LP expresion RP bloque SEMICOLON')
     def decision(self, p):
         return p
     
     ####### REPETICION ######## 
     # revisar el desde
-    @_('MIENTRAS LP expresion RP HACER bloque', 'DESDE')
+    @_('MIENTRAS LP expresion RP HACER bloque', 'DESDE ID ASSIGN expresion HASTA expresion HACER bloque')
     def repeticion(self, p):
+        return p
+    
+    ######## TIPO ########
+    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID')
+    def tipo(self, p):
         return p
 
     ####### EXPRESION ########
-    @_('exp', 'exp OP_REL exp')
+    @_('expresion OP_LOG super_exp', 'expresion')
+    def super_exp(self, p):
+        return p
+
+    @_('exp OP_REL exp', 'exp')
     def expresion(self, p):
         return p
 
     ####### EXP ########
-    @_('termino', 'termino OP_ARIT exp')
+    @_('termino OP_ARIT_SEC exp', 'termino')
     def exp(self, p):
         return p
 
     ####### TERMINO ########
-    @_('factor', 'factor OP_ARIT termino')
+    @_('factor OP_ARIT_PRIM termino', 'factor')
     def termino(self, p):
         return p
 
     ######## FACTOR ########
-    @_('LP expresion RP', 'var_cte', 'OP_ARIT var_cte')
+    @_('LP expresion RP','OP_ARIT_PRIM var_cte', 'var_cte')
     def factor(self, p):
         return p
 
     ######## VAR_CTE ########
-    @_('ID', 'CTE_I', 'CTE_F')
+    @_('ID', 'CTE_I', 'CTE_F', 'CTE_STRING')
     def var_cte(self, p):
         return p
 
-    ######## TIPO ########
-    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID', 'ID')
-    def tipo(self, p):
-        return p
+    
