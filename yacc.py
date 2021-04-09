@@ -113,11 +113,12 @@ class Yacc(Parser):
     def tipo(self, p):
         return p
 
-    ####### EXPRESION ########
+    ####### SUPER EXPRESION ########
     @_('expresion OP_LOG super_exp', 'expresion')
     def super_exp(self, p):
         return p
 
+    ####### EXPRESION ########
     @_('exp OP_REL exp', 'exp')
     def expresion(self, p):
         return p
@@ -133,7 +134,7 @@ class Yacc(Parser):
         return p
 
     ######## FACTOR ########
-    @_('LP expresion RP','OP_ARIT_PRIM var_cte', 'var_cte')
+    @_('LP super_exp RP','OP_ARIT_PRIM var_cte', 'var_cte')
     def factor(self, p):
         return p
 
