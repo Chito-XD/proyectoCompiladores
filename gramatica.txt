@@ -105,12 +105,33 @@ FACTOR -> VAR_CTE
 
 *** VARC_CTE
 VAR_CTE -> ID
-VAR_CTE -> CTE_I
-VAR_CTE -> CTE_F
-VAR_CTE -> CTE_STRING
+VAR_CTE -> cte_i
+VAR_CTE -> cte_f
+VAR_CTE -> cte_string
 
 *** TIPO
 TIPO -> ENTERO
 TIPO -> FLOTANTE
 TIPO -> CHAR
 TIPO -> VOID
+
+*** OP_ARIT_PRIM
+OP_ARIT_PRIM -> *
+OP_ARIT_PRIM -> /
+
+*** OP OP_ARIT_SEC
+OP_ARIT_SEC -> +
+OP_ARIT_SEC -> -
+
+*** OP_LOG
+OP_LOG -> &
+OP_LOG -> |
+
+*** OP_REL
+OP_REL -> <>
+OP_REL -> <=
+OP_REL -> >=
+OP_REL -> <
+OP_REL -> >
+OP_REL -> ==
+OP_REL -> !=
