@@ -10,13 +10,22 @@ class Yacc(Parser):
 
     
     ######## PROGRAMA ########
-    @_('PROGRAMA ID SEMICOLON principal', 'PROGRAMA ID SEMICOLON dec_vars principal', 'PROGRAMA ID SEMICOLON dec_vars dec_func principal', 'PROGRAMA ID SEMICOLON dec_func PRINCIPAL')
+    @_('PROGRAMA ID SEMICOLON dec_clas dec_vars dec_func principal','PROGRAMA ID SEMICOLON dec_clas dec_vars principal','PROGRAMA ID SEMICOLON dec_clas dec_func principal', 'PROGRAMA ID SEMICOLON dec_clas principal','PROGRAMA ID SEMICOLON dec_vars dec_func principal', 'PROGRAMA ID SEMICOLON dec_vars principal', 'PROGRAMA ID SEMICOLON dec_func principal', 'PROGRAMA ID SEMICOLON principal')
     def program(self, p):
         return p
     
     ######## PRINCIPAL ########
     @_('PRINCIPAL LP RP bloque')
     def principal(self, p):
+        return p
+    
+    ######## DEC_CLAS ########
+    @_('CLASE ID HEREDA ID LK dec_clas_aux RK', 'CLASE ID LK dec_clas_aux RK', 'CLASE ID HEREDA ID LK RK', 'CLASE ID LK RK')
+    def dec_clas(self, p):
+        return p
+    
+    @_('ATRIBUTOS dec_vars_cicle METODOS dec_func', 'METODOS dec_func', 'ATRIBUTOS dec_vars_cicle')
+    def dec_clas_aux(self, p):
         return p
 
     ######## DEC_VARS ########
@@ -93,8 +102,12 @@ class Yacc(Parser):
     def lectura(self, p):
         return p
 
-    @_('ID COMMA lectura_aux', 'ID')
+    @_('lectura_aux_vars COMMA lectura_aux', 'lectura_aux_vars')
     def lectura_aux(self, p):
+        return p
+    
+    @_('class_var', 'ID')
+    def lectura_aux_vars(self, p):
         return p
 
     ####### DECISION ########
@@ -109,7 +122,7 @@ class Yacc(Parser):
         return p
     
     ######## TIPO ########
-    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID')
+    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID', 'ID')
     def tipo(self, p):
         return p
 
@@ -139,8 +152,19 @@ class Yacc(Parser):
         return p
 
     ######## VAR_CTE ########
-    @_('funcion', 'ID', 'CTE_I', 'CTE_F', 'CTE_STRING')
+    @_('funcion', 'class_method' ,'class_var', 'ID', 'CTE_I', 'CTE_F', 'CTE_STRING')
     def var_cte(self, p):
         return p
+
+    ######## CLASS_METHOD ########
+    @_('ID DOT funcion')
+    def class_method(self, p):
+        return p
+    
+    ######## CLASS_VAR ########
+    @_('ID DOT ID')
+    def class_var(self, p):
+        return p
+
 
     
