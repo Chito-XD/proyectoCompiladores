@@ -38,7 +38,7 @@ class Yacc(Parser):
         return p
     
     ######## DEC_FUNC ########
-    @_('tipo FUNCION ID LP parametros RP SEMICOLON dec_vars bloque', 'tipo FUNCION ID LP parametros RP SEMICOLON bloque','tipo FUNCION ID LP RP SEMICOLON dec_vars bloque','tipo FUNCION ID LP RP SEMICOLON bloque')
+    @_('tipo FUNCION ID LP parametros RP SEMICOLON dec_vars bloque', 'tipo FUNCION ID LP parametros RP SEMICOLON bloque','tipo FUNCION ID LP RP SEMICOLON dec_vars bloque','tipo FUNCION ID LP RP SEMICOLON bloque','tipo FUNCION ID LP parametros RP SEMICOLON dec_vars bloque dec_func', 'tipo FUNCION ID LP parametros RP SEMICOLON bloque dec_func','tipo FUNCION ID LP RP SEMICOLON dec_vars bloque dec_func','tipo FUNCION ID LP RP SEMICOLON bloque dec_func')
     def dec_func(self, p):
         return p
 
@@ -52,12 +52,12 @@ class Yacc(Parser):
         return p
 
     ######## ESTATUTO ########
-    @_('asignacion', 'funcion', 'retorno', 'lectura', 'escritura', 'decision', 'repeticion')
+    @_('asignacion', 'funcion SEMICOLON', 'retorno', 'lectura', 'escritura', 'decision', 'repeticion')
     def estatuto(self, p):
         return p
 
     ######## ASIGNACION ########
-    @_('ID ASSIGN super_exp SEMICOLON', 'ID ASSIGN funcion asignacion_aux', 'ID ASSIGN funcion')
+    @_('ID ASSIGN super_exp SEMICOLON', 'ID ASSIGN funcion asignacion_aux', 'ID ASSIGN funcion SEMICOLON')
     def asignacion(self, p):
         return p
     
@@ -66,7 +66,7 @@ class Yacc(Parser):
         return p
     
     ######## LLAMADA FUNCION ########
-    @_('ID LP funcion_aux RP SEMICOLON')
+    @_('ID LP funcion_aux RP', 'ID LP RP')
     def funcion(self, p):
         return p
     
@@ -98,7 +98,7 @@ class Yacc(Parser):
         return p
 
     ####### DECISION ########
-    @_('SI LP super_exp RP ENTONCES bloque SINO bloque', 'SI LP super_exp RP ENTONCES bloque SEMICOLON')
+    @_('SI LP super_exp RP ENTONCES bloque SINO bloque', 'SI LP super_exp RP ENTONCES bloque')
     def decision(self, p):
         return p
     
@@ -139,7 +139,7 @@ class Yacc(Parser):
         return p
 
     ######## VAR_CTE ########
-    @_('ID', 'CTE_I', 'CTE_F', 'CTE_STRING')
+    @_('funcion', 'ID', 'CTE_I', 'CTE_F', 'CTE_STRING')
     def var_cte(self, p):
         return p
 

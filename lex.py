@@ -3,14 +3,14 @@ from sly import Lexer
 class Lex(Lexer):
 
     tokens = {
-        PROGRAMA, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, FUNCION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, VARIABLES, ID, SEMICOLON, COMMA, LP, RP, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS
+        PROGRAMA, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, FUNCION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, ID, SEMICOLON, COMMA, LP, RP, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS
     }
         
     ID = r'[a-zA-Z_][a-zA-Z_0-9]*(\[\d+,\d+\])?'
 
+    ID['variables'] = VARIABLES
     ID['programa'] = PROGRAMA
     ID['principal'] = PRINCIPAL
-    ID['variables'] = VARIABLES
     ID['entero'] = ENTERO
     ID['flotante'] = FLOTANTE
     ID['char'] = CHAR
@@ -26,8 +26,8 @@ class Lex(Lexer):
     ID['si'] = SI
     ID['entonces'] = ENTONCES
     ID['sino'] = SINO
-    ID['variables'] = VARIABLES
     
+    OP_REL = r'(<>|<=|>=|<|>|(==)|!=)'
     SEMICOLON = r'\;'
     COMMA = r'\,'
     LP = r'\('
@@ -36,7 +36,7 @@ class Lex(Lexer):
     RK = r'\}'
     ASSIGN = r'\='
 
-    OP_REL = r'(<>|<=|>=|<|>|==|!=)'
+    
     OP_ARIT_SEC = r'(\+|-)'
     OP_ARIT_PRIM = r'(\*|\/)'
     OP_LOG = r'(&|\|)'

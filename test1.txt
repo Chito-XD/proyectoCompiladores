@@ -1,16 +1,35 @@
 programa test1 ;
 
-variables i , j : entero ; a : entero ; b : entero ;
+variables i, j, p: entero; estudiante : entero ;
 
-flotante funcion metodo1 (c : entero ) ; 
-variables i , j : entero ;
+entero funcion fact (j : entero); 
+variables i : entero;
 { 
-    i = c + 1 ;
-    j = i ;
-
-    regresa ( j ) ;
+    i = j + (p -j*2+j);
+    si (j==1) entonces {
+        regresa(j);
+    } sino {
+        regresa(j*fact());
+    }
 }
 
-principal ( ) {
+void funcion pelos (y : entero);
+variables x: entero;
+{
+    leer(estudiante);
+    x = y;
+    mientras (x<10) hacer {
+        escribir(estudiante);
+        x = x + 1;
+    }
+}
 
+principal () {
+    leer(p); j = p * 2;
+    i = fact(p);
+    leer(estudiante);
+    pelos(p);
+    desde i = 1 hasta 10 hacer {
+        escribir("hola", alumno, fact(edad), "hol");
+    }
 }
