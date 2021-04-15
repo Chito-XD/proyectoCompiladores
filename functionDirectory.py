@@ -44,12 +44,12 @@ class FunctionDirectory():
             raise Exception("No existe esa funcion")   
     }
 
-    #def updateVariables(self, keyFunc, var){
-    #    if keyFunc in directory.keys():
-    #        self.directory[key].directorio_variables.updateVariable(var)
-    #    else:
-    #        raise Exception("No existe esa funcion") 
-    #}
+    def updateVariables(self, keyFunc, var){
+        if keyFunc in directory.keys():
+            self.directory[key].directorio_variables.updateVariable(var)
+        else:
+            raise Exception("No existe esa funcion") 
+    }
             
 
 

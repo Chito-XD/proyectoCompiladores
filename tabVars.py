@@ -16,14 +16,15 @@ class TableVariables():
             if not variable_declared:
                 self.variables[val.key] = {
                     tipo: val.tipo
+                    valor: None
                     # demás parámetros ...
                 }
             else: 
                 raise Exception("La variable ya existe")
 
-   # def updateVariable(self, var):
-   #     if var.key in variables.keys():
-   #         variables[var.key] = var.value
-   #     else:
-   #         raise Exception("No existe la variable")
+    def updateVariable(self, var):
+        if var.key in variables.keys():
+            variables[var.key] = var.valor
+        else:
+            raise Exception("No existe la variable")
         
