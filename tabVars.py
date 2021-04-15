@@ -2,11 +2,8 @@
 
 class TableVariables(): 
 
-    def __init__ (self, values, proceso_main):
+    def __init__ (self, values):
         self.variables = {}
-        self.global_variables = None
-        if proceso_main is not None: 
-            self.global_variables = proceso_main.directorio_variables.variables
         self.insertVariables(values)
     
 
@@ -23,8 +20,8 @@ class TableVariables():
                 raise Exception("La variable ya existe")
 
     def updateVariable(self, var):
-        if var.key in variables.keys():
-            variables[var.key] = var.valor
+        if var.key in self.variables.keys():
+            self.variables[var.key] = var.valor
         else:
             raise Exception("No existe la variable")
         

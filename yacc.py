@@ -1,5 +1,6 @@
 from sly import Parser
 from lex import Lex
+dire = duncitonDirectory()
 
 class Yacc(Parser):
     
@@ -122,7 +123,7 @@ class Yacc(Parser):
         return p
     
     ######## TIPO ########
-    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID', 'ID')
+    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID', 'BOOLEAN' 'ID')
     def tipo(self, p):
         return p
 

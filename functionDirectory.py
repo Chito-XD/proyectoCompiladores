@@ -29,7 +29,7 @@ class FunctionDirectory():
             self.directory[key] = {
                 tipo_retorno: params.tipo,
                 #  Valores extra del directorio de funciones
-                directorio_variables: TableVariables(params.values, self.proceso_main)
+                directorio_variables: TableVariables(params.values)
             }
             if params.tipo == PROCESO:
                 self.proceso_main = self.directory[key]
@@ -37,19 +37,19 @@ class FunctionDirectory():
             raise Exception("La función ya existe")
     
     ##Funcion para agregar las variables locales de las funciones
-    def addLocalVariables(self, key, vars){
-        if key in directory.keys():
-            self.directory[key].directorio_variables.insertVariables(vars)
+    def addLocalVariable(self, key, var):
+        if key in self.directory.keys():
+            self.directory[key].directorio_variables.insertVariables(var)
         else:
             raise Exception("No existe esa funcion")   
-    }
-
-    def updateVariables(self, keyFunc, var){
-        if keyFunc in directory.keys():
+    
+    # Funcion para actualizar el valor de una variable de un método
+    def updateVariables(self, key, var):
+        if key in self.directory.keys():
             self.directory[key].directorio_variables.updateVariable(var)
         else:
             raise Exception("No existe esa funcion") 
-    }
+    
             
 
 
