@@ -20,3 +20,10 @@ class TableVariables():
                 }
             else: 
                 raise Exception("La variable ya existe")
+
+   # def updateVariable(self, var):
+   #     if var.key in variables.keys():
+   #         variables[var.key] = var.value
+   #     else:
+   #         raise Exception("No existe la variable")
+        

@@ -35,5 +35,21 @@ class FunctionDirectory():
                 self.proceso_main = self.directory[key]
         else :
             raise Exception("La función ya existe")
+    
+    ##Funcion para agregar las variables locales de las funciones
+    def addLocalVariables(self, key, vars){
+        if key in directory.keys():
+            self.directory[key].directorio_variables.insertVariables(vars)
+        else:
+            raise Exception("No existe esa funcion")   
+    }
+
+    #def updateVariables(self, keyFunc, var){
+    #    if keyFunc in directory.keys():
+    #        self.directory[key].directorio_variables.updateVariable(var)
+    #    else:
+    #        raise Exception("No existe esa funcion") 
+    #}
+            
 
 
