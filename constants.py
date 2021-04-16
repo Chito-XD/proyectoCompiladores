@@ -1,4 +1,5 @@
 PROCESO = "N/P"
+PRINCIPAL = "PRINCIAPAL"
 ENTERO = "entero"
 FLOTANTE = "flotante"
 VOID = "void"
