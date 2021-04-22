@@ -1,6 +1,7 @@
 from sly import Parser
 from lex import Lex
-dire = duncitonDirectory()
+from functionDirectory import FunctionDirectory
+dire = FunctionDirectory()
 
 class Yacc(Parser):
     

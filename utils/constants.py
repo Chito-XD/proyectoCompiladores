@@ -6,6 +6,7 @@ VOID = "void"
 CHAR = "char"
 BOOLEANO = "booleano"
 ERROR = "error"
+EQUAL = "=="
 OPER_ARIT_PRIM = ['*', '/']
 OPER_ARIT_SEC = ['+', '-']
 OPER_LOG = ['&', '|']
@@ -14,16 +15,6 @@ ARIT_PRIM = "AritmeticoPrimario"
 ARIT_SEC = "AritmeticoSecundario"
 ARIT_LOG = "AritmeticoLogico"
 ARIT_REL = "AritmeticoRelacional"
-
-def getOperatorType(operator):
-    if operator in OPER_ARIT_PRIM:
-        return ARIT_PRIM
-    if operator in OPER_ARIT_SEC:
-        return ARIT_SEC
-    if operator in OPER_LOG:
-        return ARIT_LOG
-    if operator in OPER_REL:
-        return ARIT_REL
 
 TYPE_MATCHING = {
     ENTERO: {

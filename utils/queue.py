@@ -16,7 +16,7 @@ class Queue:
 
     # Retrieve and deletes first element of the queue
     # Return null if the queue is empty
-    def poll(self):
+    def pop(self):
         if len(self.array) > 0: 
             head = self.array[0]
             del self.array[0]

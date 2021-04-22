@@ -1,5 +1,5 @@
+from utils.constansts import PROCESO
 from tabVars import TableVariables
-from constansts import PROCESO
 
 class FunctionDirectory():
     
@@ -27,9 +27,9 @@ class FunctionDirectory():
         unused_key = self.directory.get(key, None)
         if unused_key: 
             self.directory[key] = {
-                tipo_retorno: params["tipo"],
+                "tipo_retorno": params["tipo"],
                 #  Valores extra del directorio de funciones
-                directorio_variables: TableVariables()
+                "directorio_variables": TableVariables()
             }
             if params["tipo"] == PROCESO:
                 self.proceso_main = self.directory[key]
