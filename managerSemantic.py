@@ -1,8 +1,16 @@
 from functionDirectory import FunctionDirectory
-from utils.constansts import (PROCESO, PRINCIPAL, OPER_ARIT_PRIM, OPER_ARIT_SEC, ERROR)
+from utils.constants import (
+    PROCESO, 
+    PRINCIPAL, 
+    OPER_ARIT_PRIM, 
+    OPER_ARIT_SEC, 
+    ERROR,
+    OPER_LOG,
+    OPER_REL
+)
 from utils.queue import Queue
 from utils.stack import Stack
-from utils.types import get_type_from_operator, get_value_from_operator
+from utils.types import get_type_operation, evaluate_operation
 
 class ManagerSemantic():
 
@@ -75,38 +83,66 @@ class ManagerSemantic():
 
     def insert_operando_type(self, operando, type_o):
         self.operandos.push(operando)
-        self.tipos.push(type_o)
+        self.tipos.push(type_o) #revisar 
     
     def insert_operador(self, operador):
         self.operadores.push(operador)
+
+    def create_cruadruplo(self, operator, op_izq, op_der, temporal):
+        self.cuadruplos.append((operator, op_izq, op_der, temporal))
+
+    def primary_arithmetic_operation(self):
+        if self.operadores.peek() in OPER_ARIT_PRIM:
+            self.arithmetic_ops()
     
-    def create_cruadruplo(self, ope_izq, ope_der, operator):
+    def secondary_arithmetic_operation(self):
+        if self.operadores.peek() in OPER_ARIT_SEC:
+            self.arithmetic_ops()
+    
+    def logical_operation(self):
+        if self.operadores.peek() in OPER_LOG:
+            self.arithmetic_ops()
+    
+    def relational_operation(self):
+        if self.operadores.peek() in OPER_REL:
+            self.arithmetic_ops()
 
-        # Revisar la lógica de cuando el operador derecho está vacío
+    def arithmetic_ops(self):
+        op = self.operadores.pop()
+        op_der = self.operandos.pop()
+        op_izq = self.operandos.pop()
 
-        # Validar si la operacion entre los dos es válida
-        operator_type = get_type_from_operator(ope_izq, ope_der, operator)
-        if operator_type is not ERROR:
-            result = get_value_from_operator(ope_izq, ope_der, operator)
-            self.cuadruplos.append((operator, ope_izq, ope_der, result))
+        tipo_der = self.tipos.pop()
+        tipo_izq = self.tipos.pop()
+
+        operation_type = get_type_operation(tipo_izq, tipo_der, op)
+        if operation_type is not ERROR:
+            result = evaluate_operation(op_izq, op_der, op)
+            self.create_cruadruplo(op, op_izq, op_der, result)
+            self.create_cruadruplo(op, tipo_izq, tipo_der, operation_type) # Revisar esto
         else:
-            raise Exception("No es posible hacer la operación")
-    
+            raise Exception(f"No se puede evaluar -> {op_izq} {op} {op_der}")
 
-    # REVISAR METODO
-    def creat_asignacion(self, op):
-        self.cuadruplos.append(("=", None, None, op))
+    def create_asignacion(self):
+        res = self.operandos.pop()
+        tipo_resultado = self.tipos.pop()
+        lado_izq = self.operadores.pop()
+        tipo_izq = self.tipos.pop()
 
-    def crear_escritura(self, op):
-        self.cuadruplos.append(("ESCRIBE", None, None, op))
+        operator_type = get_type_operation(tipo_resultado, tipo_izq, '=')
+        if operator_type is not ERROR:
+            self.create_cruadruplo("=", res, None, lado_izq)
+
+    def create_escritura(self, variable):
+        self.create_cruadruplo("ESCRIBE", None, None, variable)
     
-    def creat_lectura(self, op):
+    def create_lectura(self, op):
         # Validar que la var exista
         variables = self.directory[self.currentId]["directorio_variables"]
         variable = variables.get(op, None)
         if variable: 
             # Si existe la variable, entonces, creas el cuadruplo de lectura
-            self.cuadruplos.append(("LECTURA", None, None, op))
+            self.create_cruadruplo("LECTURA", None, None, op)
         else:
             raise Exception("La variable que se quiere leer no existe")
     

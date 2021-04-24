@@ -1,4 +1,4 @@
-from utils.constansts import PROCESO
+from utils.constants import PROCESO
 from tabVars import TableVariables
 
 class FunctionDirectory():
@@ -48,7 +48,13 @@ class FunctionDirectory():
         if key in self.directory.keys():
             self.directory[key].directorio_variables.updateVariable(var)
         else:
-            raise Exception("No existe esa funcion") 
+            raise Exception("No existe esa funcion")
+
+    # def get_variable(self, key):
+    #     if key in self.directory.keys():
+    #         variables = self.directory[key].directorio_variables
+    #     else:
+    #         raise Exception("No existe esa funcion")
     
             
 

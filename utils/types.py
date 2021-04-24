@@ -1,6 +1,4 @@
-
-
-from constants import (
+from utils.constants import (
     TYPE_MATCHING, 
     OPER_ARIT_PRIM,
     ARIT_PRIM,
@@ -10,36 +8,39 @@ from constants import (
     ARIT_LOG,
     OPER_REL,
     ARIT_REL,
-    EQUAL
+    EQUAL,
+    ASSIGN
 )
 
 def get_operator_type(operator):
     if operator in OPER_ARIT_PRIM:
         return ARIT_PRIM
-    if operator in OPER_ARIT_SEC:
+    elif operator in OPER_ARIT_SEC:
         return ARIT_SEC
-    if operator in OPER_LOG:
+    elif operator in OPER_LOG:
         return ARIT_LOG
-    if operator in OPER_REL:
+    elif operator in OPER_REL:
         return ARIT_REL
+    elif operator == ASSIGN:
+        return ASSIGN
+    else:
+        return None
 
-def get_type_from_operator(op1, op2, operator):
-    return TYPE_MATCHING[op1][op2][get_operator_type(operator)]
+def get_type_operation(op1, op2, operator):
+    op = get_operator_type(operator)
 
-def get_value_from_operator(op1, op2, operator):
-    # Igualdad
-    if operator is EQUAL:
-        return op1
+    if op:
+        return TYPE_MATCHING[op1][op2][op]
+    else: 
+        raise Exception(f"Operator no mapeado -> {operator}")
 
+def evaluate_operation(op1, op2, operator):
     # Operador lógico
     if operator in OPER_LOG:
-        if operator is '&':
+        if operator == '&':
             return (op1 and op2)
         else:
             return (op1 or op2)
     
-
-    # GOTO
-
     # Caso base (Operadores aritméticos, relacionales)
     return eval( op1 + operator + op2)

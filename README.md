@@ -19,3 +19,13 @@ Integrantes:
 - Type matching: Directorio que contiene la información de la tabla de tipos. Esta variable está dentro del archivo constants.py
 - Tabla de consideraciones semánticas: Puntos donde marcamos los puntos en los que el Manager intervendría para manejar el directorio de funciones, tabla de variables, etc. 
 - Queue y Stack: Adición de las clases de una cola y un stack (queue.py y stack.py)
+
+## Avance 3: Generación de código intermedio inicial
+- Adición de lógica para cuadruplos aritméticos, lógicos y relacionales
+- Adición de lógica para cuadruplos de escritura, lectura y avance de asignación.
+- Validación de operaciones entre tipos.
+
+
+*Pendientes*
+- Integración de la sintaxis con el manager de semántica (Por el momento creamos la lógica por parte del manager, pero no lo hemos integrado a la semántica a pesar de tener ciertos puntos neuralgicos).
+- Probar la correcta creación de los cuadruplos y puntos neuralgicos.
