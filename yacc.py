@@ -124,7 +124,7 @@ class Yacc(Parser):
         return p
     
     ######## TIPO ########
-    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID', 'BOOLEAN' 'ID')
+    @_('ENTERO', 'FLOTANTE', 'CHAR', 'VOID', 'BOOLEAN', 'ID')
     def tipo(self, p):
         return p
 
