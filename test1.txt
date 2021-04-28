@@ -1,4 +1,4 @@
-programa test1 ;
+programa pruebaPrograma ;
 
 Clase Persona hereda Hola {
     atributos edad : entero; nombre[30] : char;

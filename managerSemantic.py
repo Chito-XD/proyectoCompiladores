@@ -17,7 +17,7 @@ class ManagerSemantic():
     def __init__(self):
         self.directory = FunctionDirectory()
         self.currentType = None
-        self.currentId = None
+        self.method_id = None
         self.currentVariables = Queue() # FI FO
 
         # Variables para cuadruplos
@@ -33,14 +33,14 @@ class ManagerSemantic():
     def set_current_type(self, var_type):
         self.currentType = var_type
     
-    def set_current_id(self, curr_id):
-        self.currentId = curr_id
+    def set_method_id(self, curr_id):
+        self.method_id = curr_id
     
     def delete_current_type(self):
         self.currentType = None
     
-    def delete_currentId(self):
-        self.currentId = None
+    def delete_method_id(self):
+        self.method_id = None
 
     def create_function_directory(self, program_id):
         params = {
@@ -71,15 +71,15 @@ class ManagerSemantic():
                 "tipo": self.currentType
                 # "value": 
             }
-            self.directory.addLocalVariable(self.currentId, params)
-        self.deleteCurrentType()
+            self.directory.addLocalVariable(self.method_id, params)
+        self.delete_current_type()
     
     def update_variable(self, var, value):
         params = {
             "key": var,
             "value": value
         }
-        self.directory.updateVariable(self.currentId, params)
+        self.directory.updateVariable(self.method_id, params)
 
     def insert_operando_type(self, operando, type_o):
         self.operandos.push(operando)
@@ -138,7 +138,7 @@ class ManagerSemantic():
     
     def create_lectura(self, op):
         # Validar que la var exista
-        variables = self.directory[self.currentId]["directorio_variables"]
+        variables = self.directory[self.method_id]["directorio_variables"]
         variable = variables.get(op, None)
         if variable: 
             # Si existe la variable, entonces, creas el cuadruplo de lectura
