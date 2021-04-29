@@ -1,35 +1,29 @@
 programa pruebaPrograma ;
 
-variables i, j, p: entero; estudiante : Persona ;
+variables k, i, j, p: entero; estudiante : Persona ;
 
 entero funcion fact (j : entero); 
 variables i : entero;
 { 
-    i = j + (p -j*2+j);
+    i = j + p - j * 2 + j;
     si (j==1) entonces {
         regresa(j);
     } sino {
-        regresa(j*fact());
+        regresa(j*3);
     }
 }
 
 void funcion pelos (y : entero);
 variables x: entero;
 {
-    leer(estudiante.edad);
     x = y;
     mientras (x<10) hacer {
-        escribir(estudiante.UNO(x));
         x = x + 1;
     }
 }
 
 principal () {
     leer(p); j = p * 2;
-    i = fact(p);
-    leer(estudiante.nombre);
+    i = 3;
     pelos(p);
-    desde i = 1 hasta 10 hacer {
-        escribir("hola", alumno.nombre, fact(alumno.edad), "hol");
-    }
 }

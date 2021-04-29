@@ -1,3 +1,4 @@
+import re
 from utils.constants import (
     TYPE_MATCHING, 
     OPER_ARIT_PRIM,
@@ -9,7 +10,12 @@ from utils.constants import (
     OPER_REL,
     ARIT_REL,
     EQUAL,
-    ASSIGN
+    ASSIGN,
+    FLOTANTE,
+    ENTERO,
+    CHAR,
+    ID,
+    BOOLEANO
 )
 
 def get_operator_type(operator):
@@ -25,6 +31,20 @@ def get_operator_type(operator):
         return ASSIGN
     else:
         return None
+
+def get_type_variable(var):
+    if re.search(r'([0-9]+)(\.)([0-9]+)', var):
+        return FLOTANTE
+    elif re.search(r'[0-9]+', var):
+        return ENTERO
+    elif re.search(r'\".*\"', var):
+        return CHAR
+    elif re.search(r'(verdadero)|(falso)', var):
+        return BOOLEANO
+    # elif re.search(r'[a-zA-Z_][a-zA-Z_0-9]*', var):
+    #     return ID
+    return None
+    
 
 def get_type_operation(op1, op2, operator):
     op = get_operator_type(operator)

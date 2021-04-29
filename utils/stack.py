@@ -24,7 +24,7 @@ class Stack:
         return None
     
     # Add an element to the stack
-    def push(self, element):
+    def add(self, element):
         self.array.append(element)
 
     # Return the index of the element inside the stack

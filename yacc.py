@@ -141,7 +141,7 @@ class Yacc(Parser):
     @_('LEE LP lectura_aux RP SEMICOLON')
     def lectura(self, p):
         return p
-
+ 
     @_('lectura_aux_vars COMMA lectura_aux', 
        'lectura_aux_vars')
     def lectura_aux(self, p):
@@ -176,44 +176,46 @@ class Yacc(Parser):
         return p
 
     ####### SUPER EXPRESION ########
-    @_('expresion OP_LOG super_exp', 
-       'expresion')
+    @_('expresion logicalOperation OP_LOG insertOperador super_exp', 
+       'expresion logicalOperation')
     def super_exp(self, p):
         return p
 
     ####### EXPRESION ########
-    @_('exp OP_REL exp', 
-       'exp')
+    @_('exp relationalOperation OP_REL insertOperador exp', 
+       'exp relationalOperation')
     def expresion(self, p):
         return p
 
     ####### EXP ########
-    @_('termino OP_ARIT_SEC exp', 
-       'termino')
+    @_('termino secondaryOperation OP_ARIT_SEC insertOperador exp', 
+       'termino secondaryOperation')
     def exp(self, p):
         return p
 
     ####### TERMINO ########
-    @_('factor OP_ARIT_PRIM termino', 
-       'factor')
+    @_('factor primaryOperation OP_ARIT_PRIM insertOperador termino', 
+       'factor primaryOperation')
     def termino(self, p):
         return p
 
     ######## FACTOR ########
+    # revisar el tema del fondo falso y las variables
     @_('LP super_exp RP',
-       'OP_ARIT_PRIM var_cte', 
+       'OP_ARIT_PRIM var_cte',
        'var_cte')
     def factor(self, p):
         return p
 
     ######## VAR_CTE ########
+    # revisar el tema del fondo falso y las variables
     @_('funcion', 
        'class_method',
        'class_var', 
-       'ID', 
-       'CTE_I', 
-       'CTE_F', 
-       'CTE_STRING')
+       'ID insertOperando', 
+       'CTE_I insertOperando', 
+       'CTE_F insertOperando', 
+       'CTE_STRING insertOperando')
     def var_cte(self, p):
         return p
 
@@ -256,4 +258,28 @@ class Yacc(Parser):
     @_('printDirectory :')
     def printDirectory(self, p):
         self.manager.print_directory()
+    
+    @_('insertOperador :')
+    def insertOperador(self, p):
+        self.manager.insert_operador(p[-1])
+    
+    @_('logicalOperation :')
+    def logicalOperation(self, p):
+        self.manager.logical_operation()
+    
+    @_('relationalOperation :')
+    def relationalOperation(self, p):
+        self.manager.relational_operation()
+    
+    @_('secondaryOperation :')
+    def secondaryOperation(self, p):
+        self.manager.secondary_arithmetic_operation()
+
+    @_('primaryOperation :')
+    def primaryOperation(self, p):
+        self.manager.primary_arithmetic_operation()
+
+    @_('insertOperando :')
+    def insertOperando(self, p):
+        self.manager.insert_operando(p[-1])
     

@@ -10,7 +10,8 @@ from utils.constants import (
 )
 from utils.queue import Queue
 from utils.stack import Stack
-from utils.types import get_type_operation, evaluate_operation
+from utils.types import get_type_operation, evaluate_operation, get_type_variable
+
 
 class ManagerSemantic():
 
@@ -24,9 +25,11 @@ class ManagerSemantic():
         self.operadores = Stack() #LI FO
         self.operandos = Stack()
         self.tipos = Stack()
-        self.saltos = Stack()
+
+        # self.saltos = Queue()
         
         # Cuadruplos
+        self.cuadruplo_counter = 1
         self.cuadruplos = []
 
     
@@ -38,14 +41,13 @@ class ManagerSemantic():
         # print('seteo', curr_id)
         self.method_id = curr_id
     
-    def delete_current_type(self):
-        self.currentType = None
+    # def delete_current_type(self):
+    #     self.currentType = None
     
-    def delete_method_id(self):
-        self.method_id = None
+    # def delete_method_id(self):
+    #     self.method_id = None
 
     def create_function_directory(self, program_id):
-        # print('creo directorio', program_id)
         self.set_method_id(program_id)
         params = {
             "tipo": PROCESO
@@ -54,7 +56,6 @@ class ManagerSemantic():
         self.directory.createFunction(program_id, params)
     
     def add_function(self, function_name):
-        # print('creo funcion')
         self.set_method_id(function_name)
         params = {
             "tipo": self.currentType
@@ -62,7 +63,6 @@ class ManagerSemantic():
         self.directory.createFunction(function_name, params)
     
     def create_principal(self):
-        # print('creo principal')
         self.set_method_id(PRINCIPAL)
         params = {
             "tipo": PRINCIPAL
@@ -75,14 +75,11 @@ class ManagerSemantic():
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
-            # print('the var', var)
             params = {
                 "key": var,
                 "tipo": self.currentType
-                # "value": 
             }
             self.directory.addLocalVariable(self.method_id, params)
-        self.delete_current_type()
     
     def update_variable(self, var, value):
         params = {
@@ -91,29 +88,40 @@ class ManagerSemantic():
         }
         self.directory.updateVariable(self.method_id, params)
 
-    def insert_operando_type(self, operando, type_o):
-        self.operandos.push(operando)
-        self.tipos.push(type_o) #revisar 
+    def insert_operando(self, operando):
+        print("voy a inser a ", operando)
+        self.operandos.add(operando)
+        tipo_op = get_type_variable(operando)
+        if not tipo_op:
+            var = self.directory.get_variable(self.method_id, operando)
+            tipo_op = var["tipo"]
+        print(f"el tipo de {operando} es {tipo_op}")
+        self.tipos.add(tipo_op)
     
     def insert_operador(self, operador):
-        self.operadores.push(operador)
+        print("insert operador")
+        self.operadores.add(operador)
 
     def create_cruadruplo(self, operator, op_izq, op_der, temporal):
         self.cuadruplos.append((operator, op_izq, op_der, temporal))
 
     def primary_arithmetic_operation(self):
+        print("primary")
         if self.operadores.peek() in OPER_ARIT_PRIM:
             self.arithmetic_ops()
     
     def secondary_arithmetic_operation(self):
+        print('secondary')
         if self.operadores.peek() in OPER_ARIT_SEC:
             self.arithmetic_ops()
     
     def logical_operation(self):
+        print('logical')
         if self.operadores.peek() in OPER_LOG:
             self.arithmetic_ops()
     
     def relational_operation(self):
+        print('relational')
         if self.operadores.peek() in OPER_REL:
             self.arithmetic_ops()
 
@@ -127,9 +135,12 @@ class ManagerSemantic():
 
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
-            result = evaluate_operation(op_izq, op_der, op)
+            # result = evaluate_operation(op_izq, op_der, op)
+            result = f'temporal{self.cuadruplo_counter}'
+            self.cuadruplo_counter += 1
             self.create_cruadruplo(op, op_izq, op_der, result)
-            self.create_cruadruplo(op, tipo_izq, tipo_der, operation_type) # Revisar esto
+            self.operandos.add(result)
+            self.tipos.add(operation_type)
         else:
             raise Exception(f"No se puede evaluar -> {op_izq} {op} {op_der}")
 
@@ -148,6 +159,7 @@ class ManagerSemantic():
     
     def create_lectura(self, op):
         # Validar que la var exista
+        # var = self.directory.get_variable(self.method_id, operando)
         variables = self.directory.directory[self.method_id]["directorio_variables"]
         variable = variables.get(op, None)
         if variable: 
@@ -158,12 +170,19 @@ class ManagerSemantic():
     
 
     def print_directory(self):
+        print("")
         for key in self.directory.directory.keys():
             print('function ---> ', key)
             print(self.directory.directory[key])
             var = self.directory.directory[key]["directorio_variables"].variables
             print(var)
             print("")
+        
+        while(not self.operadores.isEmpty()):
+            print(self.operadores.pop())
+        
+        for cu in self.cuadruplos:
+            print(cu)
 
 
     

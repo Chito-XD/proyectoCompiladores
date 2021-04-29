@@ -3,27 +3,24 @@
 class TableVariables(): 
 
     def __init__ (self):
-        self.variables = None
+        self.variables = {}
 
     def insertVariable(self, val):
-        if not self.variables:
-            self.variables = {}
-
         variable_declared = self.variables.get(val["key"], None)
         if not variable_declared:
-            # print(self.variables)
             self.variables[ val["key"] ] = {
                 "tipo": val["tipo"],
                 "valor": val["value"] if val.get("value", None) else None,
                 "direccion": None
-                # demás parámetros ...
             }
+            return True
         else: 
-            raise Exception("La variable ya existe")
+            return False
 
     def updateVariable(self, var):
         if var["key"] in self.variables.keys():
             self.variables[ var["key"] ] = var["value"]
+            return True
         else:
-            raise Exception("No existe la variable")
+            return False
         
