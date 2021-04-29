@@ -31,9 +31,11 @@ class ManagerSemantic():
 
     
     def set_current_type(self, var_type):
+        # print('the type is', var_type)
         self.currentType = var_type
     
     def set_method_id(self, curr_id):
+        # print('seteo', curr_id)
         self.method_id = curr_id
     
     def delete_current_type(self):
@@ -43,22 +45,29 @@ class ManagerSemantic():
         self.method_id = None
 
     def create_function_directory(self, program_id):
+        # print('creo directorio', program_id)
+        self.set_method_id(program_id)
         params = {
             "tipo": PROCESO
         }
+        
         self.directory.createFunction(program_id, params)
     
-    def add_function(self, program_id):
+    def add_function(self, function_name):
+        # print('creo funcion')
+        self.set_method_id(function_name)
         params = {
             "tipo": self.currentType
         }
-        self.directory.createFunction(program_id, params)
+        self.directory.createFunction(function_name, params)
     
-    def create_principal(self, program_id):
+    def create_principal(self):
+        # print('creo principal')
+        self.set_method_id(PRINCIPAL)
         params = {
             "tipo": PRINCIPAL
         }
-        self.directory.createFunction(program_id, params)
+        self.directory.createFunction(PRINCIPAL, params)
     
     def stash_variable(self, var):
         self.currentVariables.add(var)
@@ -66,6 +75,7 @@ class ManagerSemantic():
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
+            # print('the var', var)
             params = {
                 "key": var,
                 "tipo": self.currentType
@@ -138,12 +148,23 @@ class ManagerSemantic():
     
     def create_lectura(self, op):
         # Validar que la var exista
-        variables = self.directory[self.method_id]["directorio_variables"]
+        variables = self.directory.directory[self.method_id]["directorio_variables"]
         variable = variables.get(op, None)
         if variable: 
             # Si existe la variable, entonces, creas el cuadruplo de lectura
             self.create_cruadruplo("LECTURA", None, None, op)
         else:
             raise Exception("La variable que se quiere leer no existe")
+    
+
+    def print_directory(self):
+        for key in self.directory.directory.keys():
+            print('function ---> ', key)
+            print(self.directory.directory[key])
+            var = self.directory.directory[key]["directorio_variables"].variables
+            print(var)
+            print("")
+
+
     
     

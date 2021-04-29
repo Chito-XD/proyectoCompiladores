@@ -1,12 +1,5 @@
 programa pruebaPrograma ;
 
-Clase Persona hereda Hola {
-    atributos edad : entero; nombre[30] : char;
-    metodos entero funcion UNO (x : entero); {
-        regresa(edad-x);
-    } 
-}
-
 variables i, j, p: entero; estudiante : Persona ;
 
 entero funcion fact (j : entero); 

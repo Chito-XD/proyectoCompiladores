@@ -11,19 +11,19 @@ class Yacc(Parser):
 
     
     ######## PROGRAMA ########
-    @_('PROGRAMA ID setFunction SEMICOLON dec_clas dec_vars dec_func principal',
-       'PROGRAMA ID setFunction SEMICOLON dec_clas dec_vars principal',
-       'PROGRAMA ID setFunction SEMICOLON dec_clas dec_func principal', 
-       'PROGRAMA ID setFunction SEMICOLON dec_clas principal',
-       'PROGRAMA ID setFunction SEMICOLON dec_vars dec_func principal', 
-       'PROGRAMA ID setFunction SEMICOLON dec_vars principal', 
-       'PROGRAMA ID setFunction SEMICOLON dec_func principal', 
-       'PROGRAMA ID setFunction SEMICOLON principal')
+    @_('PROGRAMA ID createDirectory SEMICOLON dec_clas dec_vars dec_func principal',
+       'PROGRAMA ID createDirectory SEMICOLON dec_clas dec_vars principal',
+       'PROGRAMA ID createDirectory SEMICOLON dec_clas dec_func principal', 
+       'PROGRAMA ID createDirectory SEMICOLON dec_clas principal',
+       'PROGRAMA ID createDirectory SEMICOLON dec_vars dec_func principal', 
+       'PROGRAMA ID createDirectory SEMICOLON dec_vars principal', 
+       'PROGRAMA ID createDirectory SEMICOLON dec_func principal', 
+       'PROGRAMA ID createDirectory SEMICOLON principal')
     def program(self, p):
         return p
 
     ######## PRINCIPAL ########
-    @_('PRINCIPAL LP RP bloque')
+    @_('PRINCIPAL addPrincipal LP RP bloque printDirectory')
     def principal(self, p):
         return p
     
@@ -47,31 +47,31 @@ class Yacc(Parser):
     def dec_vars(self, p):
         return p
     
-    @_('dec_vars_aux DOTS tipo SEMICOLON dec_vars_cicle', 
-       'dec_vars_aux DOTS tipo SEMICOLON')
+    @_('dec_vars_aux DOTS tipo SEMICOLON storeVariables dec_vars_cicle', 
+       'dec_vars_aux DOTS tipo SEMICOLON storeVariables')
     def dec_vars_cicle(self, p):
         return p
     
-    @_('ID COMMA dec_vars_aux', 
-       'ID')
+    @_('ID stashVar COMMA dec_vars_aux', 
+       'ID stashVar')
     def dec_vars_aux(self, p):
         return p
 
     ######## PARAMETROS ########
-    @_('ID DOTS tipo COMMA parametros', 
-       'ID DOTS tipo')
+    @_('ID stashVar DOTS tipo storeVariables COMMA parametros', 
+       'ID stashVar DOTS tipo storeVariables')
     def parametros(self, p):
         return p
     
     ######## DEC_FUNC ########
-    @_('tipo FUNCION ID LP parametros RP SEMICOLON dec_vars bloque', 
-       'tipo FUNCION ID LP parametros RP SEMICOLON bloque',
-       'tipo FUNCION ID LP RP SEMICOLON dec_vars bloque',
-       'tipo FUNCION ID LP RP SEMICOLON bloque',
-       'tipo FUNCION ID LP parametros RP SEMICOLON dec_vars bloque dec_func', 
-       'tipo FUNCION ID LP parametros RP SEMICOLON bloque dec_func',
-       'tipo FUNCION ID LP RP SEMICOLON dec_vars bloque dec_func',
-       'tipo FUNCION ID LP RP SEMICOLON bloque dec_func')
+    @_('tipo FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
+       'tipo FUNCION ID addFunction LP parametros RP SEMICOLON bloque',
+       'tipo FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque',
+       'tipo FUNCION ID addFunction LP RP SEMICOLON bloque',
+       'tipo FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
+       'tipo FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
+       'tipo FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
+       'tipo FUNCION ID addFunction LP RP SEMICOLON bloque dec_func')
     def dec_func(self, p):
         return p
 
@@ -166,12 +166,12 @@ class Yacc(Parser):
         return p
     
     ######## TIPO ########
-    @_('ENTERO', 
-       'FLOTANTE', 
-       'CHAR', 
-       'VOID', 
-       'BOOLEAN', 
-       'ID')
+    @_('ENTERO setType', 
+       'FLOTANTE setType', 
+       'CHAR setType', 
+       'VOID setType', 
+       'BOOLEAN setType', 
+       'ID setType')
     def tipo(self, p):
         return p
 
@@ -229,9 +229,31 @@ class Yacc(Parser):
 
 
     ######## PUNTOS NEURALGICOS ######## 
-    @_('setFunction :')
-    def setFunction(self, p):
-        self.manager.set_method_id(p[-1])
-        print(p[-1])
+    @_('createDirectory :')
+    def createDirectory(self, p):
+        self.manager.create_function_directory(p[-1])
 
+    @_('addFunction :')
+    def addFunction(self, p):
+        self.manager.add_function(p[-1])
+    
+    @_('addPrincipal :')
+    def addPrincipal(self, p):
+        self.manager.create_principal()
+
+    @_('stashVar :')
+    def stashVar(self, p):
+        self.manager.stash_variable(p[-1])
+
+    @_('setType :')        
+    def setType(self, p):
+        self.manager.set_current_type(p[-1])
+
+    @_('storeVariables :')
+    def storeVariables(self, p):
+        self.manager.store_variables()
+
+    @_('printDirectory :')
+    def printDirectory(self, p):
+        self.manager.print_directory()
     

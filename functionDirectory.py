@@ -24,8 +24,7 @@ class FunctionDirectory():
     
 
     def createFunction(self, key, params):
-        unused_key = self.directory.get(key, None)
-        if unused_key: 
+        if key not in self.directory.keys():
             self.directory[key] = {
                 "tipo_retorno": params["tipo"],
                 #  Valores extra del directorio de funciones
@@ -39,14 +38,14 @@ class FunctionDirectory():
     ##Funcion para agregar las variables locales de las funciones
     def addLocalVariable(self, key, var):
         if key in self.directory.keys():
-            self.directory[key].directorio_variables.insertVariable(var)
+            self.directory[key]["directorio_variables"].insertVariable(var)
         else:
             raise Exception("No existe esa funcion")   
     
     # Funcion para actualizar el valor de una variable de un método
     def updateVariable(self, key, var):
         if key in self.directory.keys():
-            self.directory[key].directorio_variables.updateVariable(var)
+            self.directory[key]["directorio_variables"].updateVariable(var)
         else:
             raise Exception("No existe esa funcion")
 

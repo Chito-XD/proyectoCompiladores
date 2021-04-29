@@ -11,9 +11,11 @@ class TableVariables():
 
         variable_declared = self.variables.get(val["key"], None)
         if not variable_declared:
+            # print(self.variables)
             self.variables[ val["key"] ] = {
                 "tipo": val["tipo"],
-                "valor": val["value"]
+                "valor": val["value"] if val.get("value", None) else None,
+                "direccion": None
                 # demás parámetros ...
             }
         else: 
