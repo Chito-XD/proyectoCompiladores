@@ -26,4 +26,5 @@ principal () {
     leer(p); j = p * 2;
     i = 3;
     pelos(p);
+    escribe("Hola");
 }

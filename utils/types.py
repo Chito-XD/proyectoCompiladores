@@ -61,6 +61,8 @@ def evaluate_operation(op1, op2, operator):
             return (op1 and op2)
         else:
             return (op1 or op2)
-    
-    # Caso base (Operadores aritméticos, relacionales)
-    return eval( op1 + operator + op2)
+    elif operator in OPER_REL:
+        return False
+    else:
+        # Caso base (Operadores aritméticos, relacionales)
+        return eval( op1 + operator + op2)

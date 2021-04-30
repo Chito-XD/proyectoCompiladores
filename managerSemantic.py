@@ -6,7 +6,9 @@ from utils.constants import (
     OPER_ARIT_SEC, 
     ERROR,
     OPER_LOG,
-    OPER_REL
+    OPER_REL,
+    BOOLEANO,
+    ENTERO
 )
 from utils.queue import Queue
 from utils.stack import Stack
@@ -25,6 +27,8 @@ class ManagerSemantic():
         self.operadores = Stack() #LI FO
         self.operandos = Stack()
         self.tipos = Stack()
+        self.saltos = Stack()
+        self.saltosNum = Stack()
 
         # self.saltos = Queue()
         
@@ -34,11 +38,11 @@ class ManagerSemantic():
 
     
     def set_current_type(self, var_type):
-        # print('the type is', var_type)
+        print('El tipo actual es', var_type)
         self.currentType = var_type
     
     def set_method_id(self, curr_id):
-        # print('seteo', curr_id)
+        print('seteo', curr_id)
         self.method_id = curr_id
     
     # def delete_current_type(self):
@@ -48,6 +52,7 @@ class ManagerSemantic():
     #     self.method_id = None
 
     def create_function_directory(self, program_id):
+        print("Se crea directorio", program_id)
         self.set_method_id(program_id)
         params = {
             "tipo": PROCESO
@@ -56,6 +61,7 @@ class ManagerSemantic():
         self.directory.createFunction(program_id, params)
     
     def add_function(self, function_name):
+        print("Se creo la funcion", function_name)
         self.set_method_id(function_name)
         params = {
             "tipo": self.currentType
@@ -70,6 +76,7 @@ class ManagerSemantic():
         self.directory.createFunction(PRINCIPAL, params)
     
     def stash_variable(self, var):
+        print("Añadiendo", var, "a la tabla de variables")
         self.currentVariables.add(var)
     
     def store_variables(self):
@@ -89,7 +96,7 @@ class ManagerSemantic():
         self.directory.updateVariable(self.method_id, params)
 
     def insert_operando(self, operando):
-        print("voy a inser a ", operando)
+        print("voy a insertar ", operando)
         self.operandos.add(operando)
         tipo_op = get_type_variable(operando)
         if not tipo_op:
@@ -99,11 +106,14 @@ class ManagerSemantic():
         self.tipos.add(tipo_op)
     
     def insert_operador(self, operador):
-        print("insert operador")
+        print("insert operador", operador)
         self.operadores.add(operador)
 
     def create_cruadruplo(self, operator, op_izq, op_der, temporal):
         self.cuadruplos.append((operator, op_izq, op_der, temporal))
+
+    def create_cruadruplo_no_lin(self, goto, cond, destino):
+        self.cuadruplos.append((goto, cond, destino))
 
     def primary_arithmetic_operation(self):
         print("primary")
@@ -145,21 +155,31 @@ class ManagerSemantic():
             raise Exception(f"No se puede evaluar -> {op_izq} {op} {op_der}")
 
     def create_asignacion(self):
+        print("Crear asignacion")
         res = self.operandos.pop()
         tipo_resultado = self.tipos.pop()
-        lado_izq = self.operadores.pop()
+        lado_izq = self.operandos.pop()
         tipo_izq = self.tipos.pop()
 
         operator_type = get_type_operation(tipo_resultado, tipo_izq, '=')
         if operator_type is not ERROR:
             self.create_cruadruplo("=", res, None, lado_izq)
+        
 
-    def create_escritura(self, variable):
+    def create_escritura(self):
         self.create_cruadruplo("ESCRIBE", None, None, variable)
+        print("Normal")
+
+    def create_escritura_exp(self):
+        Res = self.operandos.pop()
+        self.create_cruadruplo("ESCRIBE", None, None, Res)
+        print("Expresion")
+
     
     def create_lectura(self, op):
         # Validar que la var exista
         # var = self.directory.get_variable(self.method_id, operando)
+        print("Entra lectura")
         variables = self.directory.directory[self.method_id]["directorio_variables"]
         variable = variables.get(op, None)
         if variable: 
@@ -168,6 +188,97 @@ class ManagerSemantic():
         else:
             raise Exception("La variable que se quiere leer no existe")
     
+    def revisar_estatuo(self):
+        cond = self.operandos.pop()
+        typeC = self.tipos.pop()
+        
+        if typeC == ENTERO:
+            self.create_cruadruplo_no_lin("GotoF", cond, "?")
+            Tam = len(self.cuadruplos)
+            self.saltos.add(self.cuadruplos[Tam-1])
+        else:
+            raise Exception("Mismatch error")
+
+    def end_estatuto(self):
+        
+        C1 = self.saltos.pop()
+        N = len(self.cuadruplos)
+        sN = str(N+1)
+
+        Cont = 0
+        
+        for a in C1:
+            break
+
+        for b in C1:
+            if Cont == 1:
+                break
+            
+            Cont = Cont + 1
+
+        print(a, b, N)
+
+        self.create_cruadruplo_no_lin(a, b, sN)  
+
+    def goto_revisar(self):
+        Falso = self.saltos.pop()
+        self.create_cruadruplo_no_lin("Goto", "ELSE", "?")
+        Tam = len(self.cuadruplos)
+        self.saltos.add(self.cuadruplos[Tam-1])
+        sTam = str(Tam+1)
+
+        Cont = 0
+
+        for a in Falso:
+            break
+
+        for b in Falso:
+            if Cont == 1:
+                break
+            
+            Cont = Cont + 1
+
+        self.create_cruadruplo_no_lin(a, b, sTam)    
+
+    def meterActual(self):
+        Tam = len(self.cuadruplos)
+        self.saltosNum.add(Tam)
+        self.saltosNum.add(Tam)
+
+    def gotoWhile(self):
+        cond = self.operandos.pop()
+        typeC = self.tipos.pop()
+        
+        if typeC == ENTERO:
+            self.create_cruadruplo_no_lin("GotoF", cond, "?")
+            Tam = len(self.cuadruplos)
+            self.saltos.add(self.cuadruplos[Tam-1])
+            self.saltosNum.add(Tam-1)
+        else:
+            raise Exception("Mismatch error")
+
+    def SaleWhile(self):
+        Falso = self.saltos.pop()
+        FalsoNum = self.saltosNum.pop()
+        RetNum = self.saltosNum.pop()
+        Ret = self.cuadruplos[RetNum]
+        Tam = len(self.cuadruplos)
+        sTam = str(Tam+1)
+
+        Cont = 0
+
+        for a in Falso:
+            break
+
+        for b in Falso:
+            if Cont == 1:
+                break
+            
+            Cont = Cont + 1
+
+        self.create_cruadruplo_no_lin("goto", None, RetNum)
+        self.create_cruadruplo_no_lin(a, b, sTam)
+
 
     def print_directory(self):
         print("")

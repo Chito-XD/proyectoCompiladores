@@ -98,9 +98,9 @@ class Yacc(Parser):
         return p
 
     ######## ASIGNACION ########
-    @_('ID ASSIGN super_exp SEMICOLON', 
-       'ID ASSIGN funcion asignacion_aux', 
-       'ID ASSIGN funcion SEMICOLON')
+    @_('ID insertOperando ASSIGN insertOperador super_exp crearAsignacion SEMICOLON', 
+       'ID insertOperando ASSIGN insertOperador funcion asignacion_aux crearAsignacion SEMICOLON', 
+       'ID insertOperando ASSIGN insertOperador funcion crearAsignacion SEMICOLON')
     def asignacion(self, p):
         return p
     
@@ -132,8 +132,8 @@ class Yacc(Parser):
     
     @_('super_exp COMMA escritura_aux', 
        'CTE_STRING COMMA escritura_aux', 
-       'super_exp', 
-       'CTE_STRING',)
+       'super_exp create_escritura_exp', 
+       'CTE_STRING create_escritura',)
     def escritura_aux(self, p):
         return p
     
@@ -142,8 +142,10 @@ class Yacc(Parser):
     def lectura(self, p):
         return p
  
-    @_('lectura_aux_vars COMMA lectura_aux', 
-       'lectura_aux_vars')
+
+    #Revisar porque no funciona
+    @_('lectura_aux_vars create_lectura COMMA lectura_aux', 
+       'lectura_aux_vars create_lectura')
     def lectura_aux(self, p):
         return p
     
@@ -153,14 +155,14 @@ class Yacc(Parser):
         return p
 
     ####### DECISION ########
-    @_('SI LP super_exp RP ENTONCES bloque SINO bloque', 
-       'SI LP super_exp RP ENTONCES bloque')
+    @_('SI LP super_exp RP ENTONCES revisar_estatuto bloque goto_revisar SINO bloque end_estatuto', 
+       'SI LP super_exp RP ENTONCES revisar_estatuto bloque end_estatuto')
     def decision(self, p):
         return p
     
     ####### REPETICION ######## 
     # revisar el desde
-    @_('MIENTRAS LP super_exp RP HACER bloque', 
+    @_('MIENTRAS meterActual LP super_exp RP gotoWhile HACER bloque SaleWhile', 
        'DESDE ID ASSIGN super_exp HASTA super_exp HACER bloque')
     def repeticion(self, p):
         return p
@@ -282,4 +284,45 @@ class Yacc(Parser):
     @_('insertOperando :')
     def insertOperando(self, p):
         self.manager.insert_operando(p[-1])
+
+    @_('crearAsignacion :')
+    def crearAsignacion(self, p):
+        self.manager.create_asignacion()
+
+    #Revisar por que da error
+    @_('create_escritura :')
+    def create_escritura(self, p):
+        self.manager.create_escritura()
+
+    @_('create_escritura_exp :')
+    def create_escritura_exp(self, p):
+        self.manager.create_escritura_exp()
+
+    #Revisar
+    @_('create_lectura :')
+    def create_lectura(self, p):
+        self.manager.create_lectura(p[-1])
+
+    @_('revisar_estatuto :')
+    def revisar_estatuto(self, p):
+        self.manager.revisar_estatuo()
+
+    @_('end_estatuto :')
+    def end_estatuto(self, p):
+        self.manager.end_estatuto()
+
+    @_('goto_revisar :')
+    def goto_revisar(self, p):
+        self.manager.goto_revisar()
     
+    @_('meterActual :')
+    def meterActual(self, p):
+        self.manager.meterActual()
+
+    @_('gotoWhile :')
+    def gotoWhile(self, p):
+        self.manager.gotoWhile()
+
+    @_('SaleWhile :')
+    def SaleWhile(self, p):
+        self.manager.SaleWhile()
