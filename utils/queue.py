@@ -27,3 +27,6 @@ class Queue:
     def add(self, element):
         self.array.append(element)
     
+    # Method to print a queue
+    def print(self):
+        print(self.array)

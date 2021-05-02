@@ -1,6 +1,6 @@
 
 
-+*** PROGRAMA
+*** PROGRAMA
 PROGRAMA -> Programa id ; DEC_CLAS DEC_VARS DEC_FUNC PRINCIPAL
          -> Programa id ; DEC_CLAS DEC_VARS PRINCIPAL
          -> Programa id ; DEC_CLAS DEC_FUNC PRINCIPAL
@@ -51,6 +51,14 @@ DEC_FUNC -> TIPO_SIMPLE funcion id ( PARAMETROS ) ; DEC_VARS BLOQUE
          -> TIPO_SIMPLE funcion id ( ) ; BLOQUE
          -> TIPO_SIMPLE funcion id ( ) DEC_VARS BLOQUE DEC_FUNC
          -> TIPO_SIMPLE funcion id ( ) ; BLOQUE DEC_FUNC
+         -> VOID funcion id ( PARAMETROS ) ; DEC_VARS BLOQUE
+         -> VOID funcion id ( PARAMETROS ) ; BLOQUE
+         -> VOID funcion id ( PARAMETROS ) ; DEC_VARS BLOQUE DEC_FUNC
+         -> VOID funcion id ( PARAMETROS ) ; BLOQUE DEC_FUNC
+         -> VOID funcion id ( ) ; DEC_VARS BLOQUE
+         -> VOID funcion id ( ) ; BLOQUE
+         -> VOID funcion id ( ) DEC_VARS BLOQUE DEC_FUNC
+         -> VOID funcion id ( ) ; BLOQUE DEC_FUNC
 
 
 
@@ -64,15 +72,15 @@ BLOQUE_AUX -> ESTATUTO BLOQUE_AUX
 
 *** ESTATUTO
 ESTATUTO -> FUNCION ;
-ESTATUTO -> ASIGNACION
-ESTATUTO -> RETORNO
-ESTATUTO -> ESCRITURA
-ESTATUTO -> LECTURA
-ESTATUTO -> DECISION
-ESTATUTO -> REPETICION
+         -> ASIGNACION
+         -> RETORNO
+         -> ESCRITURA
+         -> LECTURA
+         -> DECISION
+         -> REPETICION
 
 *** ASIGNACION
-ASIGNACION -> ID = SUPER_EXP ;
+ASIGNACION -> VARIABLE = SUPER_EXP ;
 
 *** FUNCION
 FUNCION -> ID ( FUNCION_AUX ) SEMICOLON
@@ -112,63 +120,43 @@ REPETICION -> desde ID = SUPER_EXP  hasta  SUPER_EXP hacer BLOQUE
 TIPO_SIMPLE -> ENTERO
             -> FLOTANTE
             -> CHAR
-            -> VOID
             -> BOOLEAN
         
 TIPO_COMPUESTO -> ID
 
 *** SUPER_EXP
 SUPER_EXP -> EXPRESION OP_LOG SUPER_EXP
-SUPER_EXP -> EXPRESION
+          -> EXPRESION
 
 *** EXPRESION
 EXPRESION -> EXP OP_REL EXP
-EXPRESION -> EXP
+          -> EXP
 
 *** EXP
 EXP -> TERMINO OP_ARIT_SEC EXP
-EXP -> TERMINO
+    -> TERMINO
 
 *** TERMINO
 TERMINO -> FACTOR OP_ARIT_PRIM TERMINO
-TERMINO -> FACTOR
+        -> FACTOR
 
 *** FACTOR
 FACTOR -> LP SUPER_EXP RP
-FACTOR -> OP_ARIT_PRIM VAR_CTE
-FACTOR -> VAR_CTE
+       -> var_cte
+       -> variable
+       -> funcion
 
 *** VARC_CTE
-VAR_CTE -> ID
 VAR_CTE -> cte_i
-VAR_CTE -> cte_f
-VAR_CTE -> cte_string
+        -> cte_f
+        -> cte_string
 
-*** OP_ARIT_PRIM
-OP_ARIT_PRIM -> *
-OP_ARIT_PRIM -> /
+*** VARIABLE 
+VARIABLE -> id [ super_exp ] [ super_exp ]
+             -> id [ super_exp ]
+             -> id.id
+             -> id.id( VARIABLE_UAX )
+             -> id
 
-*** OP OP_ARIT_SEC
-OP_ARIT_SEC -> +
-OP_ARIT_SEC -> -
-
-*** OP_LOG
-OP_LOG -> &
-OP_LOG -> |
-
-*** OP_REL
-OP_REL -> <>
-OP_REL -> <=
-OP_REL -> >=
-OP_REL -> <
-OP_REL -> >
-OP_REL -> ==
-OP_REL -> !=
-
-** CLASS_METHOD
-CLASS_METHOD -> ID.FUNCION
-
-** CLASS_VAR
-CLASS_VAR -> ID.ID
-
-
+VARIABLE_AUX -> super_exp , variable_aux
+             -> super_exp

@@ -37,5 +37,7 @@ class Stack:
             index += 1
         return None
 
-
+    # Method to print all the stack
+    def print(self):
+        print(self.array)
     

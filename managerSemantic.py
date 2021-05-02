@@ -77,6 +77,8 @@ class ManagerSemantic():
     
     def stash_variable(self, var):
         print("Añadiendo", var, "a la tabla de variables")
+        if isinstance(var, tuple):
+            var = var[1]
         self.currentVariables.add(var)
     
     def store_variables(self):
@@ -116,22 +118,22 @@ class ManagerSemantic():
         self.cuadruplos.append((goto, cond, destino))
 
     def primary_arithmetic_operation(self):
-        print("primary")
+        # print("primary")
         if self.operadores.peek() in OPER_ARIT_PRIM:
             self.arithmetic_ops()
     
     def secondary_arithmetic_operation(self):
-        print('secondary')
+        # print('secondary')
         if self.operadores.peek() in OPER_ARIT_SEC:
             self.arithmetic_ops()
     
     def logical_operation(self):
-        print('logical')
+        # print('logical')
         if self.operadores.peek() in OPER_LOG:
             self.arithmetic_ops()
     
     def relational_operation(self):
-        print('relational')
+        # print('relational')
         if self.operadores.peek() in OPER_REL:
             self.arithmetic_ops()
 
@@ -143,6 +145,7 @@ class ManagerSemantic():
         tipo_der = self.tipos.pop()
         tipo_izq = self.tipos.pop()
 
+        # print(tipo_izq, tipo_der, op)
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
             # result = evaluate_operation(op_izq, op_der, op)
@@ -288,10 +291,7 @@ class ManagerSemantic():
             var = self.directory.directory[key]["directorio_variables"].variables
             print(var)
             print("")
-        
-        while(not self.operadores.isEmpty()):
-            print(self.operadores.pop())
-        
+       
         for cu in self.cuadruplos:
             print(cu)
 

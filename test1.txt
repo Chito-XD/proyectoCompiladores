@@ -1,6 +1,6 @@
 programa pruebaPrograma ;
 
-variables k, i, j, p: entero; estudiante : Persona ;
+variables k[2], i, j, p: entero; estudiante : Persona ;
 
 entero funcion fact (j : entero); 
 variables i : entero;

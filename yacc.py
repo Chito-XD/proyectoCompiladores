@@ -216,7 +216,7 @@ class Yacc(Parser):
        'ID LC super_exp RC',
        'ID DOT ID',
        'ID DOT ID LP variable_aux RP',
-       'ID')
+       'ID insertOperando')
     def variable(self, p):
         return p
     
