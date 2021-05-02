@@ -29,3 +29,14 @@ Integrantes:
 *Pendientes*
 - Integración de la sintaxis con el manager de semántica (Por el momento creamos la lógica por parte del manager, pero no lo hemos integrado a la semántica a pesar de tener ciertos puntos neuralgicos).
 - Probar la correcta creación de los cuadruplos y puntos neuralgicos.
+
+
+## Avance 4: Generación de código intermedio para estatutos no-lineales
+- Integración completa de la sintaxis y semántica.
+- Corrección del manager de la semántica
+- Integración de cuadruplos de lectura, escritura y asignación
+- Integración de código intermedio de if's, while y desde. 
+
+*Pendientes*
+- Corregir ligeros detalles del goto. 
+- Realizar ajustes de sintaxis con base en la lógica de métodos y llamadas de clases
