@@ -28,50 +28,56 @@ class Yacc(Parser):
         return p
     
     ######## DEC_CLAS ########
-    @_('CLASE ID HEREDA ID LK dec_clas_aux RK', 
-       'CLASE ID LK dec_clas_aux RK',
-       'CLASE ID HEREDA ID LK RK', 
+    @_('CLASE ID HEREDA ID LK RK', 
        'CLASE ID LK RK')
     def dec_clas(self, p):
         print(p.HEREDA)
         return p
     
-    @_('ATRIBUTOS dec_vars_cicle METODOS dec_func', 
-       'METODOS dec_func', 
-       'ATRIBUTOS dec_vars_cicle')
-    def dec_clas_aux(self, p):
-        return p
+    # @_('ATRIBUTOS dec_vars_cicle METODOS dec_func', 
+    #    'METODOS dec_func', 
+    #    'ATRIBUTOS dec_vars_cicle')
+    # def dec_clas_aux(self, p):
+    #     return p
 
     ######## DEC_VARS ########
-    @_('VARIABLES dec_vars_cicle')
+    @_('VARIABLES dec_vars_aux')
     def dec_vars(self, p):
         return p
-    
-    @_('dec_vars_aux DOTS tipo SEMICOLON storeVariables dec_vars_cicle', 
-       'dec_vars_aux DOTS tipo SEMICOLON storeVariables')
-    def dec_vars_cicle(self, p):
-        return p
-    
-    @_('ID stashVar COMMA dec_vars_aux', 
-       'ID stashVar')
+
+    @_('dec_vars_aux2 DOTS tipo_simple SEMICOLON storeVariables dec_vars_aux',
+       'dec_vars_aux2 DOTS tipo_simple SEMICOLON storeVariables',
+       'dec_vars_aux2 DOTS tipo_compuesto SEMICOLON dec_vars_aux storeVariables',
+       'dec_vars_aux2 DOTS tipo_compuesto SEMICOLON storeVariables')
     def dec_vars_aux(self, p):
         return p
 
+    @_('var stashVar COMMA dec_vars_aux2',
+       'var stashVar')
+    def dec_vars_aux2(self, p):
+        return p
+    
+    @_('ID LC CTE_I RC LC CTE_I RC',
+       'ID LC CTE_I RC',
+       'ID')
+    def var(self, p):
+        return p
+
     ######## PARAMETROS ########
-    @_('ID stashVar DOTS tipo storeVariables COMMA parametros', 
-       'ID stashVar DOTS tipo storeVariables')
+    @_('ID stashVar DOTS tipo_simple storeVariables COMMA parametros', 
+       'ID stashVar DOTS tipo_simple storeVariables')
     def parametros(self, p):
         return p
     
     ######## DEC_FUNC ########
-    @_('tipo FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
-       'tipo FUNCION ID addFunction LP parametros RP SEMICOLON bloque',
-       'tipo FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque',
-       'tipo FUNCION ID addFunction LP RP SEMICOLON bloque',
-       'tipo FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
-       'tipo FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
-       'tipo FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
-       'tipo FUNCION ID addFunction LP RP SEMICOLON bloque dec_func')
+    @_('tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque',
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque dec_func')
     def dec_func(self, p):
         return p
 
@@ -98,20 +104,12 @@ class Yacc(Parser):
         return p
 
     ######## ASIGNACION ########
-    @_('ID insertOperando ASSIGN insertOperador super_exp crearAsignacion SEMICOLON', 
-       'ID insertOperando ASSIGN insertOperador funcion asignacion_aux crearAsignacion SEMICOLON', 
-       'ID insertOperando ASSIGN insertOperador funcion crearAsignacion SEMICOLON')
+    @_('ID insertOperando ASSIGN insertOperador super_exp crearAsignacion SEMICOLON')
     def asignacion(self, p):
         return p
     
-    @_('super_exp asignacion_aux', 
-       'super_exp')
-    def asignacion_aux(self, p):
-        return p
-    
     ######## LLAMADA FUNCION ########
-    @_('ID LP funcion_aux RP', 
-       'ID LP RP')
+    @_('ID LP funcion_aux RP')
     def funcion(self, p):
         return p
     
@@ -142,18 +140,12 @@ class Yacc(Parser):
     def lectura(self, p):
         return p
  
-
     #Revisar porque no funciona
-    @_('lectura_aux_vars create_lectura COMMA lectura_aux', 
-       'lectura_aux_vars create_lectura')
+    @_('ID create_lectura COMMA lectura_aux', 
+       'ID create_lectura')
     def lectura_aux(self, p):
         return p
     
-    @_('class_var', 
-       'ID')
-    def lectura_aux_vars(self, p):
-        return p
-
     ####### DECISION ########
     @_('SI LP super_exp RP ENTONCES revisar_estatuto bloque goto_revisar SINO bloque end_estatuto', 
        'SI LP super_exp RP ENTONCES revisar_estatuto bloque end_estatuto')
@@ -172,9 +164,12 @@ class Yacc(Parser):
        'FLOTANTE setType', 
        'CHAR setType', 
        'VOID setType', 
-       'BOOLEAN setType', 
-       'ID setType')
-    def tipo(self, p):
+       'BOOLEAN setType')
+    def tipo_simple(self, p):
+        return p
+    
+    @_('ID setType')
+    def tipo_compuesto(self, p):
         return p
 
     ####### SUPER EXPRESION ########
@@ -202,37 +197,36 @@ class Yacc(Parser):
         return p
 
     ######## FACTOR ########
-    # revisar el tema del fondo falso y las variables
     @_('LP super_exp RP',
-       'OP_ARIT_PRIM var_cte',
-       'var_cte')
+       'var_cte',
+       'variable',
+       'funcion')
     def factor(self, p):
         return p
 
     ######## VAR_CTE ########
-    # revisar el tema del fondo falso y las variables
-    @_('funcion', 
-       'class_method',
-       'class_var', 
-       'ID insertOperando', 
-       'CTE_I insertOperando', 
+    @_('CTE_I insertOperando', 
        'CTE_F insertOperando', 
        'CTE_STRING insertOperando')
     def var_cte(self, p):
         return p
-
-    ######## CLASS_METHOD ########
-    @_('ID DOT funcion')
-    def class_method(self, p):
+    
+    ######## VARIABLE ########
+    @_('ID LC super_exp RC LC super_exp RC',
+       'ID LC super_exp RC',
+       'ID DOT ID',
+       'ID DOT ID LP variable_aux RP',
+       'ID')
+    def variable(self, p):
         return p
     
-    ######## CLASS_VAR ########
-    @_('ID DOT ID')
-    def class_var(self, p):
+    @_('super_exp COMMA variable_aux', 
+       'super_exp')
+    def variable_aux(self, p):
         return p
 
 
-    ######## PUNTOS NEURALGICOS ######## 
+######## PUNTOS NEURALGICOS ######## 
     @_('createDirectory :')
     def createDirectory(self, p):
         self.manager.create_function_directory(p[-1])
@@ -292,7 +286,7 @@ class Yacc(Parser):
     #Revisar por que da error
     @_('create_escritura :')
     def create_escritura(self, p):
-        self.manager.create_escritura()
+        self.manager.create_escritura(p[-1])
 
     @_('create_escritura_exp :')
     def create_escritura_exp(self, p):

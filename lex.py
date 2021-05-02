@@ -3,10 +3,10 @@ from sly import Lexer
 class Lex(Lexer):
 
     tokens = {
-        PROGRAMA, CLASE, HEREDA, ATRIBUTOS, METODOS, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, BOOLEAN,  FUNCION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, ID, SEMICOLON, COMMA, LP, RP, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS, DOT 
+        PROGRAMA, CLASE, HEREDA, ATRIBUTOS, METODOS, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, BOOLEAN,  FUNCION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, ID, SEMICOLON, COMMA, LP, RP, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS, DOT, LC, RC
     }
         
-    ID = r'[a-zA-Z_][a-zA-Z_0-9]*(\[\d+(\]|,\d+\]))?'
+    ID = r'[a-zA-Z_][a-zA-Z_0-9]*'
 
     ID['variables'] = VARIABLES
     ID['Clase'] = CLASE
@@ -37,6 +37,8 @@ class Lex(Lexer):
     COMMA = r'\,'
     LP = r'\('
     RP = r'\)'
+    LC = r'\['
+    RC = r'\]'
     LK = r'\{'
     RK = r'\}'
     ASSIGN = r'\='

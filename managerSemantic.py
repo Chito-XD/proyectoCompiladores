@@ -166,8 +166,8 @@ class ManagerSemantic():
             self.create_cruadruplo("=", res, None, lado_izq)
         
 
-    def create_escritura(self):
-        self.create_cruadruplo("ESCRIBE", None, None, variable)
+    def create_escritura(self, var):
+        self.create_cruadruplo("ESCRIBE", None, None, var)
         print("Normal")
 
     def create_escritura_exp(self):
