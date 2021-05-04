@@ -1,10 +1,11 @@
 programa pruebaPrograma ;
 
-variables k, i, j, p: entero; estudiante : Persona ;
+variables k, i, j, p, c: entero; estudiante : Persona ;
 
 entero funcion fact (j : entero); 
 variables i : entero;
 { 
+    c = 1 + 1;
     i = j + p - j * 2 + j;
     si (j==1) entonces {
         regresa(j);
@@ -23,7 +24,7 @@ variables x: entero;
 }
 
 principal () {
-    leer(p); j = p * 2;
+    lee(p); j = p * 2;
     i = 3;
     pelos(p);
     escribe("Hola");
