@@ -7,7 +7,7 @@ variables i : entero;
 { 
     c = 1 + 1;
     i = j + p - j * 2 + j;
-    si (j==1) entonces {
+   si (j ==1) entonces {
         regresa(j);
     } sino {
         regresa(j*3);
