@@ -40,3 +40,9 @@ Integrantes:
 *Pendientes*
 - Corregir ligeros detalles del goto. 
 - Realizar ajustes de sintaxis con base en la lógica de métodos y llamadas de clases
+
+## Avance 5:
+- Se corrigieron errores de los estatutos no lineales como por ejemplo que los saltos se creaban antes que los cuadruplos de las comparaciones
+- Se corrigio que se crearon 2 versiones de los saltos
+- Se corrigio que en la asignacion, no se hacia pop al operador de asignacion (=)
+- Se corrigio la funcion para crear el cuadruplo de lectura

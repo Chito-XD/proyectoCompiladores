@@ -147,8 +147,8 @@ class Yacc(Parser):
         return p
     
     ####### DECISION ########
-    @_('SI LP super_exp RP ENTONCES revisar_estatuto bloque goto_revisar SINO bloque end_estatuto', 
-       'SI LP super_exp RP ENTONCES revisar_estatuto bloque end_estatuto')
+    @_('SI LP super_exp RP revisar_estatuto ENTONCES  bloque goto_revisar SINO bloque end_estatuto', 
+       'SI LP super_exp RP revisar_estatuto ENTONCES bloque end_estatuto')
     def decision(self, p):
         return p
     

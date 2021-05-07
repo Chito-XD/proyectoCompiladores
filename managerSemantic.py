@@ -112,9 +112,11 @@ class ManagerSemantic():
         self.operadores.add(operador)
 
     def create_cruadruplo(self, operator, op_izq, op_der, temporal):
+        print("Creando cuadruplo {", operator, op_izq, op_der, temporal,"}")
         self.cuadruplos.append((operator, op_izq, op_der, temporal))
 
     def create_cruadruplo_no_lin(self, goto, cond, destino):
+        print("Creando cuadruplo nol lineal {", goto, cond, destino,"}")
         self.cuadruplos.append((goto, cond, destino))
 
     def primary_arithmetic_operation(self):
@@ -135,6 +137,7 @@ class ManagerSemantic():
     def relational_operation(self):
         # print('relational')
         if self.operadores.peek() in OPER_REL:
+            print("Operator:", self.operadores.peek())
             self.arithmetic_ops()
 
     def arithmetic_ops(self):
@@ -163,8 +166,9 @@ class ManagerSemantic():
         tipo_resultado = self.tipos.pop()
         lado_izq = self.operandos.pop()
         tipo_izq = self.tipos.pop()
+        Operator = self.operadores.pop()
 
-        operator_type = get_type_operation(tipo_resultado, tipo_izq, '=')
+        operator_type = get_type_operation(tipo_resultado, tipo_izq, Operator)
         if operator_type is not ERROR:
             self.create_cruadruplo("=", res, None, lado_izq)
         
@@ -182,105 +186,114 @@ class ManagerSemantic():
     def create_lectura(self, op):
         # Validar que la var exista
         # var = self.directory.get_variable(self.method_id, operando)
-        print("Entra lectura")
-        variables = self.directory.directory[self.method_id]["directorio_variables"]
-        variable = variables.get(op, None)
-        if variable: 
-            # Si existe la variable, entonces, creas el cuadruplo de lectura
+        op = op[1]
+        Val = self.directory
+        Existe = Val.get_variable(self.method_id, op)
+        if Existe != ERROR:
             self.create_cruadruplo("LECTURA", None, None, op)
+        
         else:
             raise Exception("La variable que se quiere leer no existe")
+        #if variable: 
+            # Si existe la variable, entonces, creas el cuadruplo de lectura
+        #    self.create_cruadruplo("LECTURA", None, None, op)
+        #else:
+        #    raise Exception("La variable que se quiere leer no existe")
     
     def revisar_estatuo(self):
+        self.arithmetic_ops()
         cond = self.operandos.pop()
         typeC = self.tipos.pop()
         
-        if typeC == ENTERO:
+        if typeC == BOOLEANO:
             self.create_cruadruplo_no_lin("GotoF", cond, "?")
             Tam = len(self.cuadruplos)
-            self.saltos.add(self.cuadruplos[Tam-1])
+            print("Tam:", Tam)
+            self.saltos.add(Tam-1)
         else:
             raise Exception("Mismatch error")
 
     def end_estatuto(self):
         
         C1 = self.saltos.pop()
+        Temp = self.cuadruplos[C1]
         N = len(self.cuadruplos)
-        sN = str(N+1)
+        sN = str(N)
 
         Cont = 0
         
-        for a in C1:
+        for a in Temp:
             break
 
-        for b in C1:
+        for b in Temp:
             if Cont == 1:
                 break
             
             Cont = Cont + 1
 
-        print(a, b, N)
-
-        self.create_cruadruplo_no_lin(a, b, sN)  
+        self.cuadruplos[C1] = {a, b, sN}
 
     def goto_revisar(self):
         Falso = self.saltos.pop()
+        Falso2 = self.cuadruplos[Falso]
         self.create_cruadruplo_no_lin("Goto", "ELSE", "?")
         Tam = len(self.cuadruplos)
-        self.saltos.add(self.cuadruplos[Tam-1])
-        sTam = str(Tam+1)
+        self.saltos.add(Tam-1)
+        sTam = str(Tam)
 
         Cont = 0
 
-        for a in Falso:
+        for a in Falso2:
             break
 
-        for b in Falso:
+        for b in Falso2:
             if Cont == 1:
                 break
             
             Cont = Cont + 1
 
-        self.create_cruadruplo_no_lin(a, b, sTam)    
+        print("ELSE", a, b, sTam)
+
+        self.cuadruplos[Falso] = {a, b, sTam}
 
     def meterActual(self):
         Tam = len(self.cuadruplos)
-        self.saltosNum.add(Tam)
-        self.saltosNum.add(Tam)
+        self.saltos.add(Tam)
+        self.saltos.add(Tam)
 
     def gotoWhile(self):
+        self.arithmetic_ops()
         cond = self.operandos.pop()
         typeC = self.tipos.pop()
         
-        if typeC == ENTERO:
+        if typeC == BOOLEANO:
             self.create_cruadruplo_no_lin("GotoF", cond, "?")
             Tam = len(self.cuadruplos)
-            self.saltos.add(self.cuadruplos[Tam-1])
-            self.saltosNum.add(Tam-1)
+            self.saltos.add(Tam-1)
         else:
             raise Exception("Mismatch error")
 
     def SaleWhile(self):
         Falso = self.saltos.pop()
-        FalsoNum = self.saltosNum.pop()
-        RetNum = self.saltosNum.pop()
+        Falso2 = self.cuadruplos[Falso]
+        RetNum = self.saltos.pop()
         Ret = self.cuadruplos[RetNum]
         Tam = len(self.cuadruplos)
         sTam = str(Tam+1)
 
         Cont = 0
 
-        for a in Falso:
+        for a in Falso2:
             break
 
-        for b in Falso:
+        for b in Falso2:
             if Cont == 1:
                 break
             
             Cont = Cont + 1
 
-        self.create_cruadruplo_no_lin("goto", None, RetNum)
-        self.create_cruadruplo_no_lin(a, b, sTam)
+        self.create_cruadruplo_no_lin("gotoRep", None, RetNum)
+        self.cuadruplos[Falso] = {a,b,sTam}
 
 
     def print_directory(self):
@@ -292,8 +305,11 @@ class ManagerSemantic():
             print(var)
             print("")
        
+        Cont = 0
+        
         for cu in self.cuadruplos:
-            print(cu)
+            print(Cont, cu)
+            Cont = Cont+1
 
 
     
