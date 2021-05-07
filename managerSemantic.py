@@ -231,7 +231,7 @@ class ManagerSemantic():
             
             Cont = Cont + 1
 
-        self.cuadruplos[C1] = {a, b, sN}
+        self.cuadruplos[C1] = (a, b, sN)
 
     def goto_revisar(self):
         Falso = self.saltos.pop()
@@ -254,7 +254,7 @@ class ManagerSemantic():
 
         print("ELSE", a, b, sTam)
 
-        self.cuadruplos[Falso] = {a, b, sTam}
+        self.cuadruplos[Falso] = (a, b, sTam)
 
     def meterActual(self):
         Tam = len(self.cuadruplos)
@@ -293,7 +293,7 @@ class ManagerSemantic():
             Cont = Cont + 1
 
         self.create_cruadruplo_no_lin("gotoRep", None, RetNum)
-        self.cuadruplos[Falso] = {a,b,sTam}
+        self.cuadruplos[Falso] = (a,b,sTam)
 
 
     def print_directory(self):

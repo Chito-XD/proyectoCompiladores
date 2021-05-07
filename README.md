@@ -46,3 +46,8 @@ Integrantes:
 - Se corrigio que se crearon 2 versiones de los saltos
 - Se corrigio que en la asignacion, no se hacia pop al operador de asignacion (=)
 - Se corrigio la funcion para crear el cuadruplo de lectura
+- Se modificó la sintaxis para poder recibir funciones, asignar funciones a variables y llamadas a propiedades de objetos.
+
+*Pendientes*
+- Revisar el 'fondo falso'
+- Agregar la lógica de funciones a la semántica
