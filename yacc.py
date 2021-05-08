@@ -70,14 +70,22 @@ class Yacc(Parser):
         return p
     
     ######## DEC_FUNC ########
-    @_('tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
+    @_('tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque dec_func',
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
        'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque',
        'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque',
        'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque',
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque dec_func')
+       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
+       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
+       'VOID FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
+       'VOID FUNCION ID addFunction LP RP SEMICOLON bloque dec_func',
+       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
+       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON bloque',
+       'VOID FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque',
+       'VOID FUNCION ID addFunction LP RP SEMICOLON bloque')
     def dec_func(self, p):
         return p
 
@@ -104,7 +112,7 @@ class Yacc(Parser):
         return p
 
     ######## ASIGNACION ########
-    @_('ID insertOperando ASSIGN insertOperador super_exp crearAsignacion SEMICOLON')
+    @_('variable ASSIGN insertOperador super_exp crearAsignacion SEMICOLON')
     def asignacion(self, p):
         return p
     
@@ -128,8 +136,8 @@ class Yacc(Parser):
     def escritura(self, p):
         return p
     
-    @_('super_exp COMMA escritura_aux', 
-       'CTE_STRING COMMA escritura_aux', 
+    @_('super_exp create_escritura_exp COMMA escritura_aux', 
+       'CTE_STRING create_escritura COMMA escritura_aux', 
        'super_exp create_escritura_exp', 
        'CTE_STRING create_escritura',)
     def escritura_aux(self, p):
@@ -140,9 +148,8 @@ class Yacc(Parser):
     def lectura(self, p):
         return p
  
-    #Revisar porque no funciona
-    @_('ID create_lectura COMMA lectura_aux', 
-       'ID create_lectura')
+    @_('variable create_lectura COMMA lectura_aux', 
+       'variable create_lectura')
     def lectura_aux(self, p):
         return p
     
@@ -163,7 +170,6 @@ class Yacc(Parser):
     @_('ENTERO setType', 
        'FLOTANTE setType', 
        'CHAR setType', 
-       'VOID setType', 
        'BOOLEAN setType')
     def tipo_simple(self, p):
         return p

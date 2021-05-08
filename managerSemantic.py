@@ -112,11 +112,11 @@ class ManagerSemantic():
         self.operadores.add(operador)
 
     def create_cruadruplo(self, operator, op_izq, op_der, temporal):
-        print("Creando cuadruplo {", operator, op_izq, op_der, temporal,"}")
+        print("Creando cuadruplo (", operator, op_izq, op_der, temporal,")")
         self.cuadruplos.append((operator, op_izq, op_der, temporal))
 
     def create_cruadruplo_no_lin(self, goto, cond, destino):
-        print("Creando cuadruplo nol lineal {", goto, cond, destino,"}")
+        print("Creando cuadruplo nol lineal (", goto, cond, destino,")")
         self.cuadruplos.append((goto, cond, destino))
 
     def primary_arithmetic_operation(self):
@@ -184,21 +184,11 @@ class ManagerSemantic():
 
     
     def create_lectura(self, op):
-        # Validar que la var exista
-        # var = self.directory.get_variable(self.method_id, operando)
-        op = op[1]
-        Val = self.directory
-        Existe = Val.get_variable(self.method_id, op)
-        if Existe != ERROR:
-            self.create_cruadruplo("LECTURA", None, None, op)
+        if isinstance(op, tuple):
+            op = op[1]
+        self.directory.get_variable(self.method_id, op)
+        self.create_cruadruplo("LECTURA", None, None, op)
         
-        else:
-            raise Exception("La variable que se quiere leer no existe")
-        #if variable: 
-            # Si existe la variable, entonces, creas el cuadruplo de lectura
-        #    self.create_cruadruplo("LECTURA", None, None, op)
-        #else:
-        #    raise Exception("La variable que se quiere leer no existe")
     
     def revisar_estatuo(self):
         self.arithmetic_ops()
@@ -292,7 +282,7 @@ class ManagerSemantic():
             
             Cont = Cont + 1
 
-        self.create_cruadruplo_no_lin("gotoRep", None, RetNum)
+        self.create_cruadruplo_no_lin("Goto", None, RetNum)
         self.cuadruplos[Falso] = (a,b,sTam)
 
 

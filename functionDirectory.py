@@ -62,7 +62,7 @@ class FunctionDirectory():
                 if var in variables.keys():
                     return variables[var]
                 else:
-                    raise(f"No existe la variable {var} en la funcion {key}")
+                    raise Exception(f"No existe la variable {var} en la funcion {key}")
         else:
             raise Exception(f"--> No existe la funcion {key}")
     

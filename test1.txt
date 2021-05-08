@@ -1,13 +1,13 @@
 programa pruebaPrograma ;
 
-variables k[2], i, j, p: entero; estudiante : Persona ;
+variables k[2], i, j, p, c: entero; estudiante : Persona ;
 
 entero funcion fact (j : entero); 
 variables i : entero;
 { 
     c = 1 + 1;
     i = j + p - j * 2 + j;
-   si (j ==1) entonces {
+    si (j ==1) entonces {
         regresa(j);
     } sino {
         regresa(j*3);
@@ -24,7 +24,11 @@ variables x: entero;
 }
 
 principal () {
-    lee(p); j = p * 2;
+    lee(p); 
+    lee(c[0]);
+    i = 2;
+    lee(k[2][2]);
+    j = p * 2;
     i = 3;
     pelos(p);
     escribe("Hola");
