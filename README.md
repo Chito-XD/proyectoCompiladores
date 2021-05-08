@@ -49,5 +49,13 @@ Integrantes:
 - Se modificó la sintaxis para poder recibir funciones, asignar funciones a variables y llamadas a propiedades de objetos.
 
 *Pendientes*
-- Revisar el 'fondo falso'
-- Agregar la lógica de funciones a la semántica
+- Cuadruplos de llamadas de funciones
+- Asignación de variables a llamadas
+- Guardar arrays o matrices
+- Escribir atributos de clases
+- Revisar los cuadruplos -> orden
+- return 
+- Objetos 
+- Arreglar el 'enter' en declaración de variables
+- DUDAS --> Asignación de variables no declaradas
+- DUDAS --> Funciones de clases

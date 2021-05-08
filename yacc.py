@@ -41,7 +41,7 @@ class Yacc(Parser):
     #     return p
 
     ######## DEC_VARS ########
-    @_('VARIABLES dec_vars_aux')
+    @_('VARIABLES DOTS dec_vars_aux')
     def dec_vars(self, p):
         return p
 
@@ -117,7 +117,8 @@ class Yacc(Parser):
         return p
     
     ######## LLAMADA FUNCION ########
-    @_('ID LP funcion_aux RP')
+    @_('ID LP funcion_aux RP',
+       'ID LP RP')
     def funcion(self, p):
         return p
     
@@ -136,10 +137,8 @@ class Yacc(Parser):
     def escritura(self, p):
         return p
     
-    @_('super_exp create_escritura_exp COMMA escritura_aux', 
-       'CTE_STRING create_escritura COMMA escritura_aux', 
-       'super_exp create_escritura_exp', 
-       'CTE_STRING create_escritura',)
+    @_('super_exp create_escritura COMMA escritura_aux', 
+       'super_exp create_escritura') 
     def escritura_aux(self, p):
         return p
     
@@ -203,7 +202,7 @@ class Yacc(Parser):
         return p
 
     ######## FACTOR ########
-    @_('LP super_exp RP',
+    @_('LP create_back super_exp RP delete_back',
        'var_cte',
        'variable',
        'funcion')
@@ -292,13 +291,8 @@ class Yacc(Parser):
     #Revisar por que da error
     @_('create_escritura :')
     def create_escritura(self, p):
-        self.manager.create_escritura(p[-1])
+        self.manager.create_escritura()
 
-    @_('create_escritura_exp :')
-    def create_escritura_exp(self, p):
-        self.manager.create_escritura_exp()
-
-    #Revisar
     @_('create_lectura :')
     def create_lectura(self, p):
         self.manager.create_lectura(p[-1])
@@ -326,3 +320,11 @@ class Yacc(Parser):
     @_('SaleWhile :')
     def SaleWhile(self, p):
         self.manager.SaleWhile()
+    
+    @_('create_back :')
+    def create_back(self, p):
+        self.manager.manage_back_operator()
+    
+    @_('delete_back :')
+    def delete_back(self, p):
+        self.manager.manage_back_operator(False)

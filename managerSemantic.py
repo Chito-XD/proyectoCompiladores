@@ -110,6 +110,12 @@ class ManagerSemantic():
     def insert_operador(self, operador):
         print("insert operador", operador)
         self.operadores.add(operador)
+    
+    def manage_back_operator(self, create=True):
+        if create:
+            self.operadores.add("(")
+        else:
+            self.operadores.pop()
 
     def create_cruadruplo(self, operator, op_izq, op_der, temporal):
         print("Creando cuadruplo (", operator, op_izq, op_der, temporal,")")
@@ -148,11 +154,10 @@ class ManagerSemantic():
         tipo_der = self.tipos.pop()
         tipo_izq = self.tipos.pop()
 
-        # print(tipo_izq, tipo_der, op)
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
             # result = evaluate_operation(op_izq, op_der, op)
-            result = f'temporal{self.cuadruplo_counter}'
+            result = f'temporal_{self.cuadruplo_counter}'
             self.cuadruplo_counter += 1
             self.create_cruadruplo(op, op_izq, op_der, result)
             self.operandos.add(result)
@@ -173,14 +178,12 @@ class ManagerSemantic():
             self.create_cruadruplo("=", res, None, lado_izq)
         
 
-    def create_escritura(self, var):
-        self.create_cruadruplo("ESCRIBE", None, None, var)
-        print("Normal")
+    def create_escritura(self):
+        self.create_cruadruplo("ESCRIBE", None, None, self.operandos.peek())
 
     def create_escritura_exp(self):
         Res = self.operandos.pop()
         self.create_cruadruplo("ESCRIBE", None, None, Res)
-        print("Expresion")
 
     
     def create_lectura(self, op):
@@ -267,7 +270,7 @@ class ManagerSemantic():
         Falso = self.saltos.pop()
         Falso2 = self.cuadruplos[Falso]
         RetNum = self.saltos.pop()
-        Ret = self.cuadruplos[RetNum]
+        # Ret = self.cuadruplos[RetNum]
         Tam = len(self.cuadruplos)
         sTam = str(Tam+1)
 
@@ -295,11 +298,11 @@ class ManagerSemantic():
             print(var)
             print("")
        
-        Cont = 0
+        cont = 0
         
         for cu in self.cuadruplos:
-            print(Cont, cu)
-            Cont = Cont+1
+            print(cont, cu)
+            cont = cont+1
 
 
     

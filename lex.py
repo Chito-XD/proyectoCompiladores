@@ -56,7 +56,7 @@ class Lex(Lexer):
     
     
     ignore = ' \t'
-    # ignore_newline = r' \n+'
+    ignore_newline = r' \n+'
     
     @_(r'\n+')
     def ignore_newline(self, t):

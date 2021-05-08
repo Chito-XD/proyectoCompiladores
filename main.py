@@ -19,7 +19,7 @@ for row in data:
     
 if text: 
     # for tok in lexer.tokenize(text):
-        # print('type=%r, value=%r' % (tok.type, tok.value))
+    #     print('type=%r, value=%r' % (tok.type, tok.value))
     if parser.parse(lexer.tokenize(text)):
         print('Correct syntaxis')
     else:
