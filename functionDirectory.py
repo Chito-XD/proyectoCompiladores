@@ -27,7 +27,9 @@ class FunctionDirectory():
         if key not in self.directory.keys():
             self.directory[key] = {
                 "tipo_retorno": params["tipo"],
-                "directorio_variables": TableVariables()
+                "directorio_variables": TableVariables(),
+                "inicio": params["inicio"],
+                "parametros": params.get("parametros") if params.get("parametros") else []
             }
             if params["tipo"] == PROCESO:
                 self.proceso_main = self.directory[key]
@@ -42,6 +44,10 @@ class FunctionDirectory():
                 raise Exception(f"--> La variable {var['key']} ya existe en la funcion {key}")
         else:
             raise Exception(f"--> No existe la funcion {key}")   
+    
+    def addParam(self, key, var):
+        self.addLocalVariable(key, var)
+        self.directory[key]["parametros"].append(var["tipo"])
     
     # Funcion para actualizar el valor de una variable de un método
     def updateVariable(self, key, var):

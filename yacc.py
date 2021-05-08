@@ -28,17 +28,24 @@ class Yacc(Parser):
         return p
     
     ######## DEC_CLAS ########
-    @_('CLASE ID HEREDA ID LK RK', 
+    @_('CLASE ID HEREDA ID LK atributos metodos RK',
+       'CLASE ID HEREDA ID LK atributos RK',
+       'CLASE ID HEREDA ID LK metodos RK',
+       'CLASE ID HEREDA ID LK RK',
+       'CLASE ID LK atributos metodos RK',
+       'CLASE ID LK atributos RK',
+       'CLASE ID LK metodos RK',
        'CLASE ID LK RK')
     def dec_clas(self, p):
-        print(p.HEREDA)
         return p
     
-    # @_('ATRIBUTOS dec_vars_cicle METODOS dec_func', 
-    #    'METODOS dec_func', 
-    #    'ATRIBUTOS dec_vars_cicle')
-    # def dec_clas_aux(self, p):
-    #     return p
+    @_('ATRIBUTOS DOTS dec_vars')
+    def atributos(self, p):
+        return p
+    
+    @_('METODOS DOTS dec_func')
+    def metodos(self, p):
+        return p
 
     ######## DEC_VARS ########
     @_('VARIABLES DOTS dec_vars_aux')
@@ -64,28 +71,28 @@ class Yacc(Parser):
         return p
 
     ######## PARAMETROS ########
-    @_('ID stashVar DOTS tipo_simple storeVariables COMMA parametros', 
-       'ID stashVar DOTS tipo_simple storeVariables')
+    @_('ID stashVar DOTS tipo_simple storeParams COMMA parametros', 
+       'ID stashVar DOTS tipo_simple storeParams')
     def parametros(self, p):
         return p
     
     ######## DEC_FUNC ########
-    @_('tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque dec_func',
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque',
-       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func', 
-       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func',
-       'VOID FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func',
-       'VOID FUNCION ID addFunction LP RP SEMICOLON bloque dec_func',
-       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque', 
-       'VOID FUNCION ID addFunction LP parametros RP SEMICOLON bloque',
-       'VOID FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque',
-       'VOID FUNCION ID addFunction LP RP SEMICOLON bloque')
+    @_('tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction dec_func', 
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque endFunction dec_func',
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction', 
+       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction',
+       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque endFunction',
+       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func endFunction', 
+       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func endFunction',
+       'VOID setType FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func endFunction',
+       'VOID setType FUNCION ID addFunction LP RP SEMICOLON bloque dec_func endFunction',
+       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction', 
+       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction',
+       'VOID setType FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction',
+       'VOID setType FUNCION ID addFunction LP RP SEMICOLON bloque endFunction')
     def dec_func(self, p):
         return p
 
@@ -240,6 +247,10 @@ class Yacc(Parser):
     def addFunction(self, p):
         self.manager.add_function(p[-1])
     
+    @_('endFunction :')
+    def endFunction(self, p):
+        self.manager.end_function()
+    
     @_('addPrincipal :')
     def addPrincipal(self, p):
         self.manager.create_principal()
@@ -255,6 +266,10 @@ class Yacc(Parser):
     @_('storeVariables :')
     def storeVariables(self, p):
         self.manager.store_variables()
+    
+    @_('storeParams :')
+    def storeParams(self, p):
+        self.manager.store_params()
 
     @_('printDirectory :')
     def printDirectory(self, p):

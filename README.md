@@ -56,6 +56,9 @@ Integrantes:
 - Revisar los cuadruplos -> orden
 - return 
 - Objetos 
+- FOR loop
 - Arreglar el 'enter' en declaración de variables
 - DUDAS --> Asignación de variables no declaradas
 - DUDAS --> Funciones de clases
+
+## Avance 6:

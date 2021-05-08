@@ -5,6 +5,10 @@ class Lex(Lexer):
     tokens = {
         PROGRAMA, CLASE, HEREDA, ATRIBUTOS, METODOS, PRINCIPAL, VARIABLES, ENTERO, FLOTANTE, CHAR, VOID, BOOLEAN,  FUNCION, LEE, REGRESA, ESCRIBE, MIENTRAS, HACER, DESDE, HASTA, SI, ENTONCES, SINO, ID, SEMICOLON, COMMA, LP, RP, LK, RK, ASSIGN, OP_REL, OP_ARIT_SEC, OP_ARIT_PRIM, OP_LOG, CTE_F, CTE_I, CTE_STRING, DOTS, DOT, LC, RC
     }
+
+    ignore = ' \t'
+    # ignore_comment = r'\#.*'
+    ignore_newline = r' \n+'
         
     ID = r'[a-zA-Z_][a-zA-Z_0-9]*'
 
@@ -55,12 +59,9 @@ class Lex(Lexer):
     DOT = r'\.'
     
     
-    ignore = ' \t'
-    ignore_newline = r' \n+'
-    
-    @_(r'\n+')
-    def ignore_newline(self, t):
-        self.lineno += t.value.count('\n')
+    # @_(r'\n+')
+    # def ignore_newline(self, t):
+    #     self.lineno += t.value.count('\n')
 
     def error(self, t):
         print("Illegal character '%s'" % t.value[0])

@@ -18,6 +18,7 @@ ARIT_SEC = "AritmeticoSecundario"
 ARIT_LOG = "AritmeticoLogico"
 ARIT_REL = "AritmeticoRelacional"
 
+
 TYPE_MATCHING = {
     ENTERO: {
         ENTERO: {

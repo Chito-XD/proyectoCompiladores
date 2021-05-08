@@ -1,4 +1,5 @@
 from functionDirectory import FunctionDirectory
+from memory import Memory
 from utils.constants import (
     PROCESO, 
     PRINCIPAL, 
@@ -7,8 +8,7 @@ from utils.constants import (
     ERROR,
     OPER_LOG,
     OPER_REL,
-    BOOLEANO,
-    ENTERO
+    BOOLEANO
 )
 from utils.queue import Queue
 from utils.stack import Stack
@@ -19,6 +19,7 @@ class ManagerSemantic():
 
     def __init__(self):
         self.directory = FunctionDirectory()
+        self.memory = Memory()
         self.currentType = None
         self.method_id = None
         self.currentVariables = Queue() # FI FO
@@ -28,10 +29,7 @@ class ManagerSemantic():
         self.operandos = Stack()
         self.tipos = Stack()
         self.saltos = Stack()
-        self.saltosNum = Stack()
 
-        # self.saltos = Queue()
-        
         # Cuadruplos
         self.cuadruplo_counter = 1
         self.cuadruplos = []
@@ -43,36 +41,39 @@ class ManagerSemantic():
     
     def set_method_id(self, curr_id):
         print('seteo', curr_id)
+        self.memory.reset_local_memory()
         self.method_id = curr_id
     
-    # def delete_current_type(self):
-    #     self.currentType = None
-    
-    # def delete_method_id(self):
-    #     self.method_id = None
-
     def create_function_directory(self, program_id):
         print("Se crea directorio", program_id)
         self.set_method_id(program_id)
         params = {
-            "tipo": PROCESO
+            "tipo": PROCESO,
+            "inicio": 0
         }
-        
+        self.create_cruadruplo('Goto', None, None, 'main')
         self.directory.createFunction(program_id, params)
     
     def add_function(self, function_name):
         print("Se creo la funcion", function_name)
         self.set_method_id(function_name)
         params = {
-            "tipo": self.currentType
+            "tipo": self.currentType,
+            "inicio": len(self.cuadruplos)
         }
         self.directory.createFunction(function_name, params)
+    
+    def end_function(self):
+        self.create_cruadruplo('END_FUNCTION', None, None, None)
     
     def create_principal(self):
         self.set_method_id(PRINCIPAL)
         params = {
-            "tipo": PRINCIPAL
+            "tipo": PRINCIPAL,
+            "inicio": len(self.cuadruplos)
         }
+        tam = len(self.cuadruplos)
+        self.cuadruplos[0] = ('Goto', None, None, tam)
         self.directory.createFunction(PRINCIPAL, params)
     
     def stash_variable(self, var):
@@ -84,11 +85,25 @@ class ManagerSemantic():
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
+            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id])
             params = {
                 "key": var,
-                "tipo": self.currentType
+                "tipo": self.currentType,
+                "direccion": address
             }
             self.directory.addLocalVariable(self.method_id, params)
+        
+    def store_params(self):
+        while (not self.currentVariables.isEmpty() ):
+            var = self.currentVariables.pop()
+            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id])
+            params = {
+                "key": var,
+                "tipo": self.currentType,
+                "direccion": address
+            }
+            self.directory.addParam(self.method_id, params)
+            # self.directory.addLocalVariable(self.method_id, params)
     
     def update_variable(self, var, value):
         params = {
