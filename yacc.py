@@ -124,13 +124,13 @@ class Yacc(Parser):
         return p
     
     ######## LLAMADA FUNCION ########
-    @_('ID LP funcion_aux RP',
-       'ID LP RP')
+    @_('ID createEra LP funcion_aux RP createGosub',
+       'ID createEra LP RP createGosub')
     def funcion(self, p):
         return p
     
-    @_('super_exp COMMA funcion_aux', 
-       'super_exp')
+    @_('super_exp evaluateParam COMMA funcion_aux', 
+       'super_exp evaluateParam')
     def funcion_aux(self, p):
         return p
 
@@ -242,6 +242,18 @@ class Yacc(Parser):
     @_('createDirectory :')
     def createDirectory(self, p):
         self.manager.create_function_directory(p[-1])
+
+    @_('createEra :')
+    def createEra(self, p):
+        self.manager.create_era(p[-1])
+
+    @_('evaluateParam :')
+    def evaluateParam(self, p):
+        self.manager.evaluate_param()
+    
+    @_('createGosub :')
+    def createGosub(self, p):
+        self.manager.create_gosub()
 
     @_('addFunction :')
     def addFunction(self, p):

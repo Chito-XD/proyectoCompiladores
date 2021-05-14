@@ -29,7 +29,7 @@ variables:
 }
 
 principal () {
-    f = pelos(1, 3*3);
+    pelos(1, 3*3);
     escribe(1*f+j);
     fact();
     lee(p); 

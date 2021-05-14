@@ -22,6 +22,8 @@ class ManagerSemantic():
         self.memory = Memory()
         self.currentType = None
         self.method_id = None
+        self.called_method = ""
+        self.current_param = 1
         self.currentVariables = Queue() # FI FO
 
         # Variables para cuadruplos
@@ -63,6 +65,20 @@ class ManagerSemantic():
         }
         self.directory.createFunction(function_name, params)
     
+    def create_era(self, method):
+        self.called_method = method
+        self.current_param = 1
+        self.create_cruadruplo("ERA", None, None, method)
+    
+    def evaluate_param(self):
+        param = self.operandos.pop()
+        self.create_cruadruplo('PARAM', param, None, self.current_param)
+        self.current_param += 1
+
+    
+    def create_gosub(self):
+        self.create_cruadruplo("GOSUB", None, None, self.called_method)
+
     def end_function(self):
         self.create_cruadruplo('END_FUNCTION', None, None, None)
     
