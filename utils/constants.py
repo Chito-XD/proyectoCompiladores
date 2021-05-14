@@ -1,5 +1,6 @@
 PROCESO = "N/P"
 PRINCIPAL = "PRINCIAPAL"
+CTE = "constante"
 ENTERO = "entero"
 FLOTANTE = "flotante"
 VOID = "void"
@@ -18,6 +19,74 @@ ARIT_SEC = "AritmeticoSecundario"
 ARIT_LOG = "AritmeticoLogico"
 ARIT_REL = "AritmeticoRelacional"
 
+GLOBAL_SPACE_ADDRESS = {
+    ENTERO: {
+        "min": 1000,
+        "max": 2999,
+        "current": 1000
+    },
+    FLOTANTE: {
+        "min": 3000,
+        "max": 5999,
+        "current": 3000
+    },
+    CHAR: {
+        "min": 6000,
+        "max": 8999,
+        "current": 6000
+    },
+    BOOLEANO: {
+        "min": 9000,
+        "max": 11999,
+        "current": 9000
+    }
+}
+
+LOCAL_SPACE_ADDRESS = {
+    ENTERO: {
+        "min": 12000,
+        "max": 14999,
+        "current": 12000
+    },
+    FLOTANTE: {
+        "min": 13000,
+        "max": 15999,
+        "current": 13000
+    },
+    CHAR: {
+        "min": 16000,
+        "max": 18999,
+        "current": 16000
+    },
+    BOOLEANO: {
+        "min": 19000,
+        "max": 21999,
+        "current": 19000
+    }
+}
+
+CTE_SPACE_ADDRESS = {
+    ENTERO: {
+        "min": 50,
+        "max": 100,
+        "current": 50
+    },
+    FLOTANTE: {
+        "min": 3000,
+        "max": 5999,
+        "current": 3000
+    },
+    CHAR: {
+        "min": 6000,
+        "max": 8999,
+        "current": 6000
+    },
+    BOOLEANO: {
+        "min": 9000,
+        "max": 11999,
+        "current": 9000
+    }
+}
 
 TYPE_MATCHING = {
     ENTERO: {

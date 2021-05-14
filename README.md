@@ -51,14 +51,23 @@ Integrantes:
 *Pendientes*
 - Cuadruplos de llamadas de funciones
 - Asignación de variables a llamadas
-- Guardar arrays o matrices
 - Escribir atributos de clases
 - Revisar los cuadruplos -> orden
 - return 
 - Objetos 
 - FOR loop
 - Arreglar el 'enter' en declaración de variables
-- DUDAS --> Asignación de variables no declaradas
 - DUDAS --> Funciones de clases
 
 ## Avance 6:
+- Flujo de cruadruplos para funciones
+- Cuadruplos para llamada de funciones
+- Adición de lógica de memoria global, local y cte
+- Fix de 'enter' en dec de variables
+
+
+*Pendientes*
+- Objetos 
+- FOR loop
+- return
+- DUDAS --> Funciones de clases

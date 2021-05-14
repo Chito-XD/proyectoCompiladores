@@ -15,7 +15,10 @@ from utils.constants import (
     ENTERO,
     CHAR,
     ID,
-    BOOLEANO
+    BOOLEANO,
+    GLOBAL_SPACE_ADDRESS,
+    LOCAL_SPACE_ADDRESS,
+    CTE_SPACE_ADDRESS
 )
 
 def get_operator_type(operator):
@@ -32,7 +35,22 @@ def get_operator_type(operator):
     else:
         return None
 
-def get_type_variable(var):
+def get_type_from_address(address):
+    for key in GLOBAL_SPACE_ADDRESS.keys():
+        if address >= GLOBAL_SPACE_ADDRESS[key]["min"] and address <= GLOBAL_SPACE_ADDRESS[key]["max"]:
+            return key
+        
+    for key in LOCAL_SPACE_ADDRESS.keys():
+        if address >= LOCAL_SPACE_ADDRESS[key]["min"] and address <= LOCAL_SPACE_ADDRESS[key]["max"]:
+            return key
+        
+    for key in CTE_SPACE_ADDRESS.keys():
+        if address >= CTE_SPACE_ADDRESS[key]["min"] and address <= CTE_SPACE_ADDRESS[key]["max"]:
+            return key
+    
+    raise Exception("-> No memory range found")
+
+def get_cte_variable(var):
     if re.search(r'([0-9]+)(\.)([0-9]+)', var):
         return FLOTANTE
     elif re.search(r'[0-9]+', var):

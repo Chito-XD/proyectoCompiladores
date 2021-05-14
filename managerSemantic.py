@@ -12,7 +12,7 @@ from utils.constants import (
 )
 from utils.queue import Queue
 from utils.stack import Stack
-from utils.types import get_type_operation, evaluate_operation, get_type_variable
+from utils.types import get_type_operation, evaluate_operation, get_cte_variable
 
 
 class ManagerSemantic():
@@ -101,7 +101,7 @@ class ManagerSemantic():
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
-            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id])
+            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id]["tipo_retorno"])
             params = {
                 "key": var,
                 "tipo": self.currentType,
@@ -112,7 +112,7 @@ class ManagerSemantic():
     def store_params(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
-            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id])
+            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id]["tipo_retorno"])
             params = {
                 "key": var,
                 "tipo": self.currentType,
@@ -130,13 +130,19 @@ class ManagerSemantic():
 
     def insert_operando(self, operando):
         print("voy a insertar ", operando)
-        self.operandos.add(operando)
-        tipo_op = get_type_variable(operando)
-        if not tipo_op:
+        tipo_operando = get_cte_variable(operando)
+        if not tipo_operando:
             var = self.directory.get_variable(self.method_id, operando)
-            tipo_op = var["tipo"]
-        print(f"el tipo de {operando} es {tipo_op}")
-        self.tipos.add(tipo_op)
+            tipo_operando = var["tipo"]
+            address = var["direccion"]
+        else:
+            address = self.memory.get_cte_address(tipo_operando, operando)
+
+        # self.operandos.add(operando)
+        self.operandos.add(address)
+
+        print(f"el tipo de {operando} es {tipo_operando}")
+        self.tipos.add(tipo_operando)
     
     def insert_operador(self, operador):
         print("insert operador", operador)
@@ -187,11 +193,12 @@ class ManagerSemantic():
 
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
-            # result = evaluate_operation(op_izq, op_der, op)
-            result = f'temporal_{self.cuadruplo_counter}'
+            # result = f'temporal_{self.cuadruplo_counter}'
+            temporal_address = self.memory.set_memory_address(operation_type, self.directory.directory[self.method_id]["tipo_retorno"])
+
             self.cuadruplo_counter += 1
-            self.create_cruadruplo(op, op_izq, op_der, result)
-            self.operandos.add(result)
+            self.create_cruadruplo(op, op_izq, op_der, temporal_address)
+            self.operandos.add(temporal_address)
             self.tipos.add(operation_type)
         else:
             raise Exception(f"No se puede evaluar -> {op_izq} {op} {op_der}")
