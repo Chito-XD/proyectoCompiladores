@@ -20,11 +20,17 @@ variables:
 
 void funcion pelos (y : entero);
 variables:
-    x: entero;
+    x, i: entero;
 {
     x = y;
     mientras (x<10) hacer {
         x = x + 1;
+    }
+
+    x = 1;
+
+    desde i = 0 hasta x * 5 hacer {
+        y = 2 * i;
     }
 }
 

@@ -326,6 +326,13 @@ class ManagerSemantic():
         self.create_cruadruplo_no_lin("Goto", None, RetNum)
         self.cuadruplos[Falso] = (a,b,sTam)
 
+    def EntraFor(self):
+        Tam = len(self.cuadruplos)
+        self.saltos.add(Tam)
+
+    def SaleFor(self):
+        Reg = self.saltos.pop()
+        self.create_cruadruplo_no_lin("gotoFor", None, Reg)
 
     def print_directory(self):
         print("")

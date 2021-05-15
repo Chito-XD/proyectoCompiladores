@@ -159,7 +159,7 @@ class Yacc(Parser):
     def lectura_aux(self, p):
         return p
     
-    ####### DECISION ########
+    ####### DECISION #meterActual#######
     @_('SI LP super_exp RP revisar_estatuto ENTONCES  bloque goto_revisar SINO bloque end_estatuto', 
        'SI LP super_exp RP revisar_estatuto ENTONCES bloque end_estatuto')
     def decision(self, p):
@@ -168,7 +168,7 @@ class Yacc(Parser):
     ####### REPETICION ######## 
     # revisar el desde
     @_('MIENTRAS meterActual LP super_exp RP gotoWhile HACER bloque SaleWhile', 
-       'DESDE ID ASSIGN super_exp HASTA super_exp HACER bloque')
+       'DESDE ID insertOperando ASSIGN insertOperador super_exp crearAsignacion HASTA super_exp EntraFor HACER bloque SaleFor')
     def repeticion(self, p):
         return p
     
@@ -355,3 +355,11 @@ class Yacc(Parser):
     @_('delete_back :')
     def delete_back(self, p):
         self.manager.manage_back_operator(False)
+
+    @_('SaleFor :')
+    def SaleFor(self, p):
+        self.manager.SaleFor()
+        
+    @_('EntraFor :')
+    def EntraFor(self, p):
+        self.manager.EntraFor()
