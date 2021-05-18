@@ -1,4 +1,4 @@
-PROCESO = "N/P"
+PROCESO = "PROCESO"
 PRINCIPAL = "PRINCIAPAL"
 CTE = "constante"
 ENTERO = "entero"

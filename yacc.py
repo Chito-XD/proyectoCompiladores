@@ -11,14 +11,14 @@ class Yacc(Parser):
 
     
     ######## PROGRAMA ########
-    @_('PROGRAMA ID createDirectory SEMICOLON dec_clas dec_vars dec_func principal',
-       'PROGRAMA ID createDirectory SEMICOLON dec_clas dec_vars principal',
-       'PROGRAMA ID createDirectory SEMICOLON dec_clas dec_func principal', 
-       'PROGRAMA ID createDirectory SEMICOLON dec_clas principal',
-       'PROGRAMA ID createDirectory SEMICOLON dec_vars dec_func principal', 
-       'PROGRAMA ID createDirectory SEMICOLON dec_vars principal', 
-       'PROGRAMA ID createDirectory SEMICOLON dec_func principal', 
-       'PROGRAMA ID createDirectory SEMICOLON principal')
+    @_('PROGRAMA ID createDirectory SEMICOLON dec_clas createMainClass dec_vars dec_func principal',
+       'PROGRAMA ID createDirectory SEMICOLON dec_clas createMainClass dec_vars principal',
+       'PROGRAMA ID createDirectory SEMICOLON dec_clas createMainClass dec_func principal', 
+       'PROGRAMA ID createDirectory SEMICOLON dec_clas createMainClass principal',
+       'PROGRAMA ID createDirectory SEMICOLON createMainClass dec_vars dec_func principal', 
+       'PROGRAMA ID createDirectory SEMICOLON createMainClass dec_vars principal', 
+       'PROGRAMA ID createDirectory SEMICOLON createMainClass dec_func principal', 
+       'PROGRAMA ID createDirectory SEMICOLON createMainClass principal')
     def program(self, p):
         return p
 
@@ -28,18 +28,26 @@ class Yacc(Parser):
         return p
     
     ######## DEC_CLAS ########
-    @_('CLASE ID HEREDA ID LK atributos metodos RK',
-       'CLASE ID HEREDA ID LK atributos RK',
-       'CLASE ID HEREDA ID LK metodos RK',
-       'CLASE ID HEREDA ID LK RK',
-       'CLASE ID LK atributos metodos RK',
-       'CLASE ID LK atributos RK',
-       'CLASE ID LK metodos RK',
-       'CLASE ID LK RK')
+    @_('CLASE ID createClass HEREDA ID LK atributos metodos RK',
+       'CLASE ID createClass HEREDA ID LK atributos RK',
+       'CLASE ID createClass HEREDA ID LK metodos RK',
+       'CLASE ID createClass HEREDA ID LK RK',
+       'CLASE ID createClass LK atributos metodos RK',
+       'CLASE ID createClass LK atributos RK',
+       'CLASE ID createClass LK metodos RK',
+       'CLASE ID createClass LK RK',
+       'CLASE ID createClass HEREDA ID LK atributos metodos RK dec_clas',
+       'CLASE ID createClass HEREDA ID LK atributos RK dec_clas',
+       'CLASE ID createClass HEREDA ID LK metodos RK dec_clas',
+       'CLASE ID createClass HEREDA ID LK RK dec_clas',
+       'CLASE ID createClass LK atributos metodos RK dec_clas',
+       'CLASE ID createClass LK atributos RK dec_clas',
+       'CLASE ID createClass LK metodos RK dec_clas',
+       'CLASE ID createClass LK RK dec_clas')
     def dec_clas(self, p):
         return p
     
-    @_('ATRIBUTOS DOTS dec_vars')
+    @_('ATRIBUTOS DOTS dec_vars_aux')
     def atributos(self, p):
         return p
     
@@ -85,10 +93,10 @@ class Yacc(Parser):
        'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction',
        'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction',
        'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque endFunction',
-       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque dec_func endFunction', 
-       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON bloque dec_func endFunction',
-       'VOID setType FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque dec_func endFunction',
-       'VOID setType FUNCION ID addFunction LP RP SEMICOLON bloque dec_func endFunction',
+       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction dec_func ', 
+       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction dec_func ',
+       'VOID setType FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction dec_func ',
+       'VOID setType FUNCION ID addFunction LP RP SEMICOLON bloque endFunction dec_func ',
        'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction', 
        'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction',
        'VOID setType FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction',
@@ -241,7 +249,15 @@ class Yacc(Parser):
 ######## PUNTOS NEURALGICOS ######## 
     @_('createDirectory :')
     def createDirectory(self, p):
-        self.manager.create_function_directory(p[-1])
+        self.manager.create_function_directory()
+    
+    @_('createClass :')
+    def createClass(self, p):
+        self.manager.create_class(p[-1])
+    
+    @_('createMainClass :')
+    def createMainClass(self, p):
+        self.manager.create_class('Main')
 
     @_('createEra :')
     def createEra(self, p):

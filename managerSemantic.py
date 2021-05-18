@@ -22,6 +22,7 @@ class ManagerSemantic():
         self.memory = Memory()
         self.currentType = None
         self.method_id = None
+        self.class_id = None
         self.called_method = ""
         self.current_param = 1
         self.currentVariables = Queue() # FI FO
@@ -46,15 +47,23 @@ class ManagerSemantic():
         self.memory.reset_local_memory()
         self.method_id = curr_id
     
-    def create_function_directory(self, program_id):
-        print("Se crea directorio", program_id)
-        self.set_method_id(program_id)
+    def set_class_id(self, class_id):
+        print('la clase es', class_id)
+        self.class_id = class_id
+    
+    def create_class(self, class_name):
+        print('creo clase', class_name)
+        self.set_class_id(class_name)
+        self.set_method_id(class_name)
+        self.directory.createClass(class_name)
         params = {
             "tipo": PROCESO,
-            "inicio": 0
+            "inicio": len(self.cuadruplos)
         }
+        self.directory.createFunction(class_name, class_name, params)
+
+    def create_function_directory(self):
         self.create_cruadruplo('Goto', None, None, 'main')
-        self.directory.createFunction(program_id, params)
     
     def add_function(self, function_name):
         print("Se creo la funcion", function_name)
@@ -63,7 +72,7 @@ class ManagerSemantic():
             "tipo": self.currentType,
             "inicio": len(self.cuadruplos)
         }
-        self.directory.createFunction(function_name, params)
+        self.directory.createFunction(self.class_id, function_name, params)
     
     def create_era(self, method):
         self.called_method = method
@@ -90,7 +99,7 @@ class ManagerSemantic():
         }
         tam = len(self.cuadruplos)
         self.cuadruplos[0] = ('Goto', None, None, tam)
-        self.directory.createFunction(PRINCIPAL, params)
+        self.directory.createFunction(self.class_id, PRINCIPAL, params)
     
     def stash_variable(self, var):
         print("Añadiendo", var, "a la tabla de variables")
@@ -101,38 +110,39 @@ class ManagerSemantic():
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
-            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id]["tipo_retorno"])
+            tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+            address = self.memory.set_memory_address(self.currentType, tipo_retorno)
             params = {
                 "key": var,
                 "tipo": self.currentType,
                 "direccion": address
             }
-            self.directory.addLocalVariable(self.method_id, params)
+            self.directory.addLocalVariable(self.class_id, self.method_id, params)
         
     def store_params(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
-            address = self.memory.set_memory_address(self.currentType, self.directory.directory[self.method_id]["tipo_retorno"])
+            tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+            address = self.memory.set_memory_address(self.currentType, tipo_retorno)
             params = {
                 "key": var,
                 "tipo": self.currentType,
                 "direccion": address
             }
-            self.directory.addParam(self.method_id, params)
-            # self.directory.addLocalVariable(self.method_id, params)
+            self.directory.addParam(self.class_id, self.method_id, params)
     
     def update_variable(self, var, value):
         params = {
             "key": var,
             "value": value
         }
-        self.directory.updateVariable(self.method_id, params)
+        self.directory.updateVariable(self.class_id, self.method_id, params)
 
     def insert_operando(self, operando):
         print("voy a insertar ", operando)
         tipo_operando = get_cte_variable(operando)
         if not tipo_operando:
-            var = self.directory.get_variable(self.method_id, operando)
+            var = self.directory.get_variable(self.class_id, self.method_id, operando)
             tipo_operando = var["tipo"]
             address = var["direccion"]
         else:
@@ -163,24 +173,19 @@ class ManagerSemantic():
         self.cuadruplos.append((goto, cond, destino))
 
     def primary_arithmetic_operation(self):
-        # print("primary")
         if self.operadores.peek() in OPER_ARIT_PRIM:
             self.arithmetic_ops()
     
     def secondary_arithmetic_operation(self):
-        # print('secondary')
         if self.operadores.peek() in OPER_ARIT_SEC:
             self.arithmetic_ops()
     
     def logical_operation(self):
-        # print('logical')
         if self.operadores.peek() in OPER_LOG:
             self.arithmetic_ops()
     
     def relational_operation(self):
-        # print('relational')
         if self.operadores.peek() in OPER_REL:
-            print("Operator:", self.operadores.peek())
             self.arithmetic_ops()
 
     def arithmetic_ops(self):
@@ -194,17 +199,17 @@ class ManagerSemantic():
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
             # result = f'temporal_{self.cuadruplo_counter}'
-            temporal_address = self.memory.set_memory_address(operation_type, self.directory.directory[self.method_id]["tipo_retorno"])
+            tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+            temporal_address = self.memory.set_memory_address(operation_type, tipo_retorno)
 
             self.cuadruplo_counter += 1
             self.create_cruadruplo(op, op_izq, op_der, temporal_address)
             self.operandos.add(temporal_address)
             self.tipos.add(operation_type)
         else:
-            raise Exception(f"No se puede evaluar -> {op_izq} {op} {op_der}")
+            raise Exception(f"==> TYPE MISTMATCH - No se puede evaluar -> {op_izq} {op} {op_der}")
 
     def create_asignacion(self):
-        print("Crear asignacion")
         res = self.operandos.pop()
         tipo_resultado = self.tipos.pop()
         lado_izq = self.operandos.pop()
@@ -214,6 +219,8 @@ class ManagerSemantic():
         operator_type = get_type_operation(tipo_resultado, tipo_izq, Operator)
         if operator_type is not ERROR:
             self.create_cruadruplo("=", res, None, lado_izq)
+        else: 
+            raise Exception("==> TYPE MISTMATCH - Ambos lados de la aisgnacion son de diferente tipo")
         
 
     def create_escritura(self):
@@ -227,7 +234,7 @@ class ManagerSemantic():
     def create_lectura(self, op):
         if isinstance(op, tuple):
             op = op[1]
-        self.directory.get_variable(self.method_id, op)
+        self.directory.get_variable(self.class_id, self.method_id, op)
         self.create_cruadruplo("LECTURA", None, None, op)
         
     
@@ -335,16 +342,9 @@ class ManagerSemantic():
         self.create_cruadruplo_no_lin("gotoFor", None, Reg)
 
     def print_directory(self):
-        print("")
-        for key in self.directory.directory.keys():
-            print('function ---> ', key)
-            print(self.directory.directory[key])
-            var = self.directory.directory[key]["directorio_variables"].variables
-            print(var)
-            print("")
+        self.directory.print_directory()
        
         cont = 0
-        
         for cu in self.cuadruplos:
             print(cont, cu)
             cont = cont+1

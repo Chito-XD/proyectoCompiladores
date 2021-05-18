@@ -1,10 +1,37 @@
 programa pruebaPrograma ;
 
+Clase Cabeza {
+    atributos:
+        f: flotante;
+        e: entero;
+    
+    metodos: 
+    void funcion uno (); {
+        f = 1.3;
+    }
+
+    entero funcion dos(); {
+        escribe(1*2);
+    }
+}
+
+
+Clase Brazo {
+    atributos:
+        f: flotante;
+
+    metodos:
+    entero funcion dos(); {
+        escribe(1*2);
+    }
+}
+
+
 variables:
     k[2], i, j, p, c, a, b, d, e, f: entero; 
     r: flotante;
     
-entero funcion fact (j : entero); 
+entero funcion fact (r : entero); 
 variables:
     i : entero;
 { 
