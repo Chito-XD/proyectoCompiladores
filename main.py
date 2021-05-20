@@ -1,6 +1,7 @@
 
 from lex import Lex
 from yacc import Yacc
+from vm.virtual_macine import VirtualMachine
 
 
 lexer = Lex()
@@ -22,5 +23,12 @@ if text:
     #     print('type=%r, value=%r' % (tok.type, tok.value))
     if parser.parse(lexer.tokenize(text)):
         print('Correct syntaxis')
+
+        cuadruplos = parser.manager.cuadruplos
+        directory = parser.manager.directory
+
+        vm = VirtualMachine(cuadruplos, directory)
+        vm.run_cuadruplos()
+
     else:
         print('Incorrect syntaxis')

@@ -12,7 +12,7 @@ from utils.constants import (
 )
 from utils.queue import Queue
 from utils.stack import Stack
-from utils.types import get_type_operation, evaluate_operation, get_cte_variable
+from utils.types import get_type_operation, get_cte_variable
 
 
 class ManagerSemantic():
@@ -340,14 +340,6 @@ class ManagerSemantic():
     def SaleFor(self):
         Reg = self.saltos.pop()
         self.create_cruadruplo_no_lin("gotoFor", None, Reg)
-
-    def print_directory(self):
-        self.directory.print_directory()
-       
-        cont = 0
-        for cu in self.cuadruplos:
-            print(cont, cu)
-            cont = cont+1
 
 
     

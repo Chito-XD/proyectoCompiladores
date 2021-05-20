@@ -23,7 +23,7 @@ class Yacc(Parser):
         return p
 
     ######## PRINCIPAL ########
-    @_('PRINCIPAL addPrincipal LP RP bloque printDirectory')
+    @_('PRINCIPAL addPrincipal LP RP bloque')
     def principal(self, p):
         return p
     
@@ -299,10 +299,6 @@ class Yacc(Parser):
     def storeParams(self, p):
         self.manager.store_params()
 
-    @_('printDirectory :')
-    def printDirectory(self, p):
-        self.manager.print_directory()
-    
     @_('insertOperador :')
     def insertOperador(self, p):
         self.manager.insert_operador(p[-1])

@@ -71,16 +71,3 @@ def get_type_operation(op1, op2, operator):
         return TYPE_MATCHING[op1][op2][op]
     else: 
         raise Exception(f"Operator no mapeado -> {operator}")
-
-def evaluate_operation(op1, op2, operator):
-    # Operador lógico
-    if operator in OPER_LOG:
-        if operator == '&':
-            return (op1 and op2)
-        else:
-            return (op1 or op2)
-    elif operator in OPER_REL:
-        return False
-    else:
-        # Caso base (Operadores aritméticos, relacionales)
-        return eval( op1 + operator + op2)
