@@ -13,7 +13,7 @@ from utils.constants import (
 )
 from utils.queue import Queue
 from utils.stack import Stack
-from utils.types import get_type_operation, evaluate_operation, get_cte_variable, get_type_from_address
+from utils.types import get_type_operation, get_cte_variable, get_type_from_address
 
 
 class ManagerSemantic():
@@ -432,14 +432,6 @@ class ManagerSemantic():
                 self.create_cruadruplo("=", res, None, lado_izq)
                 self.operandos.add(lado_izq)
                 self.tipos.add(tipo_izq)
-
-    def print_directory(self):
-        self.directory.print_directory()
-       
-        cont = 0
-        for cu in self.cuadruplos:
-            print(cont, cu)
-            cont = cont+1
 
 
     

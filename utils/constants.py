@@ -14,10 +14,17 @@ OPER_ARIT_PRIM = ['*', '/']
 OPER_ARIT_SEC = ['+', '-']
 OPER_LOG = ['&', '|']
 OPER_REL = ['<>', '<', '>', '<=', '>=', '==', '!=']
+ALL_OPERATIONS = OPER_ARIT_PRIM + OPER_ARIT_SEC + OPER_LOG + OPER_REL
 ARIT_PRIM = "AritmeticoPrimario"
 ARIT_SEC = "AritmeticoSecundario"
 ARIT_LOG = "AritmeticoLogico"
 ARIT_REL = "AritmeticoRelacional"
+
+GOTO = "Goto"
+GOTO_F = "GotoF"
+GOTO_V = "GotoV"
+LECTURA = "LECTURA"
+ESCRIBE = "ESCRIBE"
 
 GLOBAL_SPACE_ADDRESS = {
     ENTERO: {
