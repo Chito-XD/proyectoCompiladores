@@ -269,8 +269,8 @@ class ManagerSemantic():
     def create_lectura(self, op):
         if isinstance(op, tuple):
             op = op[1]
-        self.directory.get_variable(self.class_id, self.method_id, op)
-        self.create_cruadruplo("LECTURA", None, None, op)
+        var = self.directory.get_variable(self.class_id, self.method_id, op)
+        self.create_cruadruplo("LECTURA", None, None, var["direccion"])
         
     
     def revisar_estatuo(self):
