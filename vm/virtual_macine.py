@@ -14,6 +14,7 @@ from utils.constants import (
     GOTO,
     GOTO_F,
     ERA,
+    REGRESA,
     PARAM,
     GOSUB,
     END_FUNCTION
@@ -151,6 +152,9 @@ class VirtualMachine:
                     pointer = int(current_cuadruplo[2])
                 else:
                     pointer += 1
+            
+            elif operation == REGRESA:
+                pointer += 1
 
             elif operation == ERA:
                 pointer = self.run_method(current_cuadruplo, pointer+1)

@@ -264,6 +264,10 @@ class ManagerSemantic():
     def create_escritura_exp(self):
         Res = self.operandos.pop()
         self.create_cruadruplo("ESCRIBE", None, None, Res)
+    
+    def create_return(self):
+        operando = self.operandos.pop()
+        self.create_cruadruplo("REGRESA", None, None, operando)
 
     
     def create_lectura(self, op):

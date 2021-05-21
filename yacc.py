@@ -143,7 +143,7 @@ class Yacc(Parser):
         return p
 
     ######## RETORNO ########
-    @_('REGRESA LP super_exp RP SEMICOLON')
+    @_('REGRESA LP super_exp createReturn RP SEMICOLON')
     def retorno(self, p):
         return p
     
@@ -278,6 +278,10 @@ class Yacc(Parser):
     @_('endFunction :')
     def endFunction(self, p):
         self.manager.end_function()
+    
+    @_('createReturn :')
+    def createReturn(self, p):
+        self.manager.create_return()
     
     @_('addPrincipal :')
     def addPrincipal(self, p):

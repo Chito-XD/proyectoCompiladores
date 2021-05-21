@@ -54,7 +54,7 @@ class Lex(Lexer):
 
     CTE_F = r'([0-9]+)(\.)([0-9]+)'
     CTE_I = r'[0-9]+'
-    CTE_STRING = r'\".*\"'
+    CTE_STRING = r'\"(\w| )*\"'
     DOTS = r'\:'
     DOT = r'\.'
     
