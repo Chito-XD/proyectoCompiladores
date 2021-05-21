@@ -8,7 +8,8 @@ from utils.constants import (
     ERROR,
     OPER_LOG,
     OPER_REL,
-    BOOLEANO
+    BOOLEANO,
+    ENTERO
 )
 from utils.queue import Queue
 from utils.stack import Stack
@@ -333,13 +334,70 @@ class ManagerSemantic():
         self.create_cruadruplo_no_lin("Goto", None, RetNum)
         self.cuadruplos[Falso] = (a,b,sTam)
 
-    def EntraFor(self):
-        Tam = len(self.cuadruplos)
-        self.saltos.add(Tam)
-
     def SaleFor(self):
         Reg = self.saltos.pop()
-        self.create_cruadruplo_no_lin("gotoFor", None, Reg)
+        Aux = Reg-1
+        self.create_cruadruplo_no_lin("gotoFor", None, Aux)
+        Temp = self.cuadruplos[Reg]
+        N = len(self.cuadruplos)
+        sN = str(N)
+
+        Cont = 0
+        
+        for a in Temp:
+            break
+
+        for b in Temp:
+            if Cont == 1:
+                break
+            
+            Cont = Cont + 1
+
+        self.cuadruplos[Reg] = (a, b, sN)
+
+    def igualdadFor(self):
+        ladoder = self.operandos.pop()
+        ladoizq = self.operandos.pop()
+        tipoder = self.tipos.pop()
+        tipoizq = self.tipos.pop()
+
+        operation_type = get_type_operation(tipoizq, tipoder, "==")
+        if operation_type is not ERROR:
+            tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+            temporal_address = self.memory.set_memory_address(operation_type, tipo_retorno)
+            self.create_cruadruplo("==", ladoizq, ladoder, temporal_address)
+            self.operandos.add(ladoizq)
+            self.tipos.add(tipoizq)
+            Aux = len(self.cuadruplos)
+            self.saltos.add(Aux)
+            self.create_cruadruplo_no_lin("GotoF", temporal_address, "?")
+
+    def sumaFor(self):
+        cont = self.operandos.pop()
+        tipo = self.tipos.pop()
+
+        operation_type = get_type_operation(tipo, ENTERO, "+")
+        if operation_type is not ERROR:
+            tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+            temporal_address = self.memory.set_memory_address(operation_type, tipo_retorno)
+            Suma = self.memory.get_cte_address(ENTERO, 1)
+            self.create_cruadruplo("+", cont, Suma, temporal_address)
+            self.create_cruadruplo("=", temporal_address, None, cont)
+
+
+    def create_asignacionLoop(self):
+            print("Crear asignacion")
+            res = self.operandos.pop()
+            tipo_resultado = self.tipos.pop()
+            lado_izq = self.operandos.pop()
+            tipo_izq = self.tipos.pop()
+            Operator = self.operadores.pop()
+
+            operator_type = get_type_operation(tipo_resultado, tipo_izq, Operator)
+            if operator_type is not ERROR:
+                self.create_cruadruplo("=", res, None, lado_izq)
+                self.operandos.add(lado_izq)
+                self.tipos.add(tipo_izq)
 
     def print_directory(self):
         self.directory.print_directory()

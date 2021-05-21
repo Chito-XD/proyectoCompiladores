@@ -176,7 +176,7 @@ class Yacc(Parser):
     ####### REPETICION ######## 
     # revisar el desde
     @_('MIENTRAS meterActual LP super_exp RP gotoWhile HACER bloque SaleWhile', 
-       'DESDE ID insertOperando ASSIGN insertOperador super_exp crearAsignacion HASTA super_exp EntraFor HACER bloque SaleFor')
+       'DESDE ID insertOperando ASSIGN insertOperador super_exp crearAsignacionLoop HASTA super_exp igualdadFor HACER bloque sumaFor SaleFor')
     def repeticion(self, p):
         return p
     
@@ -301,7 +301,7 @@ class Yacc(Parser):
 
     @_('printDirectory :')
     def printDirectory(self, p):
-        self.manager.print_directory()
+        self.manager.print_directory() 
     
     @_('insertOperador :')
     def insertOperador(self, p):
@@ -376,6 +376,14 @@ class Yacc(Parser):
     def SaleFor(self, p):
         self.manager.SaleFor()
         
-    @_('EntraFor :')
-    def EntraFor(self, p):
-        self.manager.EntraFor()
+    @_('igualdadFor :')
+    def igualdadFor(self, p):
+        self.manager.igualdadFor()
+
+    @_('sumaFor :')
+    def sumaFor(self, p):
+        self.manager.sumaFor()
+
+    @_('crearAsignacionLoop :')
+    def crearAsignacionLoop(self, p):
+        self.manager.create_asignacionLoop()
