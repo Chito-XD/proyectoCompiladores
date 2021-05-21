@@ -8,4 +8,14 @@ principal () {
     lee(b);
     a = b * 4;
     escribe(a);
+    si (a != 20) entonces {
+        escribe(1);
+    } sino {
+        escribe("Hola");
+    }
+
+    mientras (a<30) hacer {
+        escribe(a);
+        a = a + 1;
+    }
 }
