@@ -22,7 +22,6 @@ ARIT_REL = "AritmeticoRelacional"
 
 GOTO = "Goto"
 GOTO_F = "GotoF"
-GOTO_V = "GotoV"
 LECTURA = "LECTURA"
 ESCRIBE = "ESCRIBE"
 

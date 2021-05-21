@@ -12,11 +12,7 @@ from utils.constants import (
     ESCRIBE,
     ASSIGN,
     GOTO,
-    GOTO_F,
-    GOTO_V,
-    GLOBAL_SPACE_ADDRESS,
-    LOCAL_SPACE_ADDRESS,
-    CTE_SPACE_ADDRESS
+    GOTO_F
 )
 
 class VirtualMachine:
@@ -36,6 +32,11 @@ class VirtualMachine:
         self.arrange_cte_memory()
 
         self.print_directory()
+        # a = 0
+        # for i in cuad:
+        #     print(a, i)
+        #     a += 1
+        # print("")
     
     def arrange_cte_memory(self):
         new_cte = {}
@@ -88,14 +89,17 @@ class VirtualMachine:
         self.run_cuadruplos(main_pointer)
     
     def run_cuadruplos(self, pointer=0):
-        while( pointer < len(self.cuadruplos)):
-            current_cuadruplo = self.cuadruplos[pointer]
-            print(pointer, current_cuadruplo)
 
+        while( pointer < len(self.cuadruplos)):
+
+            current_cuadruplo = self.cuadruplos[pointer]
             operation = current_cuadruplo[0]
+
+            print(pointer, current_cuadruplo)
 
             if operation == ASSIGN:
                 self.assign_value_from_addresses(current_cuadruplo[1], current_cuadruplo[3])
+                pointer += 1
 
             if operation in ALL_OPERATIONS:
                 op1 = self.get_value_from_address(current_cuadruplo[1])
@@ -103,7 +107,7 @@ class VirtualMachine:
 
                 result = self.evaluate_operation(op1, op2, operation)
                 self.set_value_from_address(current_cuadruplo[3], result)
-                # print("--> VM: OPERATION RESULT", result)
+                pointer += 1
             
             elif operation == LECTURA:
                 answer = input()
@@ -112,31 +116,25 @@ class VirtualMachine:
                 if answer_type != memory_addres:
                     raise Exception("==> INPUT MITMATCH", answer)
                 self.set_value_from_address(current_cuadruplo[3], answer)
+                pointer += 1
             
             elif operation == ESCRIBE:
                 print(self.get_value_from_address(current_cuadruplo[3]))
+                pointer += 1
 
-            # elif operation == GOTO:
-            #     pointer = int(current_cuadruplo[3])
-            #     print('?????????????????? GOTO ', self.cuadruplos[pointer])
-            
-            # elif operation == GOTO_F:
-            #     # TODO: Obtener el valor
-            #     condition = current_cuadruplo[1]
-            #     if condition is False:
-            #         pointer = int(current_cuadruplo[3])
-            #     else:
-            #         pointer += 1
+            elif operation == GOTO:
+                pointer = int(current_cuadruplo[2])
 
-            # elif GOTO_V: 
-            #     # TODO: Obtener el valor
-            #     condition = current_cuadruplo[1]
-            #     if condition is True:
-            #         pointer = int(current_cuadruplo[3])
-            #     else:
-            #         pointer += 1
+            elif operation == GOTO_F:
+                condition = self.get_value_from_address(current_cuadruplo[1])
+                if not condition:
+                    pointer = int(current_cuadruplo[2])
+                else:
+                    pointer += 1
+
+            # else: 
+            #     pointer += 1
             
-            pointer += 1
 
     
     def evaluate_operation(self, op1, op2, operator):
