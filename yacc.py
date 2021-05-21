@@ -85,22 +85,22 @@ class Yacc(Parser):
         return p
     
     ######## DEC_FUNC ########
-    @_('tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction dec_func', 
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction dec_func',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction dec_func',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque endFunction dec_func',
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction', 
-       'tipo_simple FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction',
-       'tipo_simple FUNCION ID addFunction LP RP SEMICOLON bloque endFunction',
-       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction dec_func ', 
-       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction dec_func ',
-       'VOID setType FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction dec_func ',
-       'VOID setType FUNCION ID addFunction LP RP SEMICOLON bloque endFunction dec_func ',
-       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON dec_vars bloque endFunction', 
-       'VOID setType FUNCION ID addFunction LP parametros RP SEMICOLON bloque endFunction',
-       'VOID setType FUNCION ID addFunction LP RP SEMICOLON dec_vars bloque endFunction',
-       'VOID setType FUNCION ID addFunction LP RP SEMICOLON bloque endFunction')
+    @_('tipo_simple FUNCION ID addFunction LP parametros RP dec_vars bloque endFunction dec_func', 
+       'tipo_simple FUNCION ID addFunction LP parametros RP bloque endFunction dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP dec_vars bloque endFunction dec_func',
+       'tipo_simple FUNCION ID addFunction LP RP bloque endFunction dec_func',
+       'tipo_simple FUNCION ID addFunction LP parametros RP dec_vars bloque endFunction', 
+       'tipo_simple FUNCION ID addFunction LP parametros RP bloque endFunction',
+       'tipo_simple FUNCION ID addFunction LP RP dec_vars bloque endFunction',
+       'tipo_simple FUNCION ID addFunction LP RP bloque endFunction',
+       'VOID setType FUNCION ID addFunction LP parametros RP dec_vars bloque endFunction dec_func ', 
+       'VOID setType FUNCION ID addFunction LP parametros RP bloque endFunction dec_func ',
+       'VOID setType FUNCION ID addFunction LP RP dec_vars bloque endFunction dec_func ',
+       'VOID setType FUNCION ID addFunction LP RP bloque endFunction dec_func ',
+       'VOID setType FUNCION ID addFunction LP parametros RP dec_vars bloque endFunction', 
+       'VOID setType FUNCION ID addFunction LP parametros RP bloque endFunction',
+       'VOID setType FUNCION ID addFunction LP RP dec_vars bloque endFunction',
+       'VOID setType FUNCION ID addFunction LP RP bloque endFunction')
     def dec_func(self, p):
         return p
 
