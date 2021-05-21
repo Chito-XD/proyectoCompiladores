@@ -4,11 +4,10 @@ variables:
     a, b : entero;
 
 void funcion pelos (x: entero, y: entero, z: entero)
-variables:
-    a : flotante;
 {
-    a = 3.5 * z;
+    a = 3 * z;
     escribe(a);
+    regresa(a);
 }
 
 
@@ -19,8 +18,9 @@ principal () {
     pelos(88, a, a+b*2*10);
     escribe(b);
     si (b > 0) entonces {
-        escribe(b);
+        escribe("Meno 3 rSE r");
     } sino {
-        escribe(99999);
+        escribe("mayor 3 SDF ");
     }
+    escribe(a);
 }
