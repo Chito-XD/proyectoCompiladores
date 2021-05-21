@@ -98,9 +98,13 @@ class FunctionDirectory():
     def get_tipo_retorno(self, class_name, function_name):
         return self.directory[class_name][function_name].get("tipo_retorno")
     
-
+    # regresa las variables de la tabla de variables
     def get_dir_variables(self, class_name, function_name):
         return self.directory[class_name][function_name]["directorio_variables"].variables
+    
+    # regresa el punto de inicio en los cuadruplos
+    def get_inicio(self, class_name, function_name):
+        return self.directory[class_name][function_name]["inicio"]
     
     # imprime el directorio de funciones
     def print_directory(self):

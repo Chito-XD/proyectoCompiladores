@@ -3,6 +3,14 @@ programa pruebaPrograma ;
 variables:
     a, b : entero;
 
+void funcion pelos ();
+variables:
+    a : flotante;
+{
+    a = 3.5;
+    escribe(a);
+}
+
 
 principal () {
     lee(b);
@@ -18,4 +26,5 @@ principal () {
         escribe(a);
         a = a + 1;
     }
+    pelos();
 }
