@@ -14,6 +14,7 @@ from utils.constants import (
     GOTO,
     GOTO_F,
     ERA,
+    PARAM,
     GOSUB,
     END_FUNCTION
 )
@@ -52,21 +53,32 @@ class VirtualMachine:
         print(self.cte_memory)
         print("")
     
-    def push_memory_stack(self, clas, function):
+    def pop_memory_stack(self):
+        del self.memory_stack[-1]
+        self.memory_pointer -= 1
+    
+    def push_memory_stack(self, clas, function, params=[]):
         main_process = self.directory.directory[clas]["proceso_global"]
 
         global_method_vars = self.directory.get_dir_variables(clas, main_process)
         current_method_vars = self.directory.get_dir_variables(clas, function)
 
+        if len(params) > 0:
+            for (index, var) in enumerate(current_method_vars):
+                if index < len(params):
+                    current_method_vars[var]["valor"] = params[index]
+                    continue
+                break
+        
         memory = {}
+
+        for key in current_method_vars.keys():
+            var_dir = current_method_vars[key]["direccion"]
+            memory[var_dir] = current_method_vars[key]["valor"]
         
         for key in global_method_vars.keys():
             var_dir = global_method_vars[key]["direccion"]
-            memory[var_dir] = None
-        
-        for key in current_method_vars.keys():
-            var_dir = current_method_vars[key]["direccion"]
-            memory[var_dir] = None
+            memory[var_dir] = global_method_vars[key]["valor"]
 
         self.memory_stack.append(memory)
         self.memory_pointer += 1
@@ -98,7 +110,7 @@ class VirtualMachine:
     
     def run_cuadruplos(self, pointer=0):
 
-        while( pointer < len(self.cuadruplos)):
+        while pointer < len(self.cuadruplos):
 
             current_cuadruplo = self.cuadruplos[pointer]
             operation = current_cuadruplo[0]
@@ -141,24 +153,49 @@ class VirtualMachine:
                     pointer += 1
 
             elif operation == ERA:
-                print("== ERA")
-                self.function_name = current_cuadruplo[3]
-                self.push_memory_stack(self.class_name, self.function_name)
-                pointer = self.directory.get_inicio(self.class_name, self.function_name)
-            
+                pointer = self.run_method(current_cuadruplo, pointer+1)
+
             elif operation == GOSUB:
-                print("== GOSUB")
-                pointer += 1
+                return pointer
             
             elif operation == END_FUNCTION:
-                print(" == END_FUNCTION")
-                pointer = 100000
+                return pointer
+            
+            elif operation == PARAM:
+                return pointer
 
             # else: 
             #     pointer += 1
-            
-
     
+
+    def run_method(self, current_cuadruplo, pointer):
+
+        current_pointer = pointer
+        param_values = []
+
+        while self.cuadruplos[current_pointer][0] != GOSUB:
+            if self.cuadruplos[current_pointer][0] == PARAM:
+                value = self.get_value_from_address(self.cuadruplos[current_pointer][1])
+                print("PARAM VALUE", value)
+                param_values.append(value)
+                current_pointer += 1
+            else:
+                current_pointer = self.run_cuadruplos(current_pointer)
+            
+        self.function_name = current_cuadruplo[3]
+        pointer = self.directory.get_inicio(self.class_name, self.function_name)
+
+        self.push_memory_stack(self.class_name, self.function_name, param_values)
+
+        self.run_cuadruplos(pointer)
+
+        # TODO: Logica del gosub
+        self.pop_memory_stack()
+
+        current_pointer += 1
+        return current_pointer
+        
+
     def evaluate_operation(self, op1, op2, operator):
         if operator in OPER_LOG:
             if operator == '&':

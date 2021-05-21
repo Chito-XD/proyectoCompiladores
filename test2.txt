@@ -3,28 +3,24 @@ programa pruebaPrograma ;
 variables:
     a, b : entero;
 
-void funcion pelos ();
+void funcion pelos (x: entero, y: entero, z: entero)
 variables:
     a : flotante;
 {
-    a = 3.5;
+    a = 3.5 * z;
     escribe(a);
 }
 
 
 principal () {
-    lee(b);
+    b = 5;
     a = b * 4;
     escribe(a);
-    si (a != 20) entonces {
-        escribe(1);
+    pelos(88, a, a+b*2*10);
+    escribe(b);
+    si (b > 0) entonces {
+        escribe(b);
     } sino {
-        escribe("Hola");
+        escribe(99999);
     }
-
-    mientras (a<30) hacer {
-        escribe(a);
-        a = a + 1;
-    }
-    pelos();
 }
