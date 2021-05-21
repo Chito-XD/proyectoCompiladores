@@ -26,9 +26,10 @@ if text:
 
         cuadruplos = parser.manager.cuadruplos
         directory = parser.manager.directory
+        cte_memory = parser.manager.memory.cte_vars
 
-        vm = VirtualMachine(cuadruplos, directory)
-        vm.run_cuadruplos()
+        vm = VirtualMachine(cuadruplos, directory, cte_memory)
+        vm.execute()
 
     else:
         print('Incorrect syntaxis')

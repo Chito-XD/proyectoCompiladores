@@ -1,0 +1,11 @@
+programa pruebaPrograma ;
+
+variables:
+    a, b : entero;
+
+
+principal () {
+    lee(b);
+    a = b * 4;
+    escribe(a);
+}

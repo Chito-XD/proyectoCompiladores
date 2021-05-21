@@ -98,10 +98,12 @@ class FunctionDirectory():
     def get_tipo_retorno(self, class_name, function_name):
         return self.directory[class_name][function_name].get("tipo_retorno")
     
+
+    def get_dir_variables(self, class_name, function_name):
+        return self.directory[class_name][function_name]["directorio_variables"].variables
     
     # imprime el directorio de funciones
     def print_directory(self):
-        print("")
         for class_name in self.directory.keys():
             print('=== CLASS --> ', class_name)
             for function in self.directory[class_name].keys():
