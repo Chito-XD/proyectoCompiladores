@@ -12,7 +12,10 @@ from utils.constants import (
     ESCRIBE,
     ASSIGN,
     GOTO,
-    GOTO_F
+    GOTO_F,
+    ERA,
+    GOSUB,
+    END_FUNCTION
 )
 
 class VirtualMachine:
@@ -23,8 +26,8 @@ class VirtualMachine:
 
         self.cte_memory = cte_memory
 
-        self.memoryStack = []
-        self.memory_pointer = 0
+        self.memory_stack = []
+        self.memory_pointer = -1
 
         self.class_name = "Main"
         self.function_name = "PRINCIAPAL"
@@ -32,11 +35,11 @@ class VirtualMachine:
         self.arrange_cte_memory()
 
         self.print_directory()
-        # a = 0
-        # for i in cuad:
-        #     print(a, i)
-        #     a += 1
-        # print("")
+        a = 0
+        for i in cuad:
+            print(a, i)
+            a += 1
+        print("")
     
     def arrange_cte_memory(self):
         new_cte = {}
@@ -64,23 +67,28 @@ class VirtualMachine:
         for key in current_method_vars.keys():
             var_dir = current_method_vars[key]["direccion"]
             memory[var_dir] = None
-        self.memoryStack.append(memory)
+
+        self.memory_stack.append(memory)
+        self.memory_pointer += 1
+
+        # print("MEMORY_STACK")
+        # print(self.memory_stack);
         
     def get_value_from_address(self, address):
         if self.cte_memory.get(address):
             return self.cte_memory.get(address)
-        elif self.memoryStack[self.memory_pointer].get(address):
-            return self.memoryStack[self.memory_pointer][address]
+        elif self.memory_stack[self.memory_pointer].get(address):
+            return self.memory_stack[self.memory_pointer][address]
         
-        self.memoryStack[self.memory_pointer][address] = None
+        self.memory_stack[self.memory_pointer][address] = None
         return None
     
     def assign_value_from_addresses(self, origin_add, target_add):
         value = self.get_value_from_address(origin_add)
-        self.memoryStack[self.memory_pointer][target_add] = value
+        self.memory_stack[self.memory_pointer][target_add] = value
 
     def set_value_from_address(self, address, value):
-        self.memoryStack[self.memory_pointer][address] = value
+        self.memory_stack[self.memory_pointer][address] = value
 
     def execute(self):
         # GOTO MAIN
@@ -131,6 +139,20 @@ class VirtualMachine:
                     pointer = int(current_cuadruplo[2])
                 else:
                     pointer += 1
+
+            elif operation == ERA:
+                print("== ERA")
+                self.function_name = current_cuadruplo[3]
+                self.push_memory_stack(self.class_name, self.function_name)
+                pointer = self.directory.get_inicio(self.class_name, self.function_name)
+            
+            elif operation == GOSUB:
+                print("== GOSUB")
+                pointer += 1
+            
+            elif operation == END_FUNCTION:
+                print(" == END_FUNCTION")
+                pointer = 100000
 
             # else: 
             #     pointer += 1

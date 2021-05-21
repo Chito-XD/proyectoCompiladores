@@ -22,6 +22,9 @@ ARIT_REL = "AritmeticoRelacional"
 
 GOTO = "Goto"
 GOTO_F = "GotoF"
+GOSUB = "GOSUB"
+ERA = "ERA"
+END_FUNCTION = "END_FUNCTION"
 LECTURA = "LECTURA"
 ESCRIBE = "ESCRIBE"
 
