@@ -3,24 +3,29 @@ programa pruebaPrograma ;
 variables:
     a, b : entero;
 
-void funcion pelos (x: entero, y: entero, z: entero)
+entero funcion pelos (x: entero, y: entero, z: entero)
+variables:
+    r: entero;
 {
     a = 3 * z;
     escribe(a);
-    regresa(a);
+    regresa(46);
+    escribe("hol");
+}
+
+entero funcion uno(x: entero)
+{
+    regresa(x);
 }
 
 
 principal () {
     b = 5;
-    a = b * 4;
+    a = 2;
+    a = pelos(88, a, a+b*2*10);
     escribe(a);
-    pelos(88, a, a+b*2*10);
-    escribe(b);
-    si (b > 0) entonces {
-        escribe("Meno 3 rSE r");
-    } sino {
-        escribe("mayor 3 SDF ");
-    }
-    escribe(a);
+    escribe(uno(1));
+    escribe(uno(2));
+    escribe(uno(3));
+    escribe(uno(4));
 }
