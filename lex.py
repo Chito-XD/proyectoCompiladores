@@ -52,8 +52,8 @@ class Lex(Lexer):
     OP_ARIT_PRIM = r'(\*|\/)'
     OP_LOG = r'(&|\|)'
 
-    CTE_F = r'([0-9]+)(\.)([0-9]+)'
-    CTE_I = r'[0-9]+'
+    CTE_F = r'\-?([0-9]+)(\.)([0-9]+)'
+    CTE_I = r'\-?[0-9]+'
     CTE_STRING = r'\"(\w| )*\"'
     DOTS = r'\:'
     DOT = r'\.'

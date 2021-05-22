@@ -6,13 +6,14 @@ from utils.constants import (
     OPER_ARIT_PRIM, 
     OPER_ARIT_SEC, 
     ERROR,
+    VOID,
     OPER_LOG,
     OPER_REL,
     BOOLEANO
 )
 from utils.queue import Queue
 from utils.stack import Stack
-from utils.types import get_type_operation, get_cte_variable
+from utils.types import get_type_operation, get_cte_variable, get_type_from_address
 
 
 class ManagerSemantic():
@@ -84,9 +85,25 @@ class ManagerSemantic():
         self.create_cruadruplo('PARAM', param, None, self.current_param)
         self.current_param += 1
 
+    def create_return(self):
+        operando = self.operandos.pop()
+        # TODO: Revisar que cuando se al metodo de una clase
+        tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+        operando_type = get_type_from_address(operando)
+
+        if operando_type == tipo_retorno:
+            self.create_cruadruplo("REGRESA", self.method_id, None, operando)
+        else:
+            raise Exception(">> Return mismatch")
     
     def create_gosub(self):
         self.create_cruadruplo("GOSUB", None, None, self.called_method)
+        # TODO: Revisar que cuando se al metodo de una clase
+        tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.called_method)
+        if tipo_retorno != VOID:
+            address = self.memory.set_memory_address(self.currentType, tipo_retorno)
+            self.create_cruadruplo("=", self.called_method, None, address)
+            self.operandos.add(address)
 
     def end_function(self):
         self.create_cruadruplo('END_FUNCTION', None, None, None)
@@ -229,11 +246,6 @@ class ManagerSemantic():
     def create_escritura_exp(self):
         Res = self.operandos.pop()
         self.create_cruadruplo("ESCRIBE", None, None, Res)
-    
-    def create_return(self):
-        operando = self.operandos.pop()
-        self.create_cruadruplo("REGRESA", None, None, operando)
-
     
     def create_lectura(self, op):
         if isinstance(op, tuple):
