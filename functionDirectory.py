@@ -1,4 +1,4 @@
-from utils.constants import PROCESO
+from utils.constants import PRINCIPAL, PROCESO
 from tabVars import TableVariables
 
 class FunctionDirectory():
@@ -62,18 +62,6 @@ class FunctionDirectory():
         self.addLocalVariable(class_name, function_name, var)
         self.directory[class_name][function_name]["parametros"].append(var["tipo"])
     
-    # Funcion para actualizar el valor de una variable de un método
-    def updateVariable(self, class_name, function_name, var):
-        if class_name in self.directory.keys():
-            if function_name in self.directory[class_name].keys():
-                is_updated = self.directory[class_name][function_name]["directorio_variables"].updateVariable(var)
-                if not is_updated:
-                    raise Exception(f"--> No se puede actualizar una variable que no existe en la funcion {function_name} de la clase {class_name} --> {var['key']}")
-            else:
-                raise Exception(f"--> No existe la funcion {function_name} en la clase {class_name}")
-        else:
-            raise Exception(f"--> La clase {class_name} no existe")
-
     # funcion para obtener la variable de un metodo - sino lo encuentra lo busca en el global de la clase
     def get_variable(self, class_name, function_name, var):
         if class_name in self.directory.keys():
@@ -94,10 +82,33 @@ class FunctionDirectory():
             raise Exception(f"--> La clase {class_name} no existe")
     
     
-    # regresa el tipo de retorno de la funcion
-    def get_tipo_retorno(self, class_name, function_name):
-        return self.directory[class_name][function_name].get("tipo_retorno")
+    def get_address_object(self, class_name, function_name, object_name):
+        if object_name == "Main":
+            return object_name
+        
+        if function_name == PRINCIPAL:
+            function_name = "Main"
+        
+        return self.directory[class_name][function_name]["directorio_variables"].get_address(object_name)
     
+    def get_type_return(self, called_class, called_method, class_id):
+        
+        if self.directory.get(called_class):
+            return self.get_tipo_retorno(called_class, called_method)
+        
+        object_name = self.directory[class_id][class_id]["directorio_variables"].get_type(called_class)
+
+        print('OBJECT NAME', object_name)
+
+        return self.directory[object_name][called_method]["tipo_retorno"]
+
+    # regresa el tipo de retorno de la funcion
+    def get_tipo_retorno(self, class_name, function_name, class_key=None, method_id=None):
+        if self.directory.get(class_name):
+            return self.directory[class_name][function_name].get("tipo_retorno")
+        return self.directory[class_key][method_id]["directorio_variables"].variables.get(function_name)
+
+
     # regresa las variables de la tabla de variables
     def get_dir_variables(self, class_name, function_name):
         return self.directory[class_name][function_name]["directorio_variables"].variables

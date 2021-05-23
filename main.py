@@ -21,6 +21,22 @@ for row in data:
 if text: 
     # for tok in lexer.tokenize(text):
     #     print('type=%r, value=%r' % (tok.type, tok.value))
+
+    # try:
+    #     if parser.parse(lexer.tokenize(text)):
+    #         print('Correct syntaxis')
+
+    #         cuadruplos = parser.manager.cuadruplos
+    #         directory = parser.manager.directory
+    #         cte_memory = parser.manager.memory.cte_vars
+
+    #         vm = VirtualMachine(cuadruplos, directory, cte_memory)
+    #         vm.execute()
+    #     else:
+    #         print('Incorrect syntaxis 1')
+    # except:
+    #     print('Incorrect syntaxis 2', NameError)
+
     if parser.parse(lexer.tokenize(text)):
         print('Correct syntaxis')
 
@@ -30,6 +46,5 @@ if text:
 
         vm = VirtualMachine(cuadruplos, directory, cte_memory)
         vm.execute()
-
     else:
-        print('Incorrect syntaxis')
+        print('Incorrect syntaxis 1')

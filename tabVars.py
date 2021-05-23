@@ -16,12 +16,14 @@ class TableVariables():
             return True
         else: 
             return False
-
-    def updateVariable(self, var):
-        if var["key"] in self.variables.keys():
-            self.variables[ var["key"] ] = var["value"]
-            return True
-        else:
-            return False
+        
+    def get_type(self, var_name):
+        return self.variables[var_name]["tipo"]
+        
+    def get_address(self, var_name):
+        print("GET ADDRES")
+        print(self.variables)
+        print(var_name)
+        return self.variables[var_name]["direccion"]
 
         

@@ -6,6 +6,7 @@ FLOTANTE = "flotante"
 VOID = "void"
 CHAR = "char"
 ID = "id"
+OBJECT = "objeto"
 BOOLEANO = "booleano"
 ERROR = "error"
 EQUAL = "=="
@@ -32,23 +33,28 @@ ESCRIBE = "ESCRIBE"
 
 GLOBAL_SPACE_ADDRESS = {
     ENTERO: {
-        "min": 1000,
-        "max": 2999,
-        "current": 1000
+        "min": 5000,
+        "max": 5999,
+        "current": 5000
     },
     FLOTANTE: {
-        "min": 3000,
-        "max": 5999,
-        "current": 3000
-    },
-    CHAR: {
         "min": 6000,
-        "max": 8999,
+        "max": 6999,
         "current": 6000
     },
+    CHAR: {
+        "min": 7000,
+        "max": 7999,
+        "current": 7000
+    },
     BOOLEANO: {
+        "min": 8000,
+        "max": 8999,
+        "current": 8000
+    },
+    OBJECT: {
         "min": 9000,
-        "max": 11999,
+        "max": 9999,
         "current": 9000
     }
 }
@@ -73,6 +79,11 @@ LOCAL_SPACE_ADDRESS = {
         "min": 19000,
         "max": 21999,
         "current": 19000
+    },
+    OBJECT: {
+        "min": 22000,
+        "max": 23999,
+        "current": 22000
     }
 }
 

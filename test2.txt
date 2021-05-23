@@ -1,7 +1,27 @@
 programa pruebaPrograma ;
 
+Clase Cabeza {
+    atributos:
+        f: flotante;
+        e: entero;
+    
+    metodos: 
+    void funcion uno () 
+    {
+        f = 1.3;
+        escribe(f);
+    }
+
+    entero funcion dos() 
+    {
+        regresa(1*2);
+    }
+}
+
 variables:
     a, b : entero;
+    objeto : Cabeza;
+    cara: Cabeza;
 
 entero funcion pelos (x: entero, y: entero, z: entero)
 variables:
@@ -20,12 +40,8 @@ entero funcion uno(x: entero)
 
 
 principal () {
-    b = 5;
-    a = 2;
-    a = pelos(88, a, a+b*2*10);
-    escribe(a);
-    escribe(uno(1));
-    escribe(uno(2));
-    escribe(uno(3));
-    escribe(uno(4));
+    b = cara.f;
+    b = uno(3);
+    cara.uno();
+    escribe(objeto.dos());
 }

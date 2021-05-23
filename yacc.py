@@ -116,7 +116,8 @@ class Yacc(Parser):
         return p
 
     ######## ESTATUTO ########
-    @_('asignacion', 
+    @_('asignacion',
+        'variable SEMICOLON', 
        'funcion SEMICOLON', 
        'retorno', 
        'lectura', 
@@ -132,8 +133,8 @@ class Yacc(Parser):
         return p
     
     ######## LLAMADA FUNCION ########
-    @_('ID createEra LP funcion_aux RP createGosub',
-       'ID createEra LP RP createGosub')
+    @_('ID createEra LP funcion_aux RP createGosub clearCalledFun',
+       'ID createEra LP RP createGosub clearCalledFun')
     def funcion(self, p):
         return p
     
@@ -234,18 +235,12 @@ class Yacc(Parser):
     ######## VARIABLE ########
     @_('ID LC super_exp RC LC super_exp RC',
        'ID LC super_exp RC',
-       'ID DOT ID',
-       'ID DOT ID LP variable_aux RP',
+       'ID setCalledClass DOT funcion',
+       'ID setCalledClass DOT ID createObjectVar clearCalledFun',
        'ID insertOperando')
     def variable(self, p):
         return p
     
-    @_('super_exp COMMA variable_aux', 
-       'super_exp')
-    def variable_aux(self, p):
-        return p
-
-
 ######## PUNTOS NEURALGICOS ######## 
     @_('createDirectory :')
     def createDirectory(self, p):
@@ -262,6 +257,10 @@ class Yacc(Parser):
     @_('createEra :')
     def createEra(self, p):
         self.manager.create_era(p[-1])
+    
+    @_('setCalledClass :')
+    def setCalledClass(self, p):
+        self.manager.set_called_class(p[-1])
 
     @_('evaluateParam :')
     def evaluateParam(self, p):
@@ -270,6 +269,14 @@ class Yacc(Parser):
     @_('createGosub :')
     def createGosub(self, p):
         self.manager.create_gosub()
+    
+    @_('clearCalledFun :')
+    def clearCalledFun(self, p):
+        self.manager.clear_called_fun()
+    
+    @_('createObjectVar :')
+    def createObjectVar(self, p):
+        self.manager.create_object_var(p[-1])
 
     @_('addFunction :')
     def addFunction(self, p):

@@ -1,9 +1,11 @@
 
+from utils.types import is_object
 from utils.constants import (
     GLOBAL_SPACE_ADDRESS,
     LOCAL_SPACE_ADDRESS,
     CTE_SPACE_ADDRESS,
-    PROCESO
+    PROCESO,
+    OBJECT
 )
 
 class Memory():
@@ -14,6 +16,10 @@ class Memory():
     def reset_local_memory(self):
         for key in LOCAL_SPACE_ADDRESS.keys():
             LOCAL_SPACE_ADDRESS[key]["current"] = LOCAL_SPACE_ADDRESS[key]["min"]
+        
+    def reset_global_memory(self):
+        for key in GLOBAL_SPACE_ADDRESS.keys():
+            GLOBAL_SPACE_ADDRESS[key]["current"] = GLOBAL_SPACE_ADDRESS[key]["min"]
 
 
     def set_memory_address(self, var_type, scope):
@@ -39,6 +45,8 @@ class Memory():
             raise Exception("Out of memory")
 
     def set_global_address(self, var_type):
+        if is_object(var_type):
+            var_type = OBJECT
         if GLOBAL_SPACE_ADDRESS[var_type]["current"] <= GLOBAL_SPACE_ADDRESS[var_type]["max"]:
             address = GLOBAL_SPACE_ADDRESS[var_type]["current"]
             GLOBAL_SPACE_ADDRESS[var_type]["current"] += 1
@@ -48,6 +56,8 @@ class Memory():
         
 
     def set_local_address(self, var_type):
+        if is_object(var_type):
+            var_type = OBJECT
         if LOCAL_SPACE_ADDRESS[var_type]["current"] <= LOCAL_SPACE_ADDRESS[var_type]["max"]:
             address = LOCAL_SPACE_ADDRESS[var_type]["current"]
             LOCAL_SPACE_ADDRESS[var_type]["current"] += 1

@@ -24,8 +24,10 @@ class ManagerSemantic():
         self.currentType = None
         self.method_id = None
         self.class_id = None
-        self.called_method = ""
-        self.current_param = 1
+
+        self.called_class = "" # clase que llamas ( called_class.ID() )
+        self.called_method = "" # metodo que llamas ( called_class.called_method() )
+        self.current_param = 1 # contador para asignar los parámetros en la llamada de un método
         self.currentVariables = Queue() # FI FO
 
         # Variables para cuadruplos
@@ -50,6 +52,7 @@ class ManagerSemantic():
     
     def set_class_id(self, class_id):
         print('la clase es', class_id)
+        self.memory.reset_global_memory()
         self.class_id = class_id
     
     def create_class(self, class_name):
@@ -75,10 +78,45 @@ class ManagerSemantic():
         }
         self.directory.createFunction(self.class_id, function_name, params)
     
+    def set_called_class(self, class_name):
+        self.called_class = class_name
+    
+    def clear_called_fun(self):
+        self.called_class = ""
+        self.called_method = ""
+    
+    def create_object_var(self, var_object):
+        print("create OBJECT VAR")
+        # TODO: 
+        # var_object = self.operandos.pop()
+        var = self.directory.get_variable(self.class_id, self.method_id, self.called_class)
+        tipo_var = var["tipo"]
+        
+        print(var)
+        atributo_var = self.directory.get_variable(tipo_var, tipo_var, var_object)
+        address_atributo = atributo_var["direccion"]
+        
+        # self.called_class
+
+        self.operandos.add(address_atributo)
+
+    
     def create_era(self, method):
+        print("create era")
         self.called_method = method
+
+        if self.called_class == "":
+            self.called_class = self.class_id
+
         self.current_param = 1
-        self.create_cruadruplo("ERA", None, None, method)
+        # TODO: 
+        
+        dir_object_name = self.directory.get_address_object(self.class_id, self.method_id, self.called_class)
+        # dir_object_name = self.called_class
+
+        era_method = f"{dir_object_name}-{self.called_method}"
+
+        self.create_cruadruplo("ERA", None, None, era_method)
     
     def evaluate_param(self):
         param = self.operandos.pop()
@@ -88,21 +126,34 @@ class ManagerSemantic():
     def create_return(self):
         operando = self.operandos.pop()
         # TODO: Revisar que cuando se al metodo de una clase
+
         tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+        # tipo_retorno = self.directory.get_type_return(self.called_class, self.called_method, self.class_id)
+        
         operando_type = get_type_from_address(operando)
 
         if operando_type == tipo_retorno:
-            self.create_cruadruplo("REGRESA", self.method_id, None, operando)
+            regresa_id = f"{self.class_id}-{self.method_id}"
+            self.create_cruadruplo("REGRESA", regresa_id, None, operando)
         else:
             raise Exception(">> Return mismatch")
     
     def create_gosub(self):
-        self.create_cruadruplo("GOSUB", None, None, self.called_method)
+        print("======create_gosub")
+        dir_object_name = self.directory.get_address_object(self.class_id, self.method_id, self.called_class)
+        # dir_object_name = self.called_class
+        gosub_method = f"{dir_object_name}-{self.called_method}"
+        self.create_cruadruplo("GOSUB", None, None, gosub_method)
         # TODO: Revisar que cuando se al metodo de una clase
-        tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.called_method)
+        print("----")
+        print(self.called_class, self.called_method, self.class_id, self.method_id)
+        tipo_retorno = self.directory.get_type_return(self.called_class, self.called_method, self.class_id)
+        print("TIPO RETORNO 3")
+        print(tipo_retorno)
+
         if tipo_retorno != VOID:
             address = self.memory.set_memory_address(self.currentType, tipo_retorno)
-            self.create_cruadruplo("=", self.called_method, None, address)
+            self.create_cruadruplo("=", gosub_method, None, address)
             self.operandos.add(address)
 
     def end_function(self):
@@ -118,16 +169,21 @@ class ManagerSemantic():
         self.cuadruplos[0] = ('Goto', None, None, tam)
         self.directory.createFunction(self.class_id, PRINCIPAL, params)
     
+    # metodo para almacenar las variables en una cola hasta que encontemos su tipo
     def stash_variable(self, var):
         print("Añadiendo", var, "a la tabla de variables")
         if isinstance(var, tuple):
             var = var[1]
         self.currentVariables.add(var)
     
+    # metodo que guarda las variablees del stash en el dir una vez que sabemos el tipo
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
             tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+            # print("00000000000000000000000000000000000000")
+            # print(tipo_retorno)
+            # self.directory.print_directory()
             address = self.memory.set_memory_address(self.currentType, tipo_retorno)
             params = {
                 "key": var,
@@ -136,6 +192,7 @@ class ManagerSemantic():
             }
             self.directory.addLocalVariable(self.class_id, self.method_id, params)
         
+    # Metodo similar a store_variables pero para los métodos
     def store_params(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
@@ -148,24 +205,18 @@ class ManagerSemantic():
             }
             self.directory.addParam(self.class_id, self.method_id, params)
     
-    def update_variable(self, var, value):
-        params = {
-            "key": var,
-            "value": value
-        }
-        self.directory.updateVariable(self.class_id, self.method_id, params)
-
     def insert_operando(self, operando):
         print("voy a insertar ", operando)
+        # verifica si el operando es cte
         tipo_operando = get_cte_variable(operando)
         if not tipo_operando:
+            # como no es cte, optenemos el tipo y direccion de la variable en el dir
             var = self.directory.get_variable(self.class_id, self.method_id, operando)
             tipo_operando = var["tipo"]
             address = var["direccion"]
         else:
+            # como es cte, solicitamos un dirreccion del rango de cte
             address = self.memory.get_cte_address(tipo_operando, operando)
-
-        # self.operandos.add(operando)
         self.operandos.add(address)
 
         print(f"el tipo de {operando} es {tipo_operando}")
@@ -175,6 +226,7 @@ class ManagerSemantic():
         print("insert operador", operador)
         self.operadores.add(operador)
     
+    # metodo que maneja el "fondo falso"
     def manage_back_operator(self, create=True):
         if create:
             self.operadores.add("(")
