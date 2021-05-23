@@ -386,8 +386,10 @@ class ManagerSemantic():
 
     def SaleFor(self):
         Reg = self.saltos.pop()
-        Aux = Reg-1
-        self.create_cruadruplo_no_lin("gotoFor", None, Aux)
+        Reg2 = self.saltos.pop()
+        # print("Sale for en cuadruplo: " + str(Reg) + " " + str(Reg2))
+        Aux = Reg2
+        self.create_cruadruplo_no_lin("Goto", None, Aux)
         Temp = self.cuadruplos[Reg]
         N = len(self.cuadruplos)
         sN = str(N)
@@ -403,7 +405,9 @@ class ManagerSemantic():
             
             Cont = Cont + 1
 
+
         self.cuadruplos[Reg] = (a, b, sN)
+
 
     def igualdadFor(self):
         ladoder = self.operandos.pop()
@@ -411,15 +415,17 @@ class ManagerSemantic():
         tipoder = self.tipos.pop()
         tipoizq = self.tipos.pop()
 
-        operation_type = get_type_operation(tipoizq, tipoder, "==")
+        operation_type = get_type_operation(tipoizq, tipoder, "<=")
         if operation_type is not ERROR:
             tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
             temporal_address = self.memory.set_memory_address(operation_type, tipo_retorno)
-            self.create_cruadruplo("==", ladoizq, ladoder, temporal_address)
+            self.create_cruadruplo("<=", ladoizq, ladoder, temporal_address)
             self.operandos.add(ladoizq)
             self.tipos.add(tipoizq)
+
             Aux = len(self.cuadruplos)
             self.saltos.add(Aux)
+
             self.create_cruadruplo_no_lin("GotoF", temporal_address, "?")
 
     def sumaFor(self):
@@ -448,6 +454,11 @@ class ManagerSemantic():
                 self.create_cruadruplo("=", res, None, lado_izq)
                 self.operandos.add(lado_izq)
                 self.tipos.add(tipo_izq)
+
+                Aux = len(self.cuadruplos)
+                self.saltos.add(Aux)
+
+                
 
 
     

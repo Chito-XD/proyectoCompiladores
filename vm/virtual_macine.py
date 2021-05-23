@@ -59,6 +59,9 @@ class VirtualMachine:
                 op1 = self.memory.get_value_from_address(current_cuadruplo[1])
                 op2 = self.memory.get_value_from_address(current_cuadruplo[2])
 
+                if not op1 or not op2:
+                    raise Exception("Variable no inicializada")
+
                 result = self.evaluate_operation(op1, op2, operation)
                 self.memory.set_value_from_address(current_cuadruplo[3], result)
                 pointer += 1

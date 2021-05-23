@@ -18,10 +18,10 @@ class MemoryStack:
             new_cte[self.cte_memory[key]] = key
         self.cte_memory = new_cte
         
-        # print("")
-        # print("== > CTE MEMORY")
-        # print(self.cte_memory)
-        # print("")
+        print("")
+        print("== > CTE MEMORY")
+        print(self.cte_memory)
+        print("")
     
     def pop_memory_stack(self):
         del self.memory_stack[-1]

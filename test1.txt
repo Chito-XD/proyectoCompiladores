@@ -35,17 +35,15 @@ entero funcion fact (r : entero)
 variables:
     i : entero;
 { 
-    c = 1 + 1;
-    i = j + ( p - j ) * (d + 4 / f * i) / 2 + p;
-    si (j ==1) entonces {
-        regresa(j);
+    si (r == 4) entonces {
+        regresa(r);
     } sino {
-        regresa(j*3);
+        regresa(r*3);
     }
     j = j + 2;
 }
 
-void funcion pelos (y : entero, n : entero);
+void funcion pelos (y : entero, n : entero)
 variables:
     x, i: entero;
 {
@@ -58,23 +56,16 @@ variables:
 
     x = 1;
 
-    desde i = 0 hasta x * 5 hacer {
+    desde i = 0 hasta  x * 5 +2  hacer {
         y = 2 * i;
     }
 }
 
 principal () {
     pelos(1, 2);
+    j = 5;
+    r = 45.2;
     escribe(1*f+j);
-    fact(i);
-    lee(p); 
-    lee(c[0]);
-    escribe(a.b);
-    i = 2;
-    r = 1.0;
-    lee(k[2][2]);
-    j = p * 2;
-    i = 3;
-    pelos(1,2);
-    escribe("Hola");
+    d = fact(j);
+    escribe(d);
 }
