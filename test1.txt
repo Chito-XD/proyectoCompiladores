@@ -45,7 +45,7 @@ variables:
     j = j + 2;
 }
 
-void funcion pelos (y : entero);
+void funcion pelos (y : entero, n : entero);
 variables:
     x, i: entero;
 {
@@ -53,6 +53,8 @@ variables:
     mientras (x<10) hacer {
         x = x + 1;
     }
+
+    escribe(n);
 
     x = 1;
 
@@ -62,16 +64,17 @@ variables:
 }
 
 principal () {
-    pelos(1, 3*3);
+    pelos(1, 2);
     escribe(1*f+j);
-    fact();
+    fact(i);
     lee(p); 
     lee(c[0]);
     escribe(a.b);
     i = 2;
+    r = 1.0;
     lee(k[2][2]);
     j = p * 2;
     i = 3;
-    pelos(p);
+    pelos(1,2);
     escribe("Hola");
 }

@@ -132,8 +132,8 @@ class Yacc(Parser):
         return p
     
     ######## LLAMADA FUNCION ########
-    @_('ID createEra LP funcion_aux RP createGosub',
-       'ID createEra LP RP createGosub')
+    @_('ID createEra LP funcion_aux difParam RP createGosub',
+       'ID createEra LP noParam difParam RP createGosub')
     def funcion(self, p):
         return p
     
@@ -387,3 +387,11 @@ class Yacc(Parser):
     @_('crearAsignacionLoop :')
     def crearAsignacionLoop(self, p):
         self.manager.create_asignacionLoop()
+
+    @_('noParam :')
+    def noParam(self, p):
+        self.manager.noParam()
+
+    @_('difParam :')
+    def difParam(self, p):
+        self.manager.difParam()

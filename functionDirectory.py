@@ -61,6 +61,9 @@ class FunctionDirectory():
     def addParam(self, class_name, function_name, var):
         self.addLocalVariable(class_name, function_name, var)
         self.directory[class_name][function_name]["parametros"].append(var["tipo"])
+
+    def returnParam(self, class_name, function_name):
+        return self.directory[class_name][function_name]["parametros"]
     
     # Funcion para actualizar el valor de una variable de un método
     def updateVariable(self, class_name, function_name, var):

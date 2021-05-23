@@ -13,7 +13,7 @@ from utils.constants import (
 )
 from utils.queue import Queue
 from utils.stack import Stack
-from utils.types import get_type_operation, evaluate_operation, get_cte_variable
+from utils.types import get_type_operation, evaluate_operation, get_cte_variable, get_type_from_address
 
 
 class ManagerSemantic():
@@ -76,14 +76,48 @@ class ManagerSemantic():
         self.directory.createFunction(self.class_id, function_name, params)
     
     def create_era(self, method):
+        print("Method: " + method)
         self.called_method = method
-        self.current_param = 1
+        self.current_param = 0
         self.create_cruadruplo("ERA", None, None, method)
     
     def evaluate_param(self):
-        param = self.operandos.pop()
-        self.create_cruadruplo('PARAM', param, None, self.current_param)
+        NumParam = self.directory.returnParam(self.class_id, self.called_method)
+        print("Clase: " + self.class_id)
+        print("Metodo: " + self.called_method)
+        print("Num Param " + str(len(NumParam)))
         self.current_param += 1
+
+        if(len(NumParam) >= self.current_param):
+            param = self.operandos.pop()
+            tipo = get_type_from_address(param)
+
+            if tipo == NumParam[self.current_param - 1]:
+                self.create_cruadruplo('PARAM', param, None, self.current_param)
+            else:
+                raise Exception("Mismatch type in parameters")           
+        else:
+            raise Exception("Too many parameters")
+        
+
+    def noParam(self):
+        NumParam = self.directory.returnParam(self.class_id, self.called_method)
+        print("Clase: " + self.class_id)
+        print("Metodo: " + self.called_method)
+        print("Num Param " + str(len(NumParam)))
+
+        if(len(NumParam) > 0):
+             raise Exception("Function expects parameters")
+
+    def difParam(self):
+        NumParam = self.directory.returnParam(self.class_id, self.called_method)
+        print("Clase: " + self.class_id)
+        print("Metodo: " + self.called_method)
+        print("Num Param " + str(len(NumParam)))
+        if(self.current_param !=  len(NumParam)):
+             raise Exception("Different number of parameters")
+        
+        
 
     
     def create_gosub(self):
