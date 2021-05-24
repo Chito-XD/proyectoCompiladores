@@ -232,8 +232,8 @@ class Yacc(Parser):
         return p
     
     ######## VARIABLE ########
-    @_('ID LC super_exp RC LC super_exp RC',
-       'ID LC super_exp RC',
+    @_('ID insertOperando LC super_exp RC LC super_exp RC verificaD2',
+       'ID insertOperando LC super_exp RC verificaD1',
        'ID DOT ID',
        'ID DOT ID LP variable_aux RP',
        'ID insertOperando')
@@ -326,6 +326,14 @@ class Yacc(Parser):
     @_('insertOperando :')
     def insertOperando(self, p):
         self.manager.insert_operando(p[-1])
+
+    @_('verificaD1 :')
+    def verificaD1(self, p):
+        self.manager.verifica_dim(1)
+    
+    @_('verificaD2 :')
+    def verificaD2(self, p):
+        self.manager.verifica_dim(2)
 
     @_('crearAsignacion :')
     def crearAsignacion(self, p):

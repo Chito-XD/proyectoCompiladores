@@ -28,19 +28,18 @@ Clase Brazo {
 
 
 variables:
-    k[2], i, j, p, c, a, b, d, e, f: entero; 
-    r: flotante;
+    k[2], i, j, p, c, a, b, d, e[5][3], r: entero; 
+    f: flotante;
     
 entero funcion fact (r : entero) 
 variables:
     i : entero;
 { 
-    si (r == 4) entonces {
+    si (r == 1) entonces {
         regresa(r);
     } sino {
-        regresa(r*3);
+        regresa(fact(r-1) * r);
     }
-    j = j + 2;
 }
 
 void funcion pelos (y : entero, n : entero)
@@ -62,10 +61,9 @@ variables:
 }
 
 principal () {
-    pelos(1, 2);
-    j = 5;
-    r = 45.2;
-    escribe(1*f+j);
-    d = fact(j);
-    escribe(d);
+    d = fact(5) + 9;
+    a = e[1][2];
+    f= 0.4;
+    
+    escribe("FINAL", d);
 }

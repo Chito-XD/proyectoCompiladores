@@ -81,6 +81,7 @@ class ManagerSemantic():
         self.called_method = method
         self.current_param = 0
         self.create_cruadruplo("ERA", None, None, method)
+        
     
     def evaluate_param(self):
         NumParam = self.directory.returnParam(self.class_id, self.called_method)
@@ -103,18 +104,18 @@ class ManagerSemantic():
 
     def noParam(self):
         NumParam = self.directory.returnParam(self.class_id, self.called_method)
-        print("Clase: " + self.class_id)
-        print("Metodo: " + self.called_method)
-        print("Num Param " + str(len(NumParam)))
+        # print("Clase: " + self.class_id)
+        # print("Metodo: " + self.called_method)
+        # print("Num Param " + str(len(NumParam)))
 
         if(len(NumParam) > 0):
              raise Exception("Function expects parameters")
 
     def difParam(self):
         NumParam = self.directory.returnParam(self.class_id, self.called_method)
-        print("Clase: " + self.class_id)
-        print("Metodo: " + self.called_method)
-        print("Num Param " + str(len(NumParam)))
+        # print("Clase: " + self.class_id)
+        # print("Metodo: " + self.called_method)
+        # print("Num Param " + str(len(NumParam)))
         if(self.current_param !=  len(NumParam)):
              raise Exception("Different number of parameters")
         
@@ -138,7 +139,10 @@ class ManagerSemantic():
         if tipo_retorno != VOID:
             address = self.memory.set_memory_address(self.currentType, tipo_retorno)
             self.create_cruadruplo("=", self.called_method, None, address)
+            # print(">>>>>>>>>>>>>>> GOSUB", address)
             self.operandos.add(address)
+            tipo = get_type_from_address(address)
+            self.tipos.add(tipo)
 
     def end_function(self):
         self.create_cruadruplo('END_FUNCTION', None, None, None)
@@ -155,19 +159,36 @@ class ManagerSemantic():
     
     def stash_variable(self, var):
         print("Añadiendo", var, "a la tabla de variables")
-        if isinstance(var, tuple):
-            var = var[1]
+        # if isinstance(var, tuple):
+        #     var = var[1]
         self.currentVariables.add(var)
     
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
+            if len(var) == 5: #  arreglo
+                dim = {
+                    "dim1": var[3]
+                }
+                var_size = int(var[3])
+            elif len(var) == 8: # matriz
+                dim = {
+                    "dim1": var[3],
+                    "dim2": var[6]
+                }
+                var_size = int(var[3]) * int(var[6])
+            else: # variable normal
+                dim = None
+                var_size = 1
+            var = var[1]
+
             tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
-            address = self.memory.set_memory_address(self.currentType, tipo_retorno)
+            address = self.memory.set_memory_address(self.currentType, tipo_retorno, var_size)
             params = {
                 "key": var,
                 "tipo": self.currentType,
-                "direccion": address
+                "direccion": address,
+                "dimension": dim
             }
             self.directory.addLocalVariable(self.class_id, self.method_id, params)
         
@@ -189,6 +210,53 @@ class ManagerSemantic():
             "value": value
         }
         self.directory.updateVariable(self.class_id, self.method_id, params)
+    
+    def verifica_dim(self, dim):
+        dimensions = Stack()
+        for _ in range(dim):
+            dimensions.add(self.operandos.pop()) # dimensions = al reves =  dim2 dim1
+            self.tipos.pop()
+        
+        operando_address = self.operandos.pop() # id
+        self.tipos.pop()
+
+        the_var = self.directory.find_var_from_address(self.class_id, self.method_id, operando_address)
+
+        print("the_var", the_var)
+
+        var_dimension = the_var["dimension"]
+        
+        # Validate the dimensions of the var with the given dimension
+        if var_dimension.get("dim2") and dim == 1:
+            raise Exception("Missing dimension declaration")
+        if not var_dimension.get("dim2") and dim == 2:
+            raise Exception("Extra dimension declaration")
+
+        # DirBase() + s1*d2 + s2
+        # the_var["direccion"] * 
+        # 1010 + s1(45 tambien es direccion) => cambiar addres a valores
+        # 1015
+        # for i in range(dim):
+        #     superior_limit = var_dimension[f"dim{(i+1)}"]
+
+        #     superior_limit_address = self.memory.get_cte_address(ENTERO, superior_limit)
+        #     zero_addres = self.memory.get_cte_address(ENTERO, 0)
+
+        #     dim_operando = dimensions.pop()
+        #     self.create_cruadruplo('VERIFICA', dim_operando, zero_addres, superior_limit_address)
+        #     if i == 0:
+        #         self.operandos.add(dim_operando)
+        #     else: 
+        #         temporal_address = self.memory.set_memory_address(ENTERO, None)
+        #         self.create_cruadruplo('*', self.operandos.pop(), dim_operando, temporal_address)
+        #         self.operandos.add(temporal_address)
+
+        # temporal_address = self.memory.set_memory_address(ENTERO, None)
+        # base_dir = f"dir-{the_var['direccion']}"
+        # self.create_cruadruplo("+", base_dir, self.operandos.pop(), temporal_address)
+        # self.operandos.add(temporal_address)
+        # self.tipos.add(ENTERO)
+        
 
     def insert_operando(self, operando):
         print("voy a insertar ", operando)

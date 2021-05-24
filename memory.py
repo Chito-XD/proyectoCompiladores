@@ -16,10 +16,10 @@ class Memory():
             LOCAL_SPACE_ADDRESS[key]["current"] = LOCAL_SPACE_ADDRESS[key]["min"]
 
 
-    def set_memory_address(self, var_type, scope):
+    def set_memory_address(self, var_type, scope, var_size=1):
         if scope == PROCESO:
-            return self.set_global_address(var_type)
-        return self.set_local_address(var_type)
+            return self.set_global_address(var_type, var_size)
+        return self.set_local_address(var_type, var_size)
     
     def get_cte_address(self, var_type, var):
         if self.cte_vars.get(var):
@@ -38,19 +38,19 @@ class Memory():
         else: 
             raise Exception("Out of memory")
 
-    def set_global_address(self, var_type):
+    def set_global_address(self, var_type, var_size):
         if GLOBAL_SPACE_ADDRESS[var_type]["current"] <= GLOBAL_SPACE_ADDRESS[var_type]["max"]:
             address = GLOBAL_SPACE_ADDRESS[var_type]["current"]
-            GLOBAL_SPACE_ADDRESS[var_type]["current"] += 1
+            GLOBAL_SPACE_ADDRESS[var_type]["current"] += var_size
             return address
         else: 
             raise Exception("Out of memory")
         
 
-    def set_local_address(self, var_type):
+    def set_local_address(self, var_type, var_size):
         if LOCAL_SPACE_ADDRESS[var_type]["current"] <= LOCAL_SPACE_ADDRESS[var_type]["max"]:
             address = LOCAL_SPACE_ADDRESS[var_type]["current"]
-            LOCAL_SPACE_ADDRESS[var_type]["current"] += 1
+            LOCAL_SPACE_ADDRESS[var_type]["current"] += var_size
             return address
         else: 
             raise Exception("Out of memory")

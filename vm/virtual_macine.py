@@ -8,6 +8,7 @@ from utils.constants import (
     LECTURA,
     ESCRIBE,
     ASSIGN,
+    VERIFICA,
     GOTO,
     GOTO_F,
     ERA,
@@ -56,6 +57,7 @@ class VirtualMachine:
                 pointer += 1
 
             elif operation in ALL_OPERATIONS:
+                # TODO: Revisar si es direccion o voy por valor
                 op1 = self.memory.get_value_from_address(current_cuadruplo[1])
                 op2 = self.memory.get_value_from_address(current_cuadruplo[2])
 
@@ -88,6 +90,9 @@ class VirtualMachine:
                     pointer = int(current_cuadruplo[2])
                 else:
                     pointer += 1
+
+            elif operation == VERIFICA:
+                pointer += 1
             
             elif operation == REGRESA:
                 address = current_cuadruplo[1]

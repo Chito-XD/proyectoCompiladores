@@ -1,4 +1,4 @@
-from utils.constants import PROCESO
+from utils.constants import PRINCIPAL, PROCESO
 from tabVars import TableVariables
 
 class FunctionDirectory():
@@ -104,6 +104,15 @@ class FunctionDirectory():
     # regresa las variables de la tabla de variables
     def get_dir_variables(self, class_name, function_name):
         return self.directory[class_name][function_name]["directorio_variables"].variables
+    
+    # Encontrar la variable del dir con base en la dirección
+    def find_var_from_address(self, class_name, function_name, address):
+        if function_name == PRINCIPAL:
+            function_name = "Main"
+        tab_var = self.directory[class_name][function_name]["directorio_variables"].variables
+        for key in tab_var.keys():
+            if tab_var[key]["direccion"] == address:
+                return tab_var[key]
     
     # regresa el punto de inicio en los cuadruplos
     def get_inicio(self, class_name, function_name):

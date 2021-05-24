@@ -11,7 +11,8 @@ class TableVariables():
             self.variables[ val["key"] ] = {
                 "tipo": val["tipo"],
                 "valor": val["value"] if val.get("value", None) else None,
-                "direccion": val["direccion"]
+                "direccion": val["direccion"],
+                "dimension": val.get("dimension")
             }
             return True
         else: 
