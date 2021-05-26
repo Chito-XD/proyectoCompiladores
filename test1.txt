@@ -38,7 +38,7 @@ variables:
     si (r == 1) entonces {
         regresa(r);
     } sino {
-        regresa(fact(r-1) * r);
+        regresa(r * fact(r-1));
     }
 }
 
@@ -60,10 +60,15 @@ variables:
     }
 }
 
+entero funcion fibo (n: entero)
+{
+    si (n <= 1) entonces {
+        regresa(n);
+    } sino {
+        regresa(fibo(n-1) + fibo(n-2));
+    }
+}
+
 principal () {
-    d = fact(5) + 9;
-    a = e[1][2];
-    f= 0.4;
-    
-    escribe("FINAL", d);
+    escribe( fibo( 10 ) );
 }

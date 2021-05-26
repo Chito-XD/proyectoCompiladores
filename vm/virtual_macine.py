@@ -61,7 +61,7 @@ class VirtualMachine:
                 op1 = self.memory.get_value_from_address(current_cuadruplo[1])
                 op2 = self.memory.get_value_from_address(current_cuadruplo[2])
 
-                if not op1 or not op2:
+                if op1 == None or op2 == None:
                     raise Exception("Variable no inicializada")
 
                 result = self.evaluate_operation(op1, op2, operation)
@@ -119,11 +119,15 @@ class VirtualMachine:
             #     pointer += 1
     
 
+    # metodo que ejecuta la logica del la llamada de los métodos
+    # es específicamente para las llamadas, no para la declaración de los métodos
     def run_method(self, current_cuadruplo, pointer):
 
         current_pointer = pointer
         param_values = []
 
+        # Primero revisamos los params, ejecutamos las operacion
+        # hasta el momento en que encontramos el gosub
         while self.cuadruplos[current_pointer][0] != GOSUB:
             if self.cuadruplos[current_pointer][0] == PARAM:
                 value = self.memory.get_value_from_address(self.cuadruplos[current_pointer][1])
@@ -133,11 +137,15 @@ class VirtualMachine:
             else:
                 current_pointer = self.run_cuadruplos(current_pointer)
             
+        # Una vez que ejecutamos todos los params, ahora sí, movemos el pointer
+        # al inicio de la función
         self.function_name = current_cuadruplo[3]
         pointer = self.directory.get_inicio(self.class_name, self.function_name)
 
+        # creamos nuevo stack de memoria
         self.memory.push_memory_stack(self.class_name, self.function_name, param_values)
 
+        # corremos los cuadruplos del método
         self.run_cuadruplos(pointer)
 
         # TODO: Logica del gosub

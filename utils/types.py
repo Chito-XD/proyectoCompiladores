@@ -34,6 +34,21 @@ def get_operator_type(operator):
         return ASSIGN
     else:
         return None
+    
+def get_scope_from_address(address):
+    for key in GLOBAL_SPACE_ADDRESS.keys():
+        if address >= GLOBAL_SPACE_ADDRESS[key]["min"] and address <= GLOBAL_SPACE_ADDRESS[key]["max"]:
+            return "GLOBAL"
+        
+    for key in LOCAL_SPACE_ADDRESS.keys():
+        if address >= LOCAL_SPACE_ADDRESS[key]["min"] and address <= LOCAL_SPACE_ADDRESS[key]["max"]:
+            return "LOCAL"
+        
+    for key in CTE_SPACE_ADDRESS.keys():
+        if address >= CTE_SPACE_ADDRESS[key]["min"] and address <= CTE_SPACE_ADDRESS[key]["max"]:
+            return "CTE"
+    
+    raise Exception("-> No memory range found")
 
 def get_type_from_address(address):
     for key in GLOBAL_SPACE_ADDRESS.keys():

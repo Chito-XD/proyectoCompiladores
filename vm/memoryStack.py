@@ -1,4 +1,4 @@
-
+from utils.types import get_scope_from_address
 
 class MemoryStack:
 
@@ -33,6 +33,7 @@ class MemoryStack:
         global_method_vars = self.directory.get_dir_variables(clas, main_process)
         current_method_vars = self.directory.get_dir_variables(clas, function)
 
+        # Guardar las variables que recibe un metodo como parámetro
         if len(params) > 0:
             for (index, var) in enumerate(current_method_vars):
                 if index < len(params):
@@ -42,10 +43,12 @@ class MemoryStack:
         
         memory = {}
 
+        # Guardar variables en el stack
         for key in current_method_vars.keys():
             var_dir = current_method_vars[key]["direccion"]
             memory[var_dir] = current_method_vars[key]["valor"]
         
+        # Guardar variables en el entorno global
         for key in global_method_vars.keys():
             var_dir = global_method_vars[key]["direccion"]
             if not self.global_memory.get(var_dir):
@@ -55,27 +58,27 @@ class MemoryStack:
         self.memory_pointer += 1
 
     def get_value_from_address(self, address):
-        if self.cte_memory.get(address):
+        if self.cte_memory.get(address) != None:
             return self.cte_memory.get(address)
-        elif self.memory_stack[self.memory_pointer].get(address):
+        elif self.memory_stack[self.memory_pointer].get(address) != None:
             return self.memory_stack[self.memory_pointer][address]
-        elif self.global_memory.get(address):
+        elif self.global_memory.get(address) != None:
             return self.global_memory[address]
         
         self.memory_stack[self.memory_pointer][address] = None
         return None
     
+    # asignar el valor de la dirrecion origin a la direcciónn objetivo
     def assign_value_from_addresses(self, origin_add, target_add):
         value = self.get_value_from_address(origin_add)
-        if self.memory_stack[self.memory_pointer].get(target_add):
-            self.memory_stack[self.memory_pointer][target_add] = value
-        else:
-            self.global_memory[target_add] = value
+        self.set_value_from_address(target_add, value)
 
+    # Asignar el valor dado a la dirreción con base en el scope de la direccion
     def set_value_from_address(self, address, value):
-        if self.memory_stack[self.memory_pointer].get(address):
+        scope = get_scope_from_address(address)
+        if scope == "LOCAL":
             self.memory_stack[self.memory_pointer][address] = value
-        else: 
+        else:
             self.global_memory[address] = value
 
     def set_return(self, key, value):

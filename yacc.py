@@ -132,8 +132,9 @@ class Yacc(Parser):
         return p
     
     ######## LLAMADA FUNCION ########
-    @_('ID createEra LP funcion_aux difParam RP createGosub',
-       'ID createEra LP noParam difParam RP createGosub')
+    # LP create_back super_exp RP delete_back
+    @_('ID createEra LP create_back funcion_aux difParam RP delete_back createGosub',
+       'ID createEra LP create_back noParam difParam RP delete_back createGosub')
     def funcion(self, p):
         return p
     
