@@ -132,14 +132,13 @@ class Yacc(Parser):
         return p
     
     ######## LLAMADA FUNCION ########
-    # LP create_back super_exp RP delete_back
-    @_('ID createEra LP create_back funcion_aux difParam RP delete_back createGosub',
-       'ID createEra LP create_back noParam difParam RP delete_back createGosub')
+    @_('ID createEra LP create_back funcion_aux RP evaluateParams delete_back createGosub',
+       'ID createEra LP create_back RP evaluateParams delete_back createGosub')
     def funcion(self, p):
         return p
     
-    @_('super_exp evaluateParam COMMA funcion_aux', 
-       'super_exp evaluateParam')
+    @_('super_exp stashParam COMMA funcion_aux', 
+       'super_exp stashParam')
     def funcion_aux(self, p):
         return p
 
@@ -264,9 +263,13 @@ class Yacc(Parser):
     def createEra(self, p):
         self.manager.create_era(p[-1])
 
-    @_('evaluateParam :')
-    def evaluateParam(self, p):
-        self.manager.evaluate_param()
+    @_('evaluateParams :')
+    def evaluateParams(self, p):
+        self.manager.evaluate_params()
+    
+    @_('stashParam :')
+    def stashParam(self, p):
+        self.manager.stashParams()
     
     @_('createGosub :')
     def createGosub(self, p):
@@ -396,11 +399,3 @@ class Yacc(Parser):
     @_('crearAsignacionLoop :')
     def crearAsignacionLoop(self, p):
         self.manager.create_asignacionLoop()
-
-    @_('noParam :')
-    def noParam(self, p):
-        self.manager.noParam()
-
-    @_('difParam :')
-    def difParam(self, p):
-        self.manager.difParam()

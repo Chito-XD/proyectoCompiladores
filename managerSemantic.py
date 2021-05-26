@@ -25,8 +25,11 @@ class ManagerSemantic():
         self.currentType = None
         self.method_id = None
         self.class_id = None
+        
+        self.called_methods_stack = Stack()
         self.called_method = ""
-        self.current_param = 1
+        self.params_stack = Stack()
+
         self.currentVariables = Queue() # FI FO
 
         # Variables para cuadruplos
@@ -78,48 +81,48 @@ class ManagerSemantic():
     
     def create_era(self, method):
         print("Method: " + method)
-        self.called_method = method
-        self.current_param = 0
+        self.called_methods_stack.add(method)
+        self.called_method = self.called_methods_stack.peek()
         self.create_cruadruplo("ERA", None, None, method)
+        # Añadir un arreglo de params
+        self.params_stack.add([])
         
     
-    def evaluate_param(self):
-        NumParam = self.directory.returnParam(self.class_id, self.called_method)
+    def evaluate_params(self):
+        function_params = self.directory.returnParam(self.class_id, self.called_method)
         print("Clase: " + self.class_id)
         print("Metodo: " + self.called_method)
-        print("Num Param " + str(len(NumParam)))
-        self.current_param += 1
+        print("Num Param " + str(len(function_params)))
 
-        if(len(NumParam) >= self.current_param):
-            param = self.operandos.pop()
-            tipo = get_type_from_address(param)
+        given_params = self.params_stack.pop()
+        print("Given params", len(given_params))
 
-            if tipo == NumParam[self.current_param - 1]:
-                self.create_cruadruplo('PARAM', param, None, self.current_param)
-            else:
-                raise Exception("Mismatch type in parameters")           
+        if len(function_params) == len(given_params) :
+
+            for i in range(len(given_params)):
+                print(given_params[i])
+                tipo = get_type_from_address(given_params[i])
+
+                if tipo == function_params[i]:
+                    self.create_cruadruplo('PARAM', given_params[i], None, i)
+                else:
+                    raise Exception("Mismatch type in parameters")
+
         else:
-            raise Exception("Too many parameters")
+            raise Exception(f"Function expects {len(function_params)} parameters. {len(self.given_params)} given")
         
-
-    def noParam(self):
-        NumParam = self.directory.returnParam(self.class_id, self.called_method)
-        # print("Clase: " + self.class_id)
-        # print("Metodo: " + self.called_method)
-        # print("Num Param " + str(len(NumParam)))
-
-        if(len(NumParam) > 0):
-             raise Exception("Function expects parameters")
-
-    def difParam(self):
-        NumParam = self.directory.returnParam(self.class_id, self.called_method)
-        # print("Clase: " + self.class_id)
-        # print("Metodo: " + self.called_method)
-        # print("Num Param " + str(len(NumParam)))
-        if(self.current_param !=  len(NumParam)):
-             raise Exception("Different number of parameters")
-        
-        
+    
+    # [
+    #     [], fibo
+    #     [], fact
+    # ]
+    # stashea los parametros de la pila de operandos en un stack de arreglos 
+    # Cada arreglo contiene los parámteros de cada función en caso que estén encadenadas
+    def stashParams(self):
+        param = self.operandos.pop()
+        top_param = self.params_stack.pop()
+        top_param.append(param)
+        self.params_stack.add(top_param)
 
     def create_return(self):
         operando = self.operandos.pop()
@@ -144,6 +147,9 @@ class ManagerSemantic():
             tipo = get_type_from_address(address)
             self.tipos.add(tipo)
 
+        self.called_methods_stack.pop()
+        self.called_method = self.called_methods_stack.peek()
+
     def end_function(self):
         self.create_cruadruplo('END_FUNCTION', None, None, None)
     
@@ -159,8 +165,6 @@ class ManagerSemantic():
     
     def stash_variable(self, var):
         print("Añadiendo", var, "a la tabla de variables")
-        # if isinstance(var, tuple):
-        #     var = var[1]
         self.currentVariables.add(var)
     
     def store_variables(self):
@@ -282,7 +286,6 @@ class ManagerSemantic():
         else:
             address = self.memory.get_cte_address(tipo_operando, operando)
 
-        # self.operandos.add(operando)
         self.operandos.add(address)
 
         print(f"el tipo de {operando} es {tipo_operando}")
@@ -332,7 +335,6 @@ class ManagerSemantic():
 
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
-            # result = f'temporal_{self.cuadruplo_counter}'
             tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
             temporal_address = self.memory.set_memory_address(operation_type, tipo_retorno)
 
@@ -471,7 +473,6 @@ class ManagerSemantic():
     def SaleFor(self):
         Reg = self.saltos.pop()
         Reg2 = self.saltos.pop()
-        # print("Sale for en cuadruplo: " + str(Reg) + " " + str(Reg2))
         Aux = Reg2
         self.create_cruadruplo_no_lin("Goto", None, Aux)
         Temp = self.cuadruplos[Reg]

@@ -224,7 +224,8 @@ class VirtualMachine:
         # corremos los cuadruplos del método
         self.run_cuadruplos(pointer)
 
-        # TODO: Logica del gosub
+        # Logica del gosub
+        # Remueve del stack la memoria local
         self.memory.pop_memory_stack()
         
 

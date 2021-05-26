@@ -77,9 +77,9 @@ Integrantes:
 -
 
 *Pendientes*
-- Objetos
-- Operaciones con vectores
-- Parámetros - cuando le mandas una función/vector como parámetro
-- string
-- Stack overflow
+- 1) Objetos
+- 2) Stack overflow
+- 3) Operaciones con vectores
+- 4) string
+
 - Documentación
