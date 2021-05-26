@@ -75,11 +75,20 @@ class MemoryStack:
 
     # Asignar el valor dado a la dirreción con base en el scope de la direccion
     def set_value_from_address(self, address, value):
-        scope = get_scope_from_address(address)
-        if scope == "LOCAL":
-            self.memory_stack[self.memory_pointer][address] = value
+        if isinstance(address, str):
+            if address.find('(') != -1:
+                Aux = address.replace('(', '')
+                Aux = Aux.replace(')', '')
+                Aux = int(Aux)
+
         else:
-            self.global_memory[address] = value
+            Aux = address
+
+        scope = get_scope_from_address(Aux)
+        if scope == "LOCAL":
+            self.memory_stack[self.memory_pointer][Aux] = value
+        else:
+            self.global_memory[Aux] = value
 
     def set_return(self, key, value):
         self.global_memory[key] = value

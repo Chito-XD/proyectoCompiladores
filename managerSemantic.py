@@ -236,26 +236,38 @@ class ManagerSemantic():
         # the_var["direccion"] * 
         # 1010 + s1(45 tambien es direccion) => cambiar addres a valores
         # 1015
-        # for i in range(dim):
-        #     superior_limit = var_dimension[f"dim{(i+1)}"]
 
-        #     superior_limit_address = self.memory.get_cte_address(ENTERO, superior_limit)
-        #     zero_addres = self.memory.get_cte_address(ENTERO, 0)
+        if dim == 1:
+            superior_limit = var_dimension["dim1"]
+            superior_limit_address = self.memory.get_cte_address(ENTERO, superior_limit)
+            zero_addres = self.memory.get_cte_address(ENTERO, 0)
+            dim_operando = dimensions.pop()
+            self.create_cruadruplo('VERIFICA', dim_operando, zero_addres, superior_limit_address)
+            temporal_address2 = dim_operando
+        elif dim == 2:
+            for i in range(dim):
+                superior_limit = var_dimension[f"dim{(i+1)}"]
 
-        #     dim_operando = dimensions.pop()
-        #     self.create_cruadruplo('VERIFICA', dim_operando, zero_addres, superior_limit_address)
-        #     if i == 0:
-        #         self.operandos.add(dim_operando)
-        #     else: 
-        #         temporal_address = self.memory.set_memory_address(ENTERO, None)
-        #         self.create_cruadruplo('*', self.operandos.pop(), dim_operando, temporal_address)
-        #         self.operandos.add(temporal_address)
+                superior_limit_address = self.memory.get_cte_address(ENTERO, superior_limit)
+                zero_addres = self.memory.get_cte_address(ENTERO, 0)
 
-        # temporal_address = self.memory.set_memory_address(ENTERO, None)
-        # base_dir = f"dir-{the_var['direccion']}"
-        # self.create_cruadruplo("+", base_dir, self.operandos.pop(), temporal_address)
-        # self.operandos.add(temporal_address)
-        # self.tipos.add(ENTERO)
+                dim_operando = dimensions.pop()
+                self.create_cruadruplo('VERIFICA', dim_operando, zero_addres, superior_limit_address)
+                if i == 0:
+                    temporal_address = self.memory.set_memory_address(ENTERO, None)
+                    m1 = superior_limit_address = self.memory.get_cte_address(ENTERO, var_dimension["dim2"])
+                    self.create_cruadruplo('*', dim_operando, m1, temporal_address)
+                else:
+                    temporal_address2 = self.memory.set_memory_address(ENTERO, None)
+                    self.create_cruadruplo('+', temporal_address , dim_operando, temporal_address2)
+
+
+        temporal_address3 = self.memory.set_memory_address(ENTERO, None)
+        temporal_address3 = f"({temporal_address3})"
+        base_dir = f"dir-{the_var['direccion']}"
+        self.create_cruadruplo("+", base_dir, temporal_address2, temporal_address3)
+        self.operandos.add(temporal_address3)
+        self.tipos.add(the_var["tipo"])
         
 
     def insert_operando(self, operando):

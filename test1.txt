@@ -71,4 +71,9 @@ entero funcion fibo (n: entero)
 
 principal () {
     escribe( fibo( 10 ) );
+    e[2][3] = 2;
+    a = e[2][3];
+    f= 0.4;
+    
+    escribe("FINAL", a);
 }

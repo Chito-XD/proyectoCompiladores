@@ -1,0 +1,12 @@
+programa pruebaPrograma ;
+
+variables:
+    k[2], i, j, p, c, a, b, d, e[5][3], r: entero; 
+    f: flotante;
+    
+
+principal () {
+    k[1] = 2;
+    a = k[1];
+    escribe(a);
+}
