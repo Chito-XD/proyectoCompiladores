@@ -1,3 +1,4 @@
+from os import replace
 from vm.memoryStack import MemoryStack
 
 from utils.types import get_type_from_address, get_cte_variable
@@ -43,6 +44,24 @@ class VirtualMachine:
         self.memory.push_memory_stack(self.class_name, self.function_name)
         self.run_cuadruplos(main_pointer)
     
+    def get_address_format(self, address_pointer):
+        if isinstance(address_pointer, str):
+
+            if "dir-" in address_pointer:
+                address_pointer = address_pointer.replace('dir-', '')
+                return int(address_pointer)
+
+            if address_pointer[0] == "(" and address_pointer[-1] == ")":
+                temp = self.memory.get_value_from_address(address_pointer)
+                if temp != None:
+                    return temp
+
+                address_pointer = address_pointer.replace('(', '').replace(')', '')
+                address_pointer = int(address_pointer)
+                address = self.memory.get_value_from_address(address_pointer)
+                return address
+        return address_pointer
+    
     def run_cuadruplos(self, pointer=0):
 
         while pointer < len(self.cuadruplos):
@@ -53,147 +72,79 @@ class VirtualMachine:
             print(pointer, current_cuadruplo)
 
             if operation == ASSIGN:
-                Operando1 = current_cuadruplo[1]
-                Operando3 = current_cuadruplo[3]
+                operando1 = current_cuadruplo[1]
+                operando3 = current_cuadruplo[3]
 
-                if isinstance(Operando1, str) :
-                    if Operando1.find('(') != -1:
-                        Aux = Operando1.replace('(', '')
-                        Aux = Aux.replace(')', '')
-                        Aux = int(Aux)
-                        print("Aux:",Aux)
-                        Dir = self.memory.get_value_from_address(Aux)
-                        print("DireccionOp1:",Dir)
-                        op1 = self.memory.get_value_from_address(Dir)
-                        print("Op1:",op1)
-                        if not op1:
-                            raise Exception("Instancia del arreglo sin valor")
-                        else:
-                            self.memory.assign_value_from_addresses(Dir, current_cuadruplo[3])
+                add1 = self.get_address_format(operando1)
+                add3 = self.get_address_format(operando3)
 
-                elif isinstance(Operando3, str):
-                    if Operando3.find('(') != -1:
-                        Aux = Operando3.replace('(', '')
-                        Aux = Aux.replace(')', '')
-                        Aux = int(Aux)
-                        Dir = self.memory.get_value_from_address(Aux)
-                        print("DireccionOp3:",Dir)
-                        self.memory.assign_value_from_addresses(current_cuadruplo[1], Dir)
 
-                    else:
-                        self.memory.assign_value_from_addresses(current_cuadruplo[1], current_cuadruplo[3])
-                else:
-                    self.memory.assign_value_from_addresses(current_cuadruplo[1], current_cuadruplo[3])
+                # print(operando1, operando3, add1, add3)
 
+                self.memory.assign_value_from_addresses(origin_add=add1, target_add=add3)
                 pointer += 1
+                # print(self.memory.memory_stack)
+                # print(self.memory.global_memory)
 
             elif operation in ALL_OPERATIONS:
-                # TODO: Revisar si es direccion o voy por valor 
-
                 Operando1 = current_cuadruplo[1]
                 Operando2 = current_cuadruplo[2]
+
+                if isinstance(Operando1, str) and Operando1.find('dir-') != 1:
+                    dirBase = Operando1.replace('dir-', '')
+                    # print("DirBase:",dirBase)
+                    dirBase = int(dirBase)
+                    op2 = self.memory.get_value_from_address(Operando2)
+                    if op2 == None:
+                        raise Exception("Variable no incializada")
+
+                    result = self.evaluate_operation(dirBase, op2, operation)
+                    # print("Resultado:", result)
+                    self.memory.set_value_from_address(current_cuadruplo[3], result)
                 
-                if isinstance(Operando1, str) | isinstance(Operando2,str):
-
-                   if Operando1.find('dir-') != 1:
-                        Aux = Operando1.replace('dir-', '')
-                        print("DirBase:",Aux)
-                        op1 = int(Aux)
-                        op2 = self.memory.get_value_from_address(current_cuadruplo[2])
-                        if not op2:
-                            raise Exception("Variable no incializada")
-
-                        result = self.evaluate_operation(op1, op2, operation)
-                        print("Resultado:", result)
-                        self.memory.set_value_from_address(current_cuadruplo[3], result)
-                        print(self.memory.memory_stack)
-                        pointer += 1
-
-
-                   elif Operando1.find('('):
-                        Aux = Operando1.replace('(', '')
-                        Aux = Aux.replace(')', '')
-                        Dir = self.memory.get_value_from_address(Aux)
-                        op1 = self.memory.get_value_from_address(Dir)
-                        op2 = self.memory.get_value_from_address(current_cuadruplo[2])
-
-                        print("Direccion:", Dir)
-                        print("Valor:", op1)
-
-                        if not op1 or not op2:
-                            raise Exception("Variable no incializada")
-
-                        result = self.evaluate_operation(op1, op2, operation)
-                        self.memory.set_value_from_address(current_cuadruplo[3], result)
-                        pointer += 1
-
-                   elif Operando2.find('('):
-                        Aux = Operando2.replace('(', '')
-                        Aux = Aux.replace(')', '')
-                        Dir = self.memory.get_value_from_address(Aux)
-                        op1 = self.memory.get_value_from_address(Dir)
-                        op2 = self.memory.get_value_from_address(current_cuadruplo[2])
-
-                        if not op1 or not op2:
-                            raise Exception("Variable no incializada")
-
-                        result = self.evaluate_operation(op1, op2, operation)
-                        self.memory.set_value_from_address(current_cuadruplo[3], result)
-                        pointer += 1
-
-                        # raise Exception("Variable de direccion")
-                   else:
-                        op1 = self.memory.get_value_from_address(current_cuadruplo[1])
-                        op2 = self.memory.get_value_from_address(current_cuadruplo[2])
-
-                        if not op1 or not op2:
-                            raise Exception("Variable no inicializada")
-
-                        result = self.evaluate_operation(op1, op2, operation)
-                        self.memory.set_value_from_address(current_cuadruplo[3], result)
-                        pointer += 1
-                    
                 else:
-                    op1 = self.memory.get_value_from_address(current_cuadruplo[1])
-                    op2 = self.memory.get_value_from_address(current_cuadruplo[2])
+                    add1 = self.get_address_format(Operando1)
+                    add2 = self.get_address_format(Operando2)
 
-                    if not op1 or not op2:
-                        raise Exception("Variable no inicializada")
+                    op1 = self.memory.get_value_from_address(add1)
+                    op2 = self.memory.get_value_from_address(add2)
 
+                    # print(add1, add2, op1, op2)
+
+                    if op1 == None or op2 == None:
+                        raise Exception("Variable no incializada")
+                    
                     result = self.evaluate_operation(op1, op2, operation)
                     self.memory.set_value_from_address(current_cuadruplo[3], result)
-                    pointer += 1
-
-                if op1 == None or op2 == None:
-                    raise Exception("Variable no inicializada")
-
-                    result = self.evaluate_operation(op1, op2, operation)
-                    self.memory.set_value_from_address(current_cuadruplo[3], result)
-                    pointer += 1
+                
+                # print(self.memory.memory_stack)
+                # print(self.memory.global_memory)
+                pointer += 1
             
             elif operation == LECTURA:
                 answer = input()
                 answer_type = get_cte_variable(answer)
-                memory_addres = get_type_from_address(current_cuadruplo[3])
-                if answer_type != memory_addres:
+
+                memory_addres = self.memory.get_value_from_address(current_cuadruplo[3])
+
+                # print("memory addres", memory_addres)
+                
+                memory_type = get_type_from_address(memory_addres)
+                if answer_type != memory_type:
                     raise Exception("==> INPUT MITMATCH", answer)
-                self.memory.set_value_from_address(current_cuadruplo[3], answer)
+                # print("ey", current_cuadruplo[3], answer, memory_addres)
+
+
+                self.memory.set_value_from_address(int(memory_addres), answer)
                 pointer += 1
+                # print(self.memory.memory_stack)
+                # print(self.memory.global_memory)
             
             elif operation == ESCRIBE:
-                aux = current_cuadruplo[3]
-
-                if isinstance(aux, str) and  aux[0] == "(" and aux[-1] == ")":
-                    aux = aux.replace('(', '')
-                    aux = aux.replace(')', '')
-                    aux = int(aux)
-                    address = self.memory.get_value_from_address(aux)
-                    value = self.memory.get_value_from_address(address)
-                    # print("AUXXXXX", aux, address, value)
-                    print(value)
-                else:
-                    # print("AUXXXXX", aux)
-                    print(self.memory.get_value_from_address(aux))
+                address = self.get_address_format(current_cuadruplo[3])
+                value = self.memory.get_value_from_address(address)
+                # print(address)
+                print(value)
                 pointer += 1
 
             elif operation == GOTO:
@@ -201,30 +152,33 @@ class VirtualMachine:
 
             elif operation == GOTO_F:
                 condition = self.memory.get_value_from_address(current_cuadruplo[1])
+
+                if condition == None:
+                    raise Exception("No inicializada")
+
                 if not condition:
                     pointer = int(current_cuadruplo[2])
                 else:
                     pointer += 1
 
             elif operation == VERIFICA:
-                Valor = int(self.memory.get_value_from_address(current_cuadruplo[1]))
-                LimInf = int(self.memory.get_value_from_address(current_cuadruplo[2]))
-                LimSup = int(self.memory.get_value_from_address(current_cuadruplo[3])) - 1
+                valor = int(self.memory.get_value_from_address(current_cuadruplo[1]))
+                lim_inf = int(self.memory.get_value_from_address(current_cuadruplo[2]))
+                lim_sup = int(self.memory.get_value_from_address(current_cuadruplo[3])) - 1
 
-                print(Valor, LimInf, LimSup)
+                # print(valor, lim_inf, lim_sup)
 
-                if Valor < LimInf or Valor > LimSup:
-                    raise Exception ("Out of bounds")
+                if valor < lim_inf or valor > lim_sup:
+                    raise Exception (f"{valor} is out of bounds of {lim_inf} and {lim_sup}")
 
                 pointer += 1
             
             elif operation == REGRESA:
                 address = current_cuadruplo[1]
                 value = self.memory.get_value_from_address(current_cuadruplo[3])
-
                 self.memory.set_return(address, value)
-
-                # pointer += 1
+                # print(self.memory.memory_stack)
+                # print(self.memory.global_memory)
                 return pointer
 
             elif operation == ERA:
@@ -239,9 +193,6 @@ class VirtualMachine:
             elif operation == PARAM:
                 return pointer
 
-            # else: 
-            #     pointer += 1
-    
 
     # metodo que ejecuta la logica del la llamada de los métodos
     # es específicamente para las llamadas, no para la declaración de los métodos
@@ -254,7 +205,8 @@ class VirtualMachine:
         # hasta el momento en que encontramos el gosub
         while self.cuadruplos[current_pointer][0] != GOSUB:
             if self.cuadruplos[current_pointer][0] == PARAM:
-                value = self.memory.get_value_from_address(self.cuadruplos[current_pointer][1])
+                address = self.get_address_format(self.cuadruplos[current_pointer][1])
+                value = self.memory.get_value_from_address(address)
                 print("PARAM VALUE", value)
                 param_values.append(value)
                 current_pointer += 1

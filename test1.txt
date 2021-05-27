@@ -70,10 +70,7 @@ entero funcion fibo (n: entero)
 }
 
 principal () {
-    escribe( fibo( 10 ) );
-    e[2][3] = 2;
-    a = e[2][3];
-    f= 0.4;
-    
-    escribe("FINAL", a);
+    k[1] = 6;
+    escribe( fibo( k[1] ) );
+    escribe(fact( k[1] ));
 }

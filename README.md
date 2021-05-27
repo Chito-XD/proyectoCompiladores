@@ -71,3 +71,15 @@ Integrantes:
 - FOR loop
 - return
 - DUDAS --> Funciones de clases
+
+
+## Avance 8:
+-
+
+*Pendientes*
+- Objetos
+- Operaciones con vectores
+- Parámetros - cuando le mandas una función/vector como parámetro
+- string
+- Stack overflow
+- Documentación

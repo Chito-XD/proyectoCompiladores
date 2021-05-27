@@ -365,10 +365,12 @@ class ManagerSemantic():
         self.create_cruadruplo("ESCRIBE", None, None, Res)
     
     def create_lectura(self, op):
-        if isinstance(op, tuple):
-            op = op[1]
-        var = self.directory.get_variable(self.class_id, self.method_id, op)
-        self.create_cruadruplo("LECTURA", None, None, var["direccion"])
+        # if isinstance(op, tuple):
+        #     op = op[1]
+        # var = self.directory.get_variable(self.class_id, self.method_id, op)
+        var = self.operandos.pop()
+        self.tipos.pop()
+        self.create_cruadruplo("LECTURA", None, None, var)
         
     
     def revisar_estatuo(self):

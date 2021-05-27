@@ -6,7 +6,10 @@ variables:
     
 
 principal () {
-    k[10] = 2;
-    e[1][2] = 100;
-    escribe(k[1]);
+    i = 0;
+    j = 1;
+    lee(e[i+j][0]);
+    escribe("ESCRIBE DE LA LECTURA", e[i+j][0]);
+    k[1] = 90;
+    escribe("FINAL", k[1]);
 }

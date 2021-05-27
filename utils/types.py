@@ -51,6 +51,9 @@ def get_scope_from_address(address):
     raise Exception("-> No memory range found")
 
 def get_type_from_address(address):
+    if isinstance(address, str):
+        address = address.replace('(', '').replace(')', '').replace('dir-', '')
+        address = int(address)
     for key in GLOBAL_SPACE_ADDRESS.keys():
         if address >= GLOBAL_SPACE_ADDRESS[key]["min"] and address <= GLOBAL_SPACE_ADDRESS[key]["max"]:
             return key

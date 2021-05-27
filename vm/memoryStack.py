@@ -65,7 +65,7 @@ class MemoryStack:
         elif self.global_memory.get(address) != None:
             return self.global_memory[address]
         
-        self.memory_stack[self.memory_pointer][address] = None
+        # self.memory_stack[self.memory_pointer][address] = None
         return None
     
     # asignar el valor de la dirrecion origin a la direcciónn objetivo
@@ -86,9 +86,9 @@ class MemoryStack:
 
         scope = get_scope_from_address(Aux)
         if scope == "LOCAL":
-            self.memory_stack[self.memory_pointer][Aux] = value
+            self.memory_stack[self.memory_pointer][address] = value
         else:
-            self.global_memory[Aux] = value
+            self.global_memory[address] = value
 
     def set_return(self, key, value):
         self.global_memory[key] = value
