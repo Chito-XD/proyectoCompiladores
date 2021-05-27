@@ -181,7 +181,19 @@ class VirtualMachine:
                 pointer += 1
             
             elif operation == ESCRIBE:
-                print(self.memory.get_value_from_address(current_cuadruplo[3]))
+                aux = current_cuadruplo[3]
+
+                if isinstance(aux, str) and  aux[0] == "(" and aux[-1] == ")":
+                    aux = aux.replace('(', '')
+                    aux = aux.replace(')', '')
+                    aux = int(aux)
+                    address = self.memory.get_value_from_address(aux)
+                    value = self.memory.get_value_from_address(address)
+                    # print("AUXXXXX", aux, address, value)
+                    print(value)
+                else:
+                    # print("AUXXXXX", aux)
+                    print(self.memory.get_value_from_address(aux))
                 pointer += 1
 
             elif operation == GOTO:
@@ -195,6 +207,15 @@ class VirtualMachine:
                     pointer += 1
 
             elif operation == VERIFICA:
+                Valor = int(self.memory.get_value_from_address(current_cuadruplo[1]))
+                LimInf = int(self.memory.get_value_from_address(current_cuadruplo[2]))
+                LimSup = int(self.memory.get_value_from_address(current_cuadruplo[3])) - 1
+
+                print(Valor, LimInf, LimSup)
+
+                if Valor < LimInf or Valor > LimSup:
+                    raise Exception ("Out of bounds")
+
                 pointer += 1
             
             elif operation == REGRESA:

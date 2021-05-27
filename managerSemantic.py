@@ -220,6 +220,8 @@ class ManagerSemantic():
         operando_address = self.operandos.pop() # id
         self.tipos.pop()
 
+        print(operando_address, self.class_id, self.method_id)
+
         the_var = self.directory.find_var_from_address(self.class_id, self.method_id, operando_address)
 
         print("the_var", the_var)
