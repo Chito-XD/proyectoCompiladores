@@ -18,11 +18,10 @@ class TableVariables():
         else: 
             return False
 
-    def updateVariable(self, var):
-        if var["key"] in self.variables.keys():
-            self.variables[ var["key"] ] = var["value"]
-            return True
-        else:
-            return False
+    def get_var(self, var_name):
+        # print(var_name)
+        # print(self.variables)
+        return self.variables.get(var_name)
+
 
         

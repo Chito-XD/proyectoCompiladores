@@ -65,18 +65,6 @@ class FunctionDirectory():
     def returnParam(self, class_name, function_name):
         return self.directory[class_name][function_name]["parametros"]
     
-    # Funcion para actualizar el valor de una variable de un método
-    def updateVariable(self, class_name, function_name, var):
-        if class_name in self.directory.keys():
-            if function_name in self.directory[class_name].keys():
-                is_updated = self.directory[class_name][function_name]["directorio_variables"].updateVariable(var)
-                if not is_updated:
-                    raise Exception(f"--> No se puede actualizar una variable que no existe en la funcion {function_name} de la clase {class_name} --> {var['key']}")
-            else:
-                raise Exception(f"--> No existe la funcion {function_name} en la clase {class_name}")
-        else:
-            raise Exception(f"--> La clase {class_name} no existe")
-
     # funcion para obtener la variable de un metodo - sino lo encuentra lo busca en el global de la clase
     def get_variable(self, class_name, function_name, var):
         if class_name in self.directory.keys():
@@ -104,6 +92,12 @@ class FunctionDirectory():
     # regresa las variables de la tabla de variables
     def get_dir_variables(self, class_name, function_name):
         return self.directory[class_name][function_name]["directorio_variables"].variables
+    
+    def get_var_info(self, class_name, function_name, var_name):
+        if function_name == PRINCIPAL:
+            function_name = "Main"
+        # print(class_name, function_name)
+        return self.directory[class_name][function_name]["directorio_variables"].get_var(var_name)
     
     # Encontrar la variable del dir con base en la dirección
     def find_var_from_address(self, class_name, function_name, address):

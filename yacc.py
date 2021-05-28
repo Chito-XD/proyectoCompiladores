@@ -174,7 +174,6 @@ class Yacc(Parser):
         return p
     
     ####### REPETICION ######## 
-    # revisar el desde
     @_('MIENTRAS meterActual LP super_exp RP gotoWhile HACER bloque SaleWhile', 
        'DESDE ID insertOperando ASSIGN insertOperador super_exp crearAsignacionLoop HASTA super_exp igualdadFor HACER bloque sumaFor SaleFor')
     def repeticion(self, p):
@@ -234,18 +233,12 @@ class Yacc(Parser):
     ######## VARIABLE ########
     @_('ID insertOperando LC super_exp RC LC super_exp RC verificaD2',
        'ID insertOperando LC super_exp RC verificaD1',
-       'ID DOT ID',
-       'ID DOT ID LP variable_aux RP',
+       'ID setCalledClass DOT funcion',
+    #    'ID setCalledClass DOT ID',
        'ID insertOperando')
     def variable(self, p):
         return p
     
-    @_('super_exp COMMA variable_aux', 
-       'super_exp')
-    def variable_aux(self, p):
-        return p
-
-
 ######## PUNTOS NEURALGICOS ######## 
     @_('createDirectory :')
     def createDirectory(self, p):
@@ -258,6 +251,10 @@ class Yacc(Parser):
     @_('createMainClass :')
     def createMainClass(self, p):
         self.manager.create_class('Main')
+
+    @_('setCalledClass :')
+    def setCalledClass(self, p):
+        self.manager.set_called_class(p[-1])
 
     @_('createEra :')
     def createEra(self, p):

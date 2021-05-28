@@ -1,4 +1,4 @@
-from os import replace
+# from os import replace
 from vm.memoryStack import MemoryStack
 
 from utils.types import get_type_from_address, get_cte_variable
@@ -16,7 +16,9 @@ from utils.constants import (
     REGRESA,
     PARAM,
     GOSUB,
-    END_FUNCTION
+    END_FUNCTION,
+    PRINCIPAL,
+    MAIN
 )
 
 class VirtualMachine:
@@ -26,9 +28,6 @@ class VirtualMachine:
         self.directory = dirr
 
         self.memory = MemoryStack(dirr, cte_memory)
-
-        self.class_name = "Main"
-        self.function_name = "PRINCIAPAL"
 
         self.directory.print_directory()
 
@@ -41,7 +40,7 @@ class VirtualMachine:
     def execute(self):
         # GOTO MAIN
         main_pointer = self.cuadruplos[0][3]
-        self.memory.push_memory_stack(self.class_name, self.function_name)
+        self.memory.push_memory_stack(MAIN, PRINCIPAL)
         self.run_cuadruplos(main_pointer)
     
     def get_address_format(self, address_pointer):
@@ -78,13 +77,8 @@ class VirtualMachine:
                 add1 = self.get_address_format(operando1)
                 add3 = self.get_address_format(operando3)
 
-
-                # print(operando1, operando3, add1, add3)
-
                 self.memory.assign_value_from_addresses(origin_add=add1, target_add=add3)
                 pointer += 1
-                # print(self.memory.memory_stack)
-                # print(self.memory.global_memory)
 
             elif operation in ALL_OPERATIONS:
                 Operando1 = current_cuadruplo[1]
@@ -177,8 +171,7 @@ class VirtualMachine:
                 address = current_cuadruplo[1]
                 value = self.memory.get_value_from_address(current_cuadruplo[3])
                 self.memory.set_return(address, value)
-                # print(self.memory.memory_stack)
-                # print(self.memory.global_memory)
+                # self.memory.print_memory()
                 return pointer
 
             elif operation == ERA:
@@ -213,21 +206,30 @@ class VirtualMachine:
             else:
                 current_pointer = self.run_cuadruplos(current_pointer)
             
+        # TODO: Revisar a qué inicio y qué variable llamar dependiendo del objeto y método
+        function_name = current_cuadruplo[3]
+        class_name = MAIN
+
+        if "-" in function_name:
+            class_name, function_name = function_name.split("-")
+
         # Una vez que ejecutamos todos los params, ahora sí, movemos el pointer
         # al inicio de la función
-        self.function_name = current_cuadruplo[3]
-        pointer = self.directory.get_inicio(self.class_name, self.function_name)
+        pointer = self.directory.get_inicio(class_name, function_name)
 
         # creamos nuevo stack de memoria
-        self.memory.push_memory_stack(self.class_name, self.function_name, param_values)
+        self.memory.push_memory_stack(class_name, function_name, param_values)
 
         # corremos los cuadruplos del método
         self.run_cuadruplos(pointer)
+
+        # self.memory.print_memory()
 
         # Logica del gosub
         # Remueve del stack la memoria local
         self.memory.pop_memory_stack()
         
+        # self.memory.print_memory()
 
         current_pointer += 1
         return current_pointer

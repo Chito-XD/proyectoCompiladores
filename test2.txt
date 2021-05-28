@@ -1,31 +1,39 @@
 programa pruebaPrograma ;
 
-variables:
-    a, b : entero;
-
-entero funcion pelos (x: entero, y: entero, z: entero)
-variables:
-    r: entero;
-{
-    a = 3 * z;
-    escribe(a);
-    regresa(46);
-    escribe("hol");
+Clase Cabeza {
+    atributos:
+        f: flotante;
+        e: entero;
+    
+    metodos: 
+    entero funcion uno (a: entero, b:entero)
+    variables:
+        c: entero;
+    {
+        e = a * b;
+        regresa(e);
+    }
 }
+
+variables:
+    f : flotante;
+    a, b : entero;
+    cadena: char;
+    objeto : Cabeza;
+    cara: Cabeza;
+    
 
 entero funcion uno(x: entero)
 {
+    b = 99;
     regresa(x);
+    
 }
 
-
 principal () {
-    b = 5;
-    a = 2;
-    a = pelos(88, a, a+b*2*10);
-    escribe(a);
-    escribe(uno(1));
-    escribe(uno(2));
-    escribe(uno(3));
-    escribe(uno(4));
+    escribe(cara.uno(5, 5));
+    escribe(uno(7 + 2));
+    escribe(b);
+    cadena = "HOLA";
+    escribe(cadena);
 }

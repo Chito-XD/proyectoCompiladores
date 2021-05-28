@@ -30,6 +30,7 @@ Clase Brazo {
 variables:
     k[2], i, j, p, c, a, b, d, e[5][3], r: entero; 
     f: flotante;
+    cabeza: Cabeza;
     
 entero funcion fact (r : entero) 
 variables:
@@ -69,6 +70,22 @@ entero funcion fibo (n: entero)
     }
 }
 
+void funcion fiboIterative(n: entero)
+variables:
+    a, b, c: entero;
+{
+    a = 0;
+    b = 1;
+    escribe(a, b);
+    mientras (n > 2) hacer {
+        c = a + b;
+        a = b;
+        b = c;
+        n = n-1;
+        escribe(c);
+    }
+}
+
 principal () {
-    escribe( fibo( fact(3) ) );
+    fiboIterative(7);
 }
