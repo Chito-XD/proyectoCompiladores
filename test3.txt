@@ -1,16 +1,13 @@
 programa pruebaPrograma ;
 
 variables:
-    k[2], i, j, p, c, a, b, d, e[5][3], r: entero; 
+    k[6], i, j, p, c, a, b, d, e[5][3], r: entero; 
     f: flotante;
     
 
 principal () {
-    i = 0;
-    j = 1;
-    lee(e[i+j][0]);
-    escribe("ESCRIBE DE LA LECTURA", e[i+j][0]);
-    k[1] = 90;
-    c = k[1];
-    escribe("FINAL", c);
+    k[0] = 1;
+    k[1] = 2;
+
+    a = k[0] + k[1]; 
 }
