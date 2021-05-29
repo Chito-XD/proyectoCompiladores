@@ -318,6 +318,7 @@ class ManagerSemantic():
         self.create_cruadruplo("+", base_dir, temporal_address2, temporal_address3)
         self.operandos.add(temporal_address3)
         self.tipos.add(the_var["tipo"])
+        self.operadores.pop()
         
 
     def insert_operando(self, operando):
@@ -333,6 +334,25 @@ class ManagerSemantic():
         self.operandos.add(address)
 
         print(f"el tipo de {operando} es {tipo_operando}")
+        self.tipos.add(tipo_operando)
+
+    def insert_operandoArr(self, operando):
+        print("voy a insertar ", operando)
+        tipo_operando = get_cte_variable(operando)
+        if not tipo_operando:
+            var = self.directory.get_variable(self.class_id, self.method_id, operando)
+            tipo_operando = var["tipo"]
+            address = var["direccion"]
+        else:
+            address = self.memory.get_cte_address(tipo_operando, operando)
+        
+        #Set fondo falso
+
+        self.operadores.add('[')
+
+        self.operandos.add(address)
+
+        print(f"el tipo de {operando} es un arreglo de tipo {tipo_operando}")
         self.tipos.add(tipo_operando)
     
     def insert_operador(self, operador):
@@ -404,7 +424,7 @@ class ManagerSemantic():
         
 
     def create_escritura(self):
-        self.create_cruadruplo("ESCRIBE", None, None, self.operandos.peek())
+        self.create_cruadruplo("ESCRIBE", None, None, self.operandos.pop())
 
     def create_escritura_exp(self):
         Res = self.operandos.pop()

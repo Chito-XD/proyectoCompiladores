@@ -231,10 +231,10 @@ class Yacc(Parser):
         return p
     
     ######## VARIABLE ########
-    @_('ID insertOperando LC super_exp RC LC super_exp RC verificaD2',
-       'ID insertOperando LC super_exp RC verificaD1',
-       'ID setCalledClass DOT funcion',
-    #    'ID setCalledClass DOT ID',
+    @_('ID insertOperandoArr LC super_exp RC LC super_exp RC verificaD2',
+       'ID insertOperandoArr LC super_exp RC verificaD1',
+       'ID DOT ID',
+       'ID DOT ID LP variable_aux RP',
        'ID insertOperando')
     def variable(self, p):
         return p
@@ -327,6 +327,10 @@ class Yacc(Parser):
     @_('insertOperando :')
     def insertOperando(self, p):
         self.manager.insert_operando(p[-1])
+
+    @_('insertOperandoArr :')
+    def insertOperandoArr(self, p):
+        self.manager.insert_operandoArr(p[-1])
 
     @_('verificaD1 :')
     def verificaD1(self, p):
