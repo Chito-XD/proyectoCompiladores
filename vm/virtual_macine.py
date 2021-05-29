@@ -46,6 +46,8 @@ class VirtualMachine:
     def get_address_format(self, address_pointer):
         if isinstance(address_pointer, str):
 
+            print(address_pointer)
+
             if "dir-" in address_pointer:
                 address_pointer = address_pointer.replace('dir-', '')
                 return int(address_pointer)
@@ -84,7 +86,7 @@ class VirtualMachine:
                 Operando1 = current_cuadruplo[1]
                 Operando2 = current_cuadruplo[2]
 
-                if isinstance(Operando1, str) and Operando1.find('dir-') != 1:
+                if isinstance(Operando1, str) and Operando1.find('dir-') != -1:
                     dirBase = Operando1.replace('dir-', '')
                     # print("DirBase:",dirBase)
                     dirBase = int(dirBase)

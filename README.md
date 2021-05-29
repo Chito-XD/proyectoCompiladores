@@ -73,12 +73,12 @@ Integrantes:
 - DUDAS --> Funciones de clases
 
 
-## Avance 8:
--
-
+## Avance 7 y 8:
+- Se crearon los cuadruplos de arreglos
+- Se ejecutan los arreglos y sus operaciones junto con su indexacion
+- Se ejecutan las funciones de los objetos
 *Pendientes*
 - 1) Objetos - Atributos
-- 3) Operaciones con vectores
 - 4) string - operaciones?
 
 - negativos
