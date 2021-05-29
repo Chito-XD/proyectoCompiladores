@@ -1,27 +1,39 @@
 programa pruebaPrograma ;
 
 variables:
-    matrix[3][4]: entero;
-    i, j, n: entero;
+    matrix[3][4]: flotante;
+    i, j: entero;
+    n: flotante;
+
+void funcion findValue(valor: flotante)
+{
+    i = 0;
+    j = 0;
+    escribe("valor a encontrar", valor);
+    mientras (i < 2)  hacer {
+        mientras (j < 3) hacer {
+            si (matrix[i][j] == valor) entonces {
+                escribe("aqui esta");
+            } sino {
+                escribe("no esta");
+            }
+            j = j+1;
+        }   
+        i = i+1;
+    }
+}
 
 principal () {
-
     escribe("Arreglo");
 
     desde i = 0 hasta 2 hacer {
         desde j = 0 hasta 3 hacer {
-            matrix[i][j] = i*j;
+            matrix[i][j] = 2.0;
             escribe(matrix[i][j]);
         }
     }
 
-
-    n = 1;
-
-    desde i = 0 hasta 2 hacer {
-        desde j = 0 hasta 3 hacer {
-            escribe(matrix[i][j]);
-        }
-    }
-
+    escribe("Que numero quieres encontrar");
+    lee(n);
+    findValue(n);
 }

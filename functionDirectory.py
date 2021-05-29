@@ -99,14 +99,24 @@ class FunctionDirectory():
         # print(class_name, function_name)
         return self.directory[class_name][function_name]["directorio_variables"].get_var(var_name)
     
-    # Encontrar la variable del dir con base en la dirección
+    # Encontrar la variable en el dir con base en la dirección
     def find_var_from_address(self, class_name, function_name, address):
         if function_name == PRINCIPAL:
             function_name = "Main"
+        # Busca la variable en la tabla de variables local
         tab_var = self.directory[class_name][function_name]["directorio_variables"].variables
         for key in tab_var.keys():
             if tab_var[key]["direccion"] == address:
                 return tab_var[key]
+
+        # Busca la variable en la tabla de variables global
+        global_class_function = self.directory[class_name]["proceso_global"]
+        global_tab_var = self.directory[class_name][global_class_function]["directorio_variables"].variables
+        for key in global_tab_var.keys():
+            if global_tab_var[key]["direccion"] == address:
+                return global_tab_var[key]
+        
+        return None
     
     # regresa el punto de inicio en los cuadruplos
     def get_inicio(self, class_name, function_name):

@@ -198,7 +198,7 @@ class Yacc(Parser):
         return p
 
     ####### EXPRESION ########
-    @_('exp relationalOperation OP_REL insertOperador exp', 
+    @_('exp relationalOperation OP_REL insertOperador expresion', 
        'exp relationalOperation')
     def expresion(self, p):
         return p

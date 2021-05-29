@@ -2,6 +2,7 @@ programa pruebaPrograma ;
 
 variables:
     k[6]: entero; 
+    i, n: entero;
 
 entero funcion partition(low: entero, high:entero)
 variables:
@@ -11,7 +12,7 @@ variables:
     pivot = k[high];
 
     desde j = low hasta high hacer {
-        si (k[j] <= pivot) {
+        si (k[j] <= pivot) entonces {
             i = i + 1;
             temp = k[i];
             k[i] = k[j];
@@ -53,7 +54,7 @@ principal () {
         escribe(k[i]);
     }
     
-    quickSort(0, n-1)
+    quickSort(0, n-1);
 
 
     escribe("Arreglo ordenado");

@@ -46,8 +46,6 @@ class VirtualMachine:
     def get_address_format(self, address_pointer):
         if isinstance(address_pointer, str):
 
-            # print(address_pointer)
-
             if "dir-" in address_pointer:
                 address_pointer = address_pointer.replace('dir-', '')
                 return int(address_pointer)
@@ -70,7 +68,7 @@ class VirtualMachine:
             current_cuadruplo = self.cuadruplos[pointer]
             operation = current_cuadruplo[0]
 
-            print(pointer, current_cuadruplo)
+            # print(pointer, current_cuadruplo)
 
             if operation == ASSIGN:
                 operando1 = current_cuadruplo[1]
@@ -88,14 +86,12 @@ class VirtualMachine:
 
                 if isinstance(Operando1, str) and Operando1.find('dir-') != -1:
                     dirBase = Operando1.replace('dir-', '')
-                    # print("DirBase:",dirBase)
                     dirBase = int(dirBase)
                     op2 = self.memory.get_value_from_address(Operando2)
                     if op2 == None:
                         raise Exception("Variable no incializada")
 
                     result = self.evaluate_operation(dirBase, op2, operation)
-                    # print("Resultado:", result)
                     self.memory.set_value_from_address(current_cuadruplo[3], result)
                 
                 else:
@@ -105,41 +101,30 @@ class VirtualMachine:
                     op1 = self.memory.get_value_from_address(add1)
                     op2 = self.memory.get_value_from_address(add2)
 
-                    # print(add1, add2, op1, op2)
-
                     if op1 == None or op2 == None:
                         raise Exception("Variable no incializada")
                     
                     result = self.evaluate_operation(op1, op2, operation)
                     self.memory.set_value_from_address(current_cuadruplo[3], result)
                 
-                # print(self.memory.memory_stack)
-                # print(self.memory.global_memory)
                 pointer += 1
             
             elif operation == LECTURA:
                 answer = input()
                 answer_type = get_cte_variable(answer)
 
-                memory_addres = self.memory.get_value_from_address(current_cuadruplo[3])
+                memory_addres = current_cuadruplo[3]
 
-                # print("memory addres", memory_addres)
-                
                 memory_type = get_type_from_address(memory_addres)
                 if answer_type != memory_type:
                     raise Exception("==> INPUT MITMATCH", answer)
-                # print("ey", current_cuadruplo[3], answer, memory_addres)
-
 
                 self.memory.set_value_from_address(int(memory_addres), answer)
                 pointer += 1
-                # print(self.memory.memory_stack)
-                # print(self.memory.global_memory)
             
             elif operation == ESCRIBE:
                 address = self.get_address_format(current_cuadruplo[3])
                 value = self.memory.get_value_from_address(address)
-                # print(address)
                 print(value)
                 pointer += 1
 
@@ -147,6 +132,7 @@ class VirtualMachine:
                 pointer = int(current_cuadruplo[2])
 
             elif operation == GOTO_F:
+                # print("GOTOF", current_cuadruplo)
                 condition = self.memory.get_value_from_address(current_cuadruplo[1])
 
                 if condition == None:
@@ -162,8 +148,6 @@ class VirtualMachine:
                 lim_inf = int(self.memory.get_value_from_address(current_cuadruplo[2]))
                 lim_sup = int(self.memory.get_value_from_address(current_cuadruplo[3])) - 1
 
-                # print(valor, lim_inf, lim_sup)
-
                 if valor < lim_inf or valor > lim_sup:
                     raise Exception (f"{valor} is out of bounds of {lim_inf} and {lim_sup}")
 
@@ -173,7 +157,6 @@ class VirtualMachine:
                 address = current_cuadruplo[1]
                 value = self.memory.get_value_from_address(current_cuadruplo[3])
                 self.memory.set_return(address, value)
-                # self.memory.print_memory()
                 return pointer
 
             elif operation == ERA:
@@ -225,14 +208,10 @@ class VirtualMachine:
         # corremos los cuadruplos del método
         self.run_cuadruplos(pointer)
 
-        # self.memory.print_memory()
-
         # Logica del gosub
         # Remueve del stack la memoria local
         self.memory.pop_memory_stack()
         
-        # self.memory.print_memory()
-
         current_pointer += 1
         return current_pointer
         

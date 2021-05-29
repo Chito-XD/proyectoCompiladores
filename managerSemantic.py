@@ -260,10 +260,13 @@ class ManagerSemantic():
             self.directory.addParam(self.class_id, self.method_id, params)
     
     def verifica_dim(self, dim):
+        print("VERIFICA DIM")
         dimensions = Stack()
         for _ in range(dim):
             dimensions.add(self.operandos.pop()) # dimensions = al reves =  dim2 dim1
             self.tipos.pop()
+
+        print(dimensions.print())
         
         operando_address = self.operandos.pop() # id
         self.tipos.pop()
@@ -387,6 +390,7 @@ class ManagerSemantic():
     
     def relational_operation(self):
         if self.operadores.peek() in OPER_REL:
+            print("OPER_REL")
             self.arithmetic_ops()
 
     def arithmetic_ops(self):
@@ -396,6 +400,9 @@ class ManagerSemantic():
 
         tipo_der = self.tipos.pop()
         tipo_izq = self.tipos.pop()
+
+        print("ARITHMETIC OPS")
+        print(op, op_izq, op_der, tipo_izq, tipo_der)
 
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
@@ -440,7 +447,7 @@ class ManagerSemantic():
         
     
     def revisar_estatuo(self):
-        self.arithmetic_ops()
+        # self.arithmetic_ops()
         cond = self.operandos.pop()
         typeC = self.tipos.pop()
         
@@ -455,6 +462,7 @@ class ManagerSemantic():
     def end_estatuto(self):
         
         C1 = self.saltos.pop()
+
         Temp = self.cuadruplos[C1]
         N = len(self.cuadruplos)
         sN = str(N)
@@ -474,11 +482,15 @@ class ManagerSemantic():
 
     def goto_revisar(self):
         Falso = self.saltos.pop()
-        Falso2 = self.cuadruplos[Falso]
+
         self.create_cruadruplo_no_lin("Goto", "ELSE", "?")
+
         Tam = len(self.cuadruplos)
         self.saltos.add(Tam-1)
         sTam = str(Tam)
+
+
+        Falso2 = self.cuadruplos[Falso]
 
         Cont = 0
 
@@ -491,19 +503,26 @@ class ManagerSemantic():
             
             Cont = Cont + 1
 
-        print("ELSE", a, b, sTam)
+        # print("ELSE", a, b, sTam)
 
         self.cuadruplos[Falso] = (a, b, sTam)
 
     def meterActual(self):
         Tam = len(self.cuadruplos)
         self.saltos.add(Tam)
-        self.saltos.add(Tam)
+        # self.saltos.add(Tam)
 
     def gotoWhile(self):
-        self.arithmetic_ops()
+        # self.arithmetic_ops()
+        print("GOTOWHILE")
+        print(self.operandos.print())
+        print(self.cuadruplos)
+        print(self.tipos.print())
         cond = self.operandos.pop()
         typeC = self.tipos.pop()
+
+        print(cond, typeC)
+        
         
         if typeC == BOOLEANO:
             self.create_cruadruplo_no_lin("GotoF", cond, "?")
@@ -514,25 +533,15 @@ class ManagerSemantic():
 
     def SaleWhile(self):
         Falso = self.saltos.pop()
-        Falso2 = self.cuadruplos[Falso]
         RetNum = self.saltos.pop()
-        # Ret = self.cuadruplos[RetNum]
-        Tam = len(self.cuadruplos)
-        sTam = str(Tam+1)
-
-        Cont = 0
-
-        for a in Falso2:
-            break
-
-        for b in Falso2:
-            if Cont == 1:
-                break
-            
-            Cont = Cont + 1
 
         self.create_cruadruplo_no_lin("Goto", None, RetNum)
-        self.cuadruplos[Falso] = (a,b,sTam)
+
+        goto_command = self.cuadruplos[Falso][0]
+        goto_cond = self.cuadruplos[Falso][1]
+        goto_return = len(self.cuadruplos)
+
+        self.cuadruplos[Falso] = (goto_command, goto_cond, goto_return)
 
     def SaleFor(self):
         Reg = self.saltos.pop()

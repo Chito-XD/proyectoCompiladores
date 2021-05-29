@@ -4,6 +4,19 @@ variables:
     k[6]: entero; 
     i, j, n, temp: entero;
 
+void funcion bubbleSort()
+{  
+    desde i = 0 hasta n-1 hacer {
+        desde j = 0 hasta n-i-1 hacer {
+            si ( k[j] > k[j+1] ) entonces {
+                temp = k[j];
+                k[j] = k[j+1];
+                k[j+1] = temp;
+            }
+        }
+    }
+}
+
 principal () {
 
     n = 5;
@@ -21,16 +34,7 @@ principal () {
     }
     
     escribe("BUBBLE SORT");
-
-    desde i = 0 hasta n-1 hacer {
-        desde j = 0 hasta n-i-1 hacer {
-            si ( k[j] > k[j+1] ) entonces {
-                temp = k[j];
-                k[j] = k[j+1];
-                k[j+1] = temp;
-            }
-        }
-    }
+    bubbleSort();
 
     escribe("Arreglo ordenado");
     desde i = 0 hasta n hacer {
