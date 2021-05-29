@@ -1,0 +1,60 @@
+programa pruebaPrograma ;
+
+
+variables:
+    i : entero; 
+
+entero funcion fact (r : entero) 
+{ 
+    si (r == 1) entonces {
+        regresa(r);
+    } sino {
+        regresa(r * fact(r-1));
+    }
+}
+
+entero funcion factIterative (n: entero)
+variables:
+    f : entero;
+{
+    si (n <= 1) entonces {
+        regresa(1);
+    } sino {
+        f = 1;
+        desde i = 1 hasta n hacer {
+            f = f * i;
+        }
+        regresa(f);
+    }
+}
+
+entero funcion fibo (n: entero)
+{
+    si (n <= 1) entonces {
+        regresa(n);
+    } sino {
+        regresa(fibo(n-1) + fibo(n-2));
+    }
+}
+
+entero funcion fiboIterative(n: entero)
+variables:
+    a, b, c: entero;
+{
+    a = 0;
+    b = 1;
+    mientras (n > 1) hacer {
+        c = a + b;
+        a = b;
+        b = c;
+        n = n-1;
+    }
+    regresa(c);
+}
+
+principal () {
+    escribe("Factorial iterativo" , factIterative(5));
+    escribe("Factorial recursivo", fact(6));
+    escribe("Fibonacci iterativo", fiboIterative(7));
+    escribe("Fibonacci recursivo", fibo(8));
+}

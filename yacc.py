@@ -233,8 +233,8 @@ class Yacc(Parser):
     ######## VARIABLE ########
     @_('ID insertOperandoArr LC super_exp RC LC super_exp RC verificaD2',
        'ID insertOperandoArr LC super_exp RC verificaD1',
-       'ID DOT ID',
-       'ID DOT ID LP variable RP',
+       'ID setCalledClass DOT funcion',
+    #    'ID setCalledClass DOT ID',
        'ID insertOperando')
     def variable(self, p):
         return p

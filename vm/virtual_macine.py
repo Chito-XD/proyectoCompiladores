@@ -46,7 +46,7 @@ class VirtualMachine:
     def get_address_format(self, address_pointer):
         if isinstance(address_pointer, str):
 
-            print(address_pointer)
+            # print(address_pointer)
 
             if "dir-" in address_pointer:
                 address_pointer = address_pointer.replace('dir-', '')
@@ -202,7 +202,7 @@ class VirtualMachine:
             if self.cuadruplos[current_pointer][0] == PARAM:
                 address = self.get_address_format(self.cuadruplos[current_pointer][1])
                 value = self.memory.get_value_from_address(address)
-                print("PARAM VALUE", value)
+                # print("PARAM VALUE", value)
                 param_values.append(value)
                 current_pointer += 1
             else:

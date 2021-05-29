@@ -1,0 +1,64 @@
+programa pruebaPrograma ;
+
+variables:
+    k[6]: entero; 
+
+entero funcion partition(low: entero, high:entero)
+variables:
+    pivot, i, j, temp: entero;
+{
+    i = (low-1);
+    pivot = k[high];
+
+    desde j = low hasta high hacer {
+        si (k[j] <= pivot) {
+            i = i + 1;
+            temp = k[i];
+            k[i] = k[j];
+            k[j] = temp;
+        }
+    }
+    temp = k[high];
+    k[high] = k[i+1];
+    k[i+1] = temp;
+    regresa(i+1);
+}
+
+
+void funcion quickSort(low: entero, high:entero)
+variables:
+    pi: entero;
+{
+    si (low < high ) entonces {
+        pi = partition(low, high);
+
+        quickSort(low, pi-1);
+        quickSort(pi+1, high);
+    }
+}
+
+principal () {
+
+    n = 5;
+
+    k[0] = 5;
+    k[1] = 2;
+    k[2] = 9;
+    k[3] = 3;
+    k[4] = 1;
+    k[5] = 10;
+
+    escribe("Arreglo desordenado");
+    desde i = 0 hasta n hacer {
+        escribe(k[i]);
+    }
+    
+    quickSort(0, n-1)
+
+
+    escribe("Arreglo ordenado");
+    desde i = 0 hasta n hacer {
+        escribe(k[i]);
+    }
+
+}

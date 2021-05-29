@@ -1,26 +1,26 @@
 programa pruebaPrograma ;
 
-Clase Cabeza {
+Clase Calculo {
     atributos:
         f: flotante;
         e: entero;
     
     metodos: 
-    entero funcion uno (a: entero, b:entero)
-    variables:
-        c: entero;
-    {
-        e = a * b;
-        regresa(e);
-    }
+        entero funcion uno (a: entero, b:entero)
+        variables:
+            c: entero;
+        {
+            e = a * b;
+            regresa(e);
+        }
 }
 
 variables:
     f : flotante;
     a, b : entero;
     cadena: char;
-    objeto : Cabeza;
-    cara: Cabeza;
+    objeto : Calculo;
+    cara: Calculo;
     
 
 entero funcion uno(x: entero)

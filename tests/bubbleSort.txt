@@ -1,0 +1,40 @@
+programa pruebaPrograma ;
+
+variables:
+    k[6]: entero; 
+    i, j, n, temp: entero;
+
+principal () {
+
+    n = 5;
+
+    k[0] = 5;
+    k[1] = 2;
+    k[2] = 9;
+    k[3] = 3;
+    k[4] = 1;
+    k[5] = 10;
+
+    escribe("Arreglo desordenado");
+    desde i = 0 hasta n hacer {
+        escribe(k[i]);
+    }
+    
+    escribe("BUBBLE SORT");
+
+    desde i = 0 hasta n-1 hacer {
+        desde j = 0 hasta n-i-1 hacer {
+            si ( k[j] > k[j+1] ) entonces {
+                temp = k[j];
+                k[j] = k[j+1];
+                k[j+1] = temp;
+            }
+        }
+    }
+
+    escribe("Arreglo ordenado");
+    desde i = 0 hasta n hacer {
+        escribe(k[i]);
+    }
+
+}

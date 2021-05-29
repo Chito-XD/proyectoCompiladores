@@ -1,0 +1,27 @@
+programa pruebaPrograma ;
+
+variables:
+    matrix[3][4]: entero;
+    i, j, n: entero;
+
+principal () {
+
+    escribe("Arreglo");
+
+    desde i = 0 hasta 2 hacer {
+        desde j = 0 hasta 3 hacer {
+            matrix[i][j] = i*j;
+            escribe(matrix[i][j]);
+        }
+    }
+
+
+    n = 1;
+
+    desde i = 0 hasta 2 hacer {
+        desde j = 0 hasta 3 hacer {
+            escribe(matrix[i][j]);
+        }
+    }
+
+}
