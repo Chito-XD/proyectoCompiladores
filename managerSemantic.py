@@ -28,6 +28,10 @@ class ManagerSemantic():
         
         self.called_methods_stack = Stack()
         self.called_method = ""
+
+        self.called_objects_stack = Stack()
+        self.called_object = None
+        
         self.params_stack = Stack()
 
         self.currentVariables = Queue() # FI FO
@@ -54,6 +58,7 @@ class ManagerSemantic():
     
     def set_class_id(self, class_id):
         print('la clase es', class_id)
+        self.memory.reset_global_memory()
         self.class_id = class_id
     
     def create_class(self, class_name):
@@ -79,18 +84,41 @@ class ManagerSemantic():
         }
         self.directory.createFunction(self.class_id, function_name, params)
     
+    def set_called_class(self, called_object):
+        print("seteo la clase", called_object)
+        self.called_objects_stack.add(called_object)
+        self.called_object = called_object
+    
     def create_era(self, method):
         print("Method: " + method)
         self.called_methods_stack.add(method)
-        self.called_method = self.called_methods_stack.peek()
-        self.create_cruadruplo("ERA", None, None, method)
+        self.called_method = method
+
+        if not self.called_object:
+            self.create_cruadruplo("ERA", None, None, method)
+        else:
+            # TODO: Revisar cómo llamar al cuadruplo
+            var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
+            class_name = var_info["tipo"]
+            era_class = f"{class_name}-{method}"
+            self.create_cruadruplo("ERA", None, None, era_class)
+
         # Añadir un arreglo de params
         self.params_stack.add([])
         
     
     def evaluate_params(self):
-        function_params = self.directory.returnParam(self.class_id, self.called_method)
-        print("Clase: " + self.class_id)
+
+        class_name = self.class_id
+        
+        if self.called_object:
+            # TODO: Revisar que cuando se al metodo de una clase
+            var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
+            class_name = var_info["tipo"]
+        
+        function_params = self.directory.returnParam(class_name, self.called_method)
+        
+        print("Clase: " + class_name)
         print("Metodo: " + self.called_method)
         print("Num Param " + str(len(function_params)))
 
@@ -109,7 +137,7 @@ class ManagerSemantic():
                     raise Exception("Mismatch type in parameters")
 
         else:
-            raise Exception(f"Function expects {len(function_params)} parameters. {len(self.given_params)} given")
+            raise Exception(f"Function expects {len(function_params)} parameters. {len(given_params)} given")
         
     
     # [
@@ -126,29 +154,52 @@ class ManagerSemantic():
 
     def create_return(self):
         operando = self.operandos.pop()
-        # TODO: Revisar que cuando se al metodo de una clase
-        tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+        
+        # TODO: CHECAR SI EL RETURN ESTO ES NECESARIO O ES TRANSPARENTE
+        # Si se requiere pero hay que ver cómo
+        if not self.called_object:
+            tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
+            regresa_label = self.method_id
+        else:
+            # TODO: Revisar que cuando se al metodo de una clase
+            var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
+            class_name = var_info["tipo"]
+            tipo_retorno = self.directory.get_tipo_retorno(class_name, self.method_id)
+            regresa_label = f"{self.called_object}-{self.method_id}"
+
         operando_type = get_type_from_address(operando)
 
         if operando_type == tipo_retorno:
-            self.create_cruadruplo("REGRESA", self.method_id, None, operando)
+            self.create_cruadruplo("REGRESA", regresa_label, None, operando)
         else:
             raise Exception(">> Return mismatch")
     
     def create_gosub(self):
-        self.create_cruadruplo("GOSUB", None, None, self.called_method)
-        # TODO: Revisar que cuando se al metodo de una clase
-        tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.called_method)
+        if not self.called_object:
+            self.create_cruadruplo("GOSUB", None, None, self.called_method)
+            gosub_class = self.called_method
+            tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.called_method)
+        else:
+            # TODO: Revisar que cuando se al metodo de una clase
+            var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
+            class_name = var_info["tipo"]
+            tipo_retorno = self.directory.get_tipo_retorno(class_name, self.called_method)
+
+            gosub_class = f"{class_name}-{self.called_method}"
+            self.create_cruadruplo("GOSUB", None, None, gosub_class)
+        
         if tipo_retorno != VOID:
             address = self.memory.set_memory_address(self.currentType, tipo_retorno)
             self.create_cruadruplo("=", self.called_method, None, address)
-            # print(">>>>>>>>>>>>>>> GOSUB", address)
             self.operandos.add(address)
             tipo = get_type_from_address(address)
             self.tipos.add(tipo)
 
         self.called_methods_stack.pop()
         self.called_method = self.called_methods_stack.peek()
+
+        self.called_objects_stack.pop()
+        self.called_object = self.called_objects_stack.peek()
 
     def end_function(self):
         self.create_cruadruplo('END_FUNCTION', None, None, None)
@@ -207,13 +258,6 @@ class ManagerSemantic():
                 "direccion": address
             }
             self.directory.addParam(self.class_id, self.method_id, params)
-    
-    def update_variable(self, var, value):
-        params = {
-            "key": var,
-            "value": value
-        }
-        self.directory.updateVariable(self.class_id, self.method_id, params)
     
     def verifica_dim(self, dim):
         dimensions = Stack()

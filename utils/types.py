@@ -77,9 +77,10 @@ def get_cte_variable(var):
         return CHAR
     elif re.search(r'(verdadero)|(falso)', var):
         return BOOLEANO
-    # elif re.search(r'[a-zA-Z_][a-zA-Z_0-9]*', var):
-    #     return ID
     return None
+
+def is_object(var):
+    return (var not in [FLOTANTE, ENTERO, CHAR, BOOLEANO])
     
 
 def get_type_operation(op1, op2, operator):

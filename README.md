@@ -77,9 +77,11 @@ Integrantes:
 -
 
 *Pendientes*
-- 1) Objetos
-- 2) Stack overflow
+- 1) Objetos - Atributos
 - 3) Operaciones con vectores
-- 4) string
+- 4) string - operaciones?
+
+- negativos
+- comentarios
 
 - Documentación
