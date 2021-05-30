@@ -79,9 +79,9 @@ Integrantes:
 - Se ejecutan las funciones de los objetos
 *Pendientes*
 - 1) Objetos - Atributos
-- 4) string - operaciones?
-
-- negativos
-- comentarios
+- 2) Regresa resultado de función (creo que es flotante)
+- 3) string - operaciones?
+- 4) negativos
+- 5) comentarios
 
 - Documentación

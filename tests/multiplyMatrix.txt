@@ -1,0 +1,40 @@
+programa pruebaPrograma ;
+
+variables:
+    a[3][3], b[3][3], c[3][3]: entero;
+
+void funcion mutiplyMatriz()
+variables:
+    i, j: entero;
+{
+    desde i = 0 hasta 2 hacer {
+        desde j = 0 hasta 2 hacer {
+            c[i][j] = a[i][j] * b[i][j];
+            escribe(c[i][j]);
+        }
+    }
+}
+
+principal () {
+    a[0][0] = 12;
+    a[0][0] = 7;
+    a[0][0] = 3;
+    a[0][0] = 4;
+    a[0][0] = 5;
+    a[0][0] = 6;
+    a[0][0] = 7;
+    a[0][0] = 8;
+    a[0][0] = 9;
+
+    b[0][0] = 5;
+    b[0][0] = 8;
+    b[0][0] = 1;
+    b[0][0] = 2;
+    b[0][0] = 6;
+    b[0][0] = 7;
+    b[0][0] = 3;
+    b[0][0] = 0;
+    b[0][0] = 4;
+
+    mutiplyMatriz();
+}

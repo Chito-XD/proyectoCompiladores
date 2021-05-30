@@ -461,24 +461,30 @@ class ManagerSemantic():
 
     def end_estatuto(self):
         
-        C1 = self.saltos.pop()
+        # C1 = self.saltos.pop()
+        fin = self.saltos.pop()
 
-        Temp = self.cuadruplos[C1]
-        N = len(self.cuadruplos)
-        sN = str(N)
-
-        Cont = 0
+        goto_command = self.cuadruplos[fin][0]
+        goto_cond = self.cuadruplos[fin][1]
         
-        for a in Temp:
-            break
+        self.cuadruplos[fin] = (goto_command, goto_cond, len(self.cuadruplos))
 
-        for b in Temp:
-            if Cont == 1:
-                break
+        # Temp = self.cuadruplos[C1]
+        # N = len(self.cuadruplos)
+        # sN = str(N)
+
+        # Cont = 0
+        
+        # for a in Temp:
+        #     break
+
+        # for b in Temp:
+        #     if Cont == 1:
+        #         break
             
-            Cont = Cont + 1
+        #     Cont = Cont + 1
 
-        self.cuadruplos[C1] = (a, b, sN)
+        # self.cuadruplos[C1] = (a, b, sN)
 
     def goto_revisar(self):
         Falso = self.saltos.pop()
@@ -487,25 +493,12 @@ class ManagerSemantic():
 
         Tam = len(self.cuadruplos)
         self.saltos.add(Tam-1)
-        sTam = str(Tam)
 
 
-        Falso2 = self.cuadruplos[Falso]
+        goto_command = self.cuadruplos[Falso][0]
+        goto_cond = self.cuadruplos[Falso][1]
 
-        Cont = 0
-
-        for a in Falso2:
-            break
-
-        for b in Falso2:
-            if Cont == 1:
-                break
-            
-            Cont = Cont + 1
-
-        # print("ELSE", a, b, sTam)
-
-        self.cuadruplos[Falso] = (a, b, sTam)
+        self.cuadruplos[Falso] = (goto_command, goto_cond, Tam)
 
     def meterActual(self):
         Tam = len(self.cuadruplos)

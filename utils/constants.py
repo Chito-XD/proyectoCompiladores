@@ -91,24 +91,24 @@ LOCAL_SPACE_ADDRESS = {
 
 CTE_SPACE_ADDRESS = {
     ENTERO: {
-        "min": 50,
-        "max": 100,
-        "current": 50
+        "min": 25000,
+        "max": 27999,
+        "current": 25000
     },
     FLOTANTE: {
-        "min": 3000,
-        "max": 5999,
-        "current": 3000
+        "min": 28000,
+        "max": 30999,
+        "current": 28000
     },
     CHAR: {
-        "min": 6000,
-        "max": 8999,
-        "current": 6000
+        "min": 31000,
+        "max": 33999,
+        "current": 31000
     },
     BOOLEANO: {
-        "min": 9000,
-        "max": 11999,
-        "current": 9000
+        "min": 34000,
+        "max": 36999,
+        "current": 34000
     }
 }
 

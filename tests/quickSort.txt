@@ -11,7 +11,7 @@ variables:
     i = (low-1);
     pivot = k[high];
 
-    desde j = low hasta high hacer {
+    desde j = low hasta high-1 hacer {
         si (k[j] <= pivot) entonces {
             i = i + 1;
             temp = k[i];

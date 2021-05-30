@@ -8,14 +8,11 @@ variables:
 void funcion findValue(valor: flotante)
 {
     i = 0;
-    j = 0;
-    escribe("valor a encontrar", valor);
     mientras (i < 2)  hacer {
+        j = 0;
         mientras (j < 3) hacer {
             si (matrix[i][j] == valor) entonces {
                 escribe("aqui esta");
-            } sino {
-                escribe("no esta");
             }
             j = j+1;
         }   
