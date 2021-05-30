@@ -33,6 +33,7 @@ END_FUNCTION = "END_FUNCTION"
 LECTURA = "LECTURA"
 ESCRIBE = "ESCRIBE"
 
+# rango de direcciones globales
 GLOBAL_SPACE_ADDRESS = {
     ENTERO: {
         "min": 5000,
@@ -61,6 +62,7 @@ GLOBAL_SPACE_ADDRESS = {
     }
 }
 
+# rango de direcciones locales
 LOCAL_SPACE_ADDRESS = {
     ENTERO: {
         "min": 12000,
@@ -89,6 +91,7 @@ LOCAL_SPACE_ADDRESS = {
     }
 }
 
+# rango de direcciones de constantes
 CTE_SPACE_ADDRESS = {
     ENTERO: {
         "min": 25000,
@@ -112,6 +115,7 @@ CTE_SPACE_ADDRESS = {
     }
 }
 
+# cubo semantico
 TYPE_MATCHING = {
     ENTERO: {
         ENTERO: {

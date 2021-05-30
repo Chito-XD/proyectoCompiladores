@@ -37,19 +37,23 @@ class VirtualMachine:
         #     a += 1
         # print("")
     
+    # metodo para iniciar la ejecución de los cuadruplo
     def execute(self):
         # GOTO MAIN
         main_pointer = self.cuadruplos[0][3]
+        # añada al stack de memoria
         self.memory.push_memory_stack(MAIN, PRINCIPAL)
         self.run_cuadruplos(main_pointer)
     
+    # metodo para leer la direccion de memoria dependiente si es dir-base, apuntador o dirección normal
     def get_address_format(self, address_pointer):
         if isinstance(address_pointer, str):
-
+            # direccion base
             if "dir-" in address_pointer:
                 address_pointer = address_pointer.replace('dir-', '')
                 return int(address_pointer)
 
+            # apuntador de memoria
             if address_pointer[0] == "(" and address_pointer[-1] == ")":
                 temp = self.memory.get_value_from_address(address_pointer)
                 if temp != None:
@@ -59,17 +63,22 @@ class VirtualMachine:
                 address_pointer = int(address_pointer)
                 address = self.memory.get_value_from_address(address_pointer)
                 return address
+        
+        # dirección de memoria
         return address_pointer
     
+    # corre los cuadruplos
     def run_cuadruplos(self, pointer=0):
 
         while pointer < len(self.cuadruplos):
-
+            # obtiene el cuadruplo en cuestion 
             current_cuadruplo = self.cuadruplos[pointer]
+            # obtiene la operacion del cuadruplo
             operation = current_cuadruplo[0]
 
             # print(pointer, current_cuadruplo)
 
+            # asinacion
             if operation == ASSIGN:
                 operando1 = current_cuadruplo[1]
                 operando3 = current_cuadruplo[3]
@@ -80,10 +89,12 @@ class VirtualMachine:
                 self.memory.assign_value_from_addresses(origin_add=add1, target_add=add3)
                 pointer += 1
 
+            # operaciones aritmeticas
             elif operation in ALL_OPERATIONS:
                 Operando1 = current_cuadruplo[1]
                 Operando2 = current_cuadruplo[2]
 
+                # revisa si es direccion de memoria. Si sí, suma el offset
                 if isinstance(Operando1, str) and Operando1.find('dir-') != -1:
                     dirBase = Operando1.replace('dir-', '')
                     dirBase = int(dirBase)
@@ -94,6 +105,7 @@ class VirtualMachine:
                     result = self.evaluate_operation(dirBase, op2, operation)
                     self.memory.set_value_from_address(current_cuadruplo[3], result)
                 
+                # sino, obtener el valor de la direccion y ejecutar la operacion
                 else:
                     add1 = self.get_address_format(Operando1)
                     add2 = self.get_address_format(Operando2)
@@ -109,6 +121,7 @@ class VirtualMachine:
                 
                 pointer += 1
             
+            # operacion de lectura
             elif operation == LECTURA:
                 answer = input()
                 answer_type = get_cte_variable(answer)
@@ -122,26 +135,32 @@ class VirtualMachine:
                 self.memory.set_value_from_address(int(memory_addres), answer)
                 pointer += 1
             
+            # operacion de escritura
             elif operation == ESCRIBE:
                 address = self.get_address_format(current_cuadruplo[3])
                 value = self.memory.get_value_from_address(address)
                 print(value)
                 pointer += 1
 
+            # cuadruplo de GOTO
             elif operation == GOTO:
                 pointer = int(current_cuadruplo[2])
 
+            # cuadruplo de goto_f
             elif operation == GOTO_F:
                 condition = self.memory.get_value_from_address(current_cuadruplo[1])
 
                 if condition == None:
                     raise Exception("No inicializada")
 
+                # si la condicion se cumple, moverse al cuadruplo
                 if not condition:
                     pointer = int(current_cuadruplo[2])
                 else:
+                    # sino, seguir al siguiente cuadruplo
                     pointer += 1
 
+            # cuadruplo de verifica
             elif operation == VERIFICA:
                 valor = int(self.memory.get_value_from_address(current_cuadruplo[1]))
                 lim_inf = int(self.memory.get_value_from_address(current_cuadruplo[2]))
@@ -152,21 +171,27 @@ class VirtualMachine:
 
                 pointer += 1
             
+            # cuadruplo de regres
             elif operation == REGRESA:
                 address = current_cuadruplo[1]
                 value = self.memory.get_value_from_address(current_cuadruplo[3])
                 self.memory.set_return(address, value)
                 return pointer
 
+            # cuadruplo de era
             elif operation == ERA:
+                # dejar la "migaja de pan" para sólo correr los cuadruplos del método que se llamo
                 pointer = self.run_method(current_cuadruplo, pointer+1)
 
+            # regresa al era
             elif operation == GOSUB:
                 return pointer
             
+            # regresa al era
             elif operation == END_FUNCTION:
                 return pointer
             
+            # regresa al era
             elif operation == PARAM:
                 return pointer
 
@@ -189,7 +214,6 @@ class VirtualMachine:
             else:
                 current_pointer = self.run_cuadruplos(current_pointer)
             
-        # TODO: Revisar a qué inicio y qué variable llamar dependiendo del objeto y método
         function_name = current_cuadruplo[3]
         class_name = MAIN
 
@@ -213,7 +237,7 @@ class VirtualMachine:
         current_pointer += 1
         return current_pointer
         
-
+    # metodo para ejecutar la operacion aritmetica
     def evaluate_operation(self, op1, op2, operator):
         if operator in OPER_LOG:
             if operator == '&':

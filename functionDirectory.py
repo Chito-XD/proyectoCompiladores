@@ -3,21 +3,6 @@ from tabVars import TableVariables
 
 class FunctionDirectory():
     
-# directorio_funciones = {
-#     pelos_quitos: {
-#         tipo_retorno: "NP",
-#         ...,
-#         directorio_variables: TableVariables()
-#     },
-
-#     modulo1: {
-#         tipo_retorno: "void",
-#         ...,
-#         directorio_variables: TableVariables()
-#     },
-#     ...
-# }
-
     def __init__(self):
         self.directory = {}
     

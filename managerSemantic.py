@@ -46,23 +46,22 @@ class ManagerSemantic():
         self.cuadruplo_counter = 1
         self.cuadruplos = []
 
-    
+    # Setea el tipo actual en la sintaxis
     def set_current_type(self, var_type):
-        # print('El tipo actual es', var_type)
         self.currentType = var_type
     
+    # setear el metodo actual de la sintaxis
     def set_method_id(self, curr_id):
-        # print('seteo', curr_id)
         self.memory.reset_local_memory()
         self.method_id = curr_id
     
+    # setear la clase en la que se está compilando
     def set_class_id(self, class_id):
-        # print('la clase es', class_id)
         self.memory.reset_global_memory()
         self.class_id = class_id
     
+    # crear una clase en el directorio de funciones
     def create_class(self, class_name):
-        # print('creo clase', class_name)
         self.set_class_id(class_name)
         self.set_method_id(class_name)
         self.directory.createClass(class_name)
@@ -72,9 +71,11 @@ class ManagerSemantic():
         }
         self.directory.createFunction(class_name, class_name, params)
 
+    # creat una funcion en el directorio de funciones
     def create_function_directory(self):
         self.create_cruadruplo('Goto', None, None, 'main')
     
+    # añadir una funcion al directorio
     def add_function(self, function_name):
         # print("Se creo la funcion", function_name)
         self.set_method_id(function_name)
@@ -84,20 +85,23 @@ class ManagerSemantic():
         }
         self.directory.createFunction(self.class_id, function_name, params)
     
+    # guardar el nombre del objeto al que se esta llamando
     def set_called_class(self, called_object):
         # print("seteo la clase", called_object)
         self.called_objects_stack.add(called_object)
         self.called_object = called_object
     
+    # metodo para crear el cuadruplo de una llamada a funcion
     def create_era(self, method):
         # print("Method: " + method)
         self.called_methods_stack.add(method)
         self.called_method = method
 
+        # si la funcion que se llama es de la funcion principal
         if not self.called_object:
             self.create_cruadruplo("ERA", None, None, method)
         else:
-            # TODO: Revisar cómo llamar al cuadruplo
+            # si la funcion que se llama es de un objeto
             var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
             class_name = var_info["tipo"]
             era_class = f"{class_name}-{method}"
@@ -106,29 +110,22 @@ class ManagerSemantic():
         # Añadir un arreglo de params
         self.params_stack.add([])
         
-    
+    # evaluar la cantidad y tipos de paramatros que se recibe y a los que se quiere mandar en la llamada a funcion
     def evaluate_params(self):
 
         class_name = self.class_id
         
         if self.called_object:
-            # TODO: Revisar que cuando se al metodo de una clase
             var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
             class_name = var_info["tipo"]
         
         function_params = self.directory.returnParam(class_name, self.called_method)
         
-        # print("Clase: " + class_name)
-        # print("Metodo: " + self.called_method)
-        # print("Num Param " + str(len(function_params)))
-
         given_params = self.params_stack.pop()
-        # print("Given params", len(given_params))
 
         if len(function_params) == len(given_params) :
 
             for i in range(len(given_params)):
-                # print(given_params[i])
                 tipo = get_type_from_address(given_params[i])
 
                 if tipo == function_params[i]:
@@ -152,16 +149,14 @@ class ManagerSemantic():
         top_param.append(param)
         self.params_stack.add(top_param)
 
+    # crear cuadruplo de return
     def create_return(self):
         operando = self.operandos.pop()
         
-        # TODO: CHECAR SI EL RETURN ESTO ES NECESARIO O ES TRANSPARENTE
-        # Si se requiere pero hay que ver cómo
         if not self.called_object:
             tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.method_id)
             regresa_label = self.method_id
         else:
-            # TODO: Revisar que cuando se al metodo de una clase
             var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
             class_name = var_info["tipo"]
             tipo_retorno = self.directory.get_tipo_retorno(class_name, self.method_id)
@@ -174,13 +169,13 @@ class ManagerSemantic():
         else:
             raise Exception(">> Return mismatch")
     
+    # create cuadruplo de gosub
     def create_gosub(self):
         if not self.called_object:
             self.create_cruadruplo("GOSUB", None, None, self.called_method)
             gosub_class = self.called_method
             tipo_retorno = self.directory.get_tipo_retorno(self.class_id, self.called_method)
         else:
-            # TODO: Revisar que cuando se al metodo de una clase
             var_info = self.directory.get_var_info(self.class_id, self.method_id, self.called_object)
             class_name = var_info["tipo"]
             tipo_retorno = self.directory.get_tipo_retorno(class_name, self.called_method)
@@ -188,6 +183,8 @@ class ManagerSemantic():
             gosub_class = f"{class_name}-{self.called_method}"
             self.create_cruadruplo("GOSUB", None, None, gosub_class)
         
+        # revisar si el tipo de retorno
+        # si sí, crear el parche "guadalupano"
         if tipo_retorno != VOID:
             address = self.memory.set_memory_address(self.currentType, tipo_retorno)
             self.create_cruadruplo("=", self.called_method, None, address)
@@ -201,9 +198,11 @@ class ManagerSemantic():
         self.called_objects_stack.pop()
         self.called_object = self.called_objects_stack.peek()
 
+    # crear funcion para end function
     def end_function(self):
         self.create_cruadruplo('END_FUNCTION', None, None, None)
     
+    # crear metodo principal del programa
     def create_principal(self):
         self.set_method_id(PRINCIPAL)
         params = {
@@ -214,10 +213,11 @@ class ManagerSemantic():
         self.cuadruplos[0] = ('Goto', None, None, tam)
         self.directory.createFunction(self.class_id, PRINCIPAL, params)
     
+    # guardar en un stack las variables para despues guardarlas
     def stash_variable(self, var):
-        # print("Añadiendo", var, "a la tabla de variables")
         self.currentVariables.add(var)
     
+    # guardar en el directorio de variables las variables stasheadas
     def store_variables(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
@@ -247,6 +247,7 @@ class ManagerSemantic():
             }
             self.directory.addLocalVariable(self.class_id, self.method_id, params)
         
+    # guardar los parametros en la tabla de variables del metodo en el que estas
     def store_params(self):
         while (not self.currentVariables.isEmpty() ):
             var = self.currentVariables.pop()
@@ -259,23 +260,20 @@ class ManagerSemantic():
             }
             self.directory.addParam(self.class_id, self.method_id, params)
     
+    # metodo para verificar las dimensiones de la variable y comprobar si coinciden
     def verifica_dim(self, dim):
-        # print("VERIFICA DIM")
         dimensions = Stack()
         for _ in range(dim):
             dimensions.add(self.operandos.pop()) # dimensions = al reves =  dim2 dim1
             self.tipos.pop()
 
-        # print(dimensions.print())
         
         operando_address = self.operandos.pop() # id
         self.tipos.pop()
 
-        # print(operando_address, self.class_id, self.method_id)
 
         the_var = self.directory.find_var_from_address(self.class_id, self.method_id, operando_address)
 
-        # print("the_var", the_var)
 
         var_dimension = the_var["dimension"]
         
@@ -323,7 +321,8 @@ class ManagerSemantic():
         self.tipos.add(the_var["tipo"])
         self.operadores.pop()
         
-
+    # metodo para insertar un operador.
+    # Se le asigna una direccion de memoria para ello
     def insert_operando(self, operando):
         # print("voy a insertar ", operando)
         tipo_operando = get_cte_variable(operando)
@@ -336,11 +335,11 @@ class ManagerSemantic():
 
         self.operandos.add(address)
 
-        # print(f"el tipo de {operando} es {tipo_operando}")
         self.tipos.add(tipo_operando)
 
+    # metodo para insertar un operador.
+    # Se le asigna una direccion de memoria para ello y un fondo falso
     def insert_operandoArr(self, operando):
-        # print("voy a insertar ", operando)
         tipo_operando = get_cte_variable(operando)
         if not tipo_operando:
             var = self.directory.get_variable(self.class_id, self.method_id, operando)
@@ -355,43 +354,48 @@ class ManagerSemantic():
 
         self.operandos.add(address)
 
-        # print(f"el tipo de {operando} es un arreglo de tipo {tipo_operando}")
         self.tipos.add(tipo_operando)
     
+    # añadir el operador a la pila de operadores
     def insert_operador(self, operador):
-        # print("insert operador", operador)
         self.operadores.add(operador)
     
+    # metodo para manejar la logica del fondo falso
     def manage_back_operator(self, create=True):
         if create:
             self.operadores.add("(")
         else:
             self.operadores.pop()
 
+    # metodo para añadir al arreglo de los cuadruplo la tupla
     def create_cruadruplo(self, operator, op_izq, op_der, temporal):
-        # print("Creando cuadruplo (", operator, op_izq, op_der, temporal,")")
         self.cuadruplos.append((operator, op_izq, op_der, temporal))
 
+    # metodo para añadir al arreglo de los cuadruplo la tupla
     def create_cruadruplo_no_lin(self, goto, cond, destino):
-        # print("Creando cuadruplo nol lineal (", goto, cond, destino,")")
         self.cuadruplos.append((goto, cond, destino))
 
+    # punto para evaluar los operadores aritmeticos de multiplicacion y division
     def primary_arithmetic_operation(self):
         if self.operadores.peek() in OPER_ARIT_PRIM:
             self.arithmetic_ops()
     
+    # punto para evaluar los operadores aritmeticos de suma y resta
     def secondary_arithmetic_operation(self):
         if self.operadores.peek() in OPER_ARIT_SEC:
             self.arithmetic_ops()
     
+    # punto para evaluar los operadores logicos
     def logical_operation(self):
         if self.operadores.peek() in OPER_LOG:
             self.arithmetic_ops()
     
+    # punto para evaluar los operadores relacionales
     def relational_operation(self):
         if self.operadores.peek() in OPER_REL:
             self.arithmetic_ops()
 
+    # metodo para evaluar la operacion. Revisar en el cubo semantico y crear la variable temporal
     def arithmetic_ops(self):
         op = self.operadores.pop()
         op_der = self.operandos.pop()
@@ -412,6 +416,7 @@ class ManagerSemantic():
         else:
             raise Exception(f"==> TYPE MISTMATCH - No se puede evaluar -> {op_izq} {op} {op_der}")
 
+    # metodo para crear el cuadruplo de asignacion
     def create_asignacion(self):
         res = self.operandos.pop()
         tipo_resultado = self.tipos.pop()
@@ -425,25 +430,23 @@ class ManagerSemantic():
         else: 
             raise Exception("==> TYPE MISTMATCH - Ambos lados de la aisgnacion son de diferente tipo")
         
-
+    # metodo para crear cuadruplo de escritura de super_exp
     def create_escritura(self):
         self.create_cruadruplo("ESCRIBE", None, None, self.operandos.pop())
 
+    # meotod para crear el cuadruplo de escirutar normal
     def create_escritura_exp(self):
         Res = self.operandos.pop()
         self.create_cruadruplo("ESCRIBE", None, None, Res)
     
+    # metodo para crear el cuadruplo de lectura
     def create_lectura(self, op):
-        # if isinstance(op, tuple):
-        #     op = op[1]
-        # var = self.directory.get_variable(self.class_id, self.method_id, op)
         var = self.operandos.pop()
         self.tipos.pop()
         self.create_cruadruplo("LECTURA", None, None, var)
         
     
     def revisar_estatuo(self):
-        # self.arithmetic_ops()
         cond = self.operandos.pop()
         typeC = self.tipos.pop()
         
@@ -457,7 +460,6 @@ class ManagerSemantic():
 
     def end_estatuto(self):
         
-        # C1 = self.saltos.pop()
         fin = self.saltos.pop()
 
         goto_command = self.cuadruplos[fin][0]
@@ -465,22 +467,6 @@ class ManagerSemantic():
         
         self.cuadruplos[fin] = (goto_command, goto_cond, len(self.cuadruplos))
 
-        # Temp = self.cuadruplos[C1]
-        # N = len(self.cuadruplos)
-        # sN = str(N)
-
-        # Cont = 0
-        
-        # for a in Temp:
-        #     break
-
-        # for b in Temp:
-        #     if Cont == 1:
-        #         break
-            
-        #     Cont = Cont + 1
-
-        # self.cuadruplos[C1] = (a, b, sN)
 
     def goto_revisar(self):
         Falso = self.saltos.pop()
@@ -499,20 +485,11 @@ class ManagerSemantic():
     def meterActual(self):
         Tam = len(self.cuadruplos)
         self.saltos.add(Tam)
-        # self.saltos.add(Tam)
 
     def gotoWhile(self):
-        # self.arithmetic_ops()
-        # print("GOTOWHILE")
-        # print(self.operandos.print())
-        # print(self.cuadruplos)
-        # print(self.tipos.print())
         cond = self.operandos.pop()
         typeC = self.tipos.pop()
 
-        # print(cond, typeC)
-        
-        
         if typeC == BOOLEANO:
             self.create_cruadruplo_no_lin("GotoF", cond, "?")
             Tam = len(self.cuadruplos)
@@ -589,7 +566,6 @@ class ManagerSemantic():
 
 
     def create_asignacionLoop(self):
-            # print("Crear asignacion")
             res = self.operandos.pop()
             tipo_resultado = self.tipos.pop()
             lado_izq = self.operandos.pop()
@@ -604,9 +580,3 @@ class ManagerSemantic():
 
                 Aux = len(self.cuadruplos)
                 self.saltos.add(Aux)
-
-                
-
-
-    
-    

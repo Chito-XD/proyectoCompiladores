@@ -1,35 +1,43 @@
 
 
-*** PROGRAMA
 PROGRAMA -> Programa id ; DEC_CLAS DEC_VARS DEC_FUNC PRINCIPAL
          -> Programa id ; DEC_CLAS DEC_VARS PRINCIPAL
          -> Programa id ; DEC_CLAS DEC_FUNC PRINCIPAL
-         -> Programa id ; DEC_VARS DEC_FUNC PRINCIPAL
          -> Programa id ; DEC_CLAS PRINCIPAL
+         -> Programa id ; DEC_VARS DEC_FUNC PRINCIPAL
          -> Programa id ; DEC_VARS PRINCIPAL
          -> Programa id ; DEC_FUNC PRINCIPAL
          -> Programa id ; PRINCIPAL
 
-*** PRINCIPAL
 PRINCIPAL -> principal () BLOQUE
 
-*** DEC_CLAS
-DEC_CLAS -> Clase ID hereda ID { DEC_CLAS_AUX }
-DEC_CLAS -> Clase ID { DEC_CLAS_AUX }
-DEC_CLAS -> Clase ID hereda ID { }
-DEC_CLAS -> Clase ID { }
+DEC_CLAS -> Clase id hereda id { ATRIBUTOS METODOS }
+         -> Clase id hereda id { ATRIBUTOS }
+         -> Clase id hereda id { METODOS }
+         -> Clase id hereda id { }
+         -> Clase id { ATRIBUTOS METODOS }
+         -> Clase id { ATRIBUTOS }
+         -> Clase id { METODOS }
+         -> Clase id { }
+         -> Clase id hereda id { ATRIBUTOS METODOS } DEC_CLAS
+         -> Clase id hereda id { ATRIBUTOS } DEC_CLAS
+         -> Clase id hereda id { METODOS } DEC_CLAS
+         -> Clase id hereda id { } DEC_CLAS
+         -> Clase id { ATRIBUTOS METODOS } DEC_CLAS
+         -> Clase id { ATRIBUTOS } DEC_CLAS
+         -> Clase id { METODOS } DEC_CLAS
+         -> Clase id { } DEC_CLAS
 
-DEC_CLAS_AUX -> atributos dec_vars_cicle metodos DEC_FUNC
-DEC_CLAS_AUX -> metodos DEC_FUNC
-DEC_CLAS_AUX -> atributos dec_vars_cicle
+ATRIBUTOS -> atributos : DEC_VARS_AUX
 
-*** DECLARACION DE VARIABLES
-DEC_VARS -> VARIABLES DEC_VARS_AUX
+METODOS -> metodos : dec_func
 
-DEC_VARS_AUX -> DEV_VARS_AUX2 : TIPO_SIMPLE ; DEC_VARS_AUX
-             -> DEV_VARS_AUX2 : TIPO_SIMPLE ; 
-             -> DEV_VARS_AUX2 : TIPO_COMPUESTO ; DEC_VARS_AUX
-             -> DEV_VARS_AUX2 : TIPO_COMPUESTO ;
+DEC_VARS -> variables : dec_vars_aux
+
+DEC_CLAS_AUX -> dec_var_aux2 : TIPO_SIMPLE ; dec_vars_aux
+             -> dec_var_aux2 : TIPO_SIMPLE ;
+             -> dec_var_aux2 : TIPO_COMPUESTO ; dec_vars_aux
+             -> dec_var_aux2 : TIPO_COMPUESTO ;
 
 DEV_VARS_AUX2 -> VAR , DEV_VARS_AUX2
               -> VAR
@@ -38,11 +46,9 @@ VAR -> id [ cte_i ] [ cte_i ]
     -> id [ cte_i ]
     -> id
 
-*** PARAMETROS
-PARAMETROS -> ID COMMA TIPO_SIMPLE , PARAMETROS
-           -> ID COMMA TIPO_SIMPLE
+PARAMETROS -> ID : TIPO_SIMPLE , PARAMETROS
+           -> ID : TIPO_SIMPLE
 
-*** DEC_FUNC
 DEC_FUNC -> TIPO_SIMPLE funcion id ( PARAMETROS ) ; DEC_VARS BLOQUE
          -> TIPO_SIMPLE funcion id ( PARAMETROS ) ; BLOQUE
          -> TIPO_SIMPLE funcion id ( PARAMETROS ) ; DEC_VARS BLOQUE DEC_FUNC
@@ -60,9 +66,6 @@ DEC_FUNC -> TIPO_SIMPLE funcion id ( PARAMETROS ) ; DEC_VARS BLOQUE
          -> VOID funcion id ( ) DEC_VARS BLOQUE DEC_FUNC
          -> VOID funcion id ( ) ; BLOQUE DEC_FUNC
 
-
-
-*** BLOQUE
 BLOQUE -> { BLOQUE_AUX }
        -> { }
 
@@ -70,7 +73,6 @@ BLOQUE_AUX -> ESTATUTO BLOQUE_AUX
            -> ESTATUTO
 
 
-*** ESTATUTO
 ESTATUTO -> FUNCION ;
          -> ASIGNACION
          -> RETORNO
@@ -79,84 +81,65 @@ ESTATUTO -> FUNCION ;
          -> DECISION
          -> REPETICION
 
-*** ASIGNACION
 ASIGNACION -> VARIABLE = SUPER_EXP ;
 
-*** FUNCION
-FUNCION -> ID ( FUNCION_AUX ) SEMICOLON
+FUNCION -> id ( FUNCION_AUX )
+        -> id ( ) 
 
 FUNCION_AUX -> SUPER_EXP , FUNCION_AUX
             -> SUPER_EXP
 
-*** RETORNO
 RETORNO -> regresa ( SUPER_EXP ) ;
 
-*** ESCRITURA
 ESCRITURA -> escribe ( escritura_aux ) ;
 
 ESCRITURA_AUX -> SUPER_EXP , ESCRITURA_AUX
-              -> string , ESCRITURA_AUX
               -> SUPER_EXP
-              -> string 
 
-*** LECTURA 
 LECTURA -> lee ( lectura_aux ) ;
 
-LECTURA_AUX -> LECTURA_AUX_VARS , LECTURA_AUX
-LECTURA_AUX -> LECTURA_AUX_VARS
+LECTURA_AUX -> variable , LECTURA_AUX
+            -> variable
 
 LECTURA_AUX_VARS -> CLASS_VAR
 LECTURA_AUX_VARS -> ID
 
-*** DECISION
 DECISION -> si ( SUPER_EXP ) entonces BLOQUE sino BLOQUE
          -> si ( SUPER_EXP ) entonces BLOQUE
 
-*** REPETICION
 REPETICION -> mientras ( SUPER_EXP ) hacer BLOQUE
-REPETICION -> desde ID = SUPER_EXP  hasta  SUPER_EXP hacer BLOQUE
+REPETICION -> desde id = SUPER_EXP  hasta  SUPER_EXP hacer BLOQUE
 
-*** TIPO
 TIPO_SIMPLE -> ENTERO
             -> FLOTANTE
             -> CHAR
             -> BOOLEAN
         
-TIPO_COMPUESTO -> ID
+TIPO_COMPUESTO -> id
 
-*** SUPER_EXP
 SUPER_EXP -> EXPRESION OP_LOG SUPER_EXP
           -> EXPRESION
 
-*** EXPRESION
-EXPRESION -> EXP OP_REL EXP
+EXPRESION -> EXP OP_REL EXPRESION
           -> EXP
 
-*** EXP
 EXP -> TERMINO OP_ARIT_SEC EXP
     -> TERMINO
 
-*** TERMINO
 TERMINO -> FACTOR OP_ARIT_PRIM TERMINO
         -> FACTOR
 
-*** FACTOR
 FACTOR -> LP SUPER_EXP RP
-       -> var_cte
-       -> variable
-       -> funcion
+       -> VAR_CTE
+       -> VARIABLE
+       -> FUNCION
 
-*** VARC_CTE
 VAR_CTE -> cte_i
         -> cte_f
         -> cte_string
 
-*** VARIABLE 
 VARIABLE -> id [ super_exp ] [ super_exp ]
-             -> id [ super_exp ]
-             -> id.id
-             -> id.id( VARIABLE_UAX )
-             -> id
-
-VARIABLE_AUX -> super_exp , variable_aux
-             -> super_exp
+         -> id [ super_exp ]
+         -> id . id ( VARIABLE_UAX )
+         -> id . id
+         -> id

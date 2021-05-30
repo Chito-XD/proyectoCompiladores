@@ -5,6 +5,7 @@ class TableVariables():
     def __init__ (self):
         self.variables = {}
 
+    # Metodo para agregar una variable y sus atributos al diccionario
     def insertVariable(self, val):
         variable_declared = self.variables.get(val["key"], None)
         if not variable_declared:
@@ -18,9 +19,8 @@ class TableVariables():
         else: 
             return False
 
+    # Metodo para obtener los atributos de la variable
     def get_var(self, var_name):
-        # print(var_name)
-        # print(self.variables)
         return self.variables.get(var_name)
 
 

@@ -62,7 +62,7 @@ class Yacc(Parser):
 
     @_('dec_vars_aux2 DOTS tipo_simple SEMICOLON storeVariables dec_vars_aux',
        'dec_vars_aux2 DOTS tipo_simple SEMICOLON storeVariables',
-       'dec_vars_aux2 DOTS tipo_compuesto SEMICOLON dec_vars_aux storeVariables',
+       'dec_vars_aux2 DOTS tipo_compuesto SEMICOLON storeVariables dec_vars_aux',
        'dec_vars_aux2 DOTS tipo_compuesto SEMICOLON storeVariables')
     def dec_vars_aux(self, p):
         return p
@@ -168,7 +168,7 @@ class Yacc(Parser):
         return p
     
     ####### DECISION #meterActual#######
-    @_('SI LP super_exp RP revisar_estatuto ENTONCES  bloque goto_revisar SINO bloque end_estatuto', 
+    @_('SI LP super_exp RP revisar_estatuto ENTONCES bloque goto_revisar SINO bloque end_estatuto', 
        'SI LP super_exp RP revisar_estatuto ENTONCES bloque end_estatuto')
     def decision(self, p):
         return p

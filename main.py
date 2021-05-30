@@ -7,6 +7,7 @@ from vm.virtual_macine import VirtualMachine
 lexer = Lex()
 parser = Yacc()
 
+# lee el path del test a probar
 path = input()
 data = open(path, 'r')
 
@@ -19,15 +20,13 @@ for row in data:
         break
     
 if text: 
-    # for tok in lexer.tokenize(text):
-    #     print('type=%r, value=%r' % (tok.type, tok.value))
+    # corre el lexer y parser
     if parser.parse(lexer.tokenize(text)):
-        # print('Correct syntaxis')
-
         cuadruplos = parser.manager.cuadruplos
         directory = parser.manager.directory
         cte_memory = parser.manager.memory.cte_vars
-
+        
+        # corre la maquina virtual
         vm = VirtualMachine(cuadruplos, directory, cte_memory)
         vm.execute()
 
