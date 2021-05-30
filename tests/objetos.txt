@@ -13,26 +13,32 @@ Clase Calculo {
             e = a * b;
             regresa(e);
         }
+
+        entero funcion dos (y: entero) {
+            regresa(y*3);
+        }
 }
 
 variables:
     f : flotante;
     a, b : entero;
     cadena: char;
-    objeto : Calculo;
-    cara: Calculo;
-    
+    cal: Calculo;
 
-entero funcion uno(x: entero)
-{
+entero funcion uno(x: entero) {
     b = 99;
     regresa(x);
-    
+}
+
+entero funcion dos(y: entero) {
+    regresa(y*2);
 }
 
 principal () {
-    escribe(cara.uno(5, 5));
+    escribe(cal.uno(5, 5));
     escribe(uno(7 + 2));
+    escribe(dos(cal.uno(5, 5)));
+    escribe(cal.dos(cal.uno(3,3)));
     escribe(b);
     cadena = "HOLA";
     escribe(cadena);

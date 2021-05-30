@@ -29,13 +29,13 @@ class VirtualMachine:
 
         self.memory = MemoryStack(dirr, cte_memory)
 
-        self.directory.print_directory()
+        # self.directory.print_directory()
 
-        a = 0
-        for i in cuad:
-            print(a, i)
-            a += 1
-        print("")
+        # a = 0
+        # for i in cuad:
+        #     print(a, i)
+        #     a += 1
+        # print("")
     
     def execute(self):
         # GOTO MAIN
@@ -132,7 +132,6 @@ class VirtualMachine:
                 pointer = int(current_cuadruplo[2])
 
             elif operation == GOTO_F:
-                # print("GOTOF", current_cuadruplo)
                 condition = self.memory.get_value_from_address(current_cuadruplo[1])
 
                 if condition == None:
@@ -185,7 +184,6 @@ class VirtualMachine:
             if self.cuadruplos[current_pointer][0] == PARAM:
                 address = self.get_address_format(self.cuadruplos[current_pointer][1])
                 value = self.memory.get_value_from_address(address)
-                # print("PARAM VALUE", value)
                 param_values.append(value)
                 current_pointer += 1
             else:

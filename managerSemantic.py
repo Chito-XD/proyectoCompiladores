@@ -48,21 +48,21 @@ class ManagerSemantic():
 
     
     def set_current_type(self, var_type):
-        print('El tipo actual es', var_type)
+        # print('El tipo actual es', var_type)
         self.currentType = var_type
     
     def set_method_id(self, curr_id):
-        print('seteo', curr_id)
+        # print('seteo', curr_id)
         self.memory.reset_local_memory()
         self.method_id = curr_id
     
     def set_class_id(self, class_id):
-        print('la clase es', class_id)
+        # print('la clase es', class_id)
         self.memory.reset_global_memory()
         self.class_id = class_id
     
     def create_class(self, class_name):
-        print('creo clase', class_name)
+        # print('creo clase', class_name)
         self.set_class_id(class_name)
         self.set_method_id(class_name)
         self.directory.createClass(class_name)
@@ -76,7 +76,7 @@ class ManagerSemantic():
         self.create_cruadruplo('Goto', None, None, 'main')
     
     def add_function(self, function_name):
-        print("Se creo la funcion", function_name)
+        # print("Se creo la funcion", function_name)
         self.set_method_id(function_name)
         params = {
             "tipo": self.currentType,
@@ -85,12 +85,12 @@ class ManagerSemantic():
         self.directory.createFunction(self.class_id, function_name, params)
     
     def set_called_class(self, called_object):
-        print("seteo la clase", called_object)
+        # print("seteo la clase", called_object)
         self.called_objects_stack.add(called_object)
         self.called_object = called_object
     
     def create_era(self, method):
-        print("Method: " + method)
+        # print("Method: " + method)
         self.called_methods_stack.add(method)
         self.called_method = method
 
@@ -118,17 +118,17 @@ class ManagerSemantic():
         
         function_params = self.directory.returnParam(class_name, self.called_method)
         
-        print("Clase: " + class_name)
-        print("Metodo: " + self.called_method)
-        print("Num Param " + str(len(function_params)))
+        # print("Clase: " + class_name)
+        # print("Metodo: " + self.called_method)
+        # print("Num Param " + str(len(function_params)))
 
         given_params = self.params_stack.pop()
-        print("Given params", len(given_params))
+        # print("Given params", len(given_params))
 
         if len(function_params) == len(given_params) :
 
             for i in range(len(given_params)):
-                print(given_params[i])
+                # print(given_params[i])
                 tipo = get_type_from_address(given_params[i])
 
                 if tipo == function_params[i]:
@@ -215,7 +215,7 @@ class ManagerSemantic():
         self.directory.createFunction(self.class_id, PRINCIPAL, params)
     
     def stash_variable(self, var):
-        print("Añadiendo", var, "a la tabla de variables")
+        # print("Añadiendo", var, "a la tabla de variables")
         self.currentVariables.add(var)
     
     def store_variables(self):
@@ -260,22 +260,22 @@ class ManagerSemantic():
             self.directory.addParam(self.class_id, self.method_id, params)
     
     def verifica_dim(self, dim):
-        print("VERIFICA DIM")
+        # print("VERIFICA DIM")
         dimensions = Stack()
         for _ in range(dim):
             dimensions.add(self.operandos.pop()) # dimensions = al reves =  dim2 dim1
             self.tipos.pop()
 
-        print(dimensions.print())
+        # print(dimensions.print())
         
         operando_address = self.operandos.pop() # id
         self.tipos.pop()
 
-        print(operando_address, self.class_id, self.method_id)
+        # print(operando_address, self.class_id, self.method_id)
 
         the_var = self.directory.find_var_from_address(self.class_id, self.method_id, operando_address)
 
-        print("the_var", the_var)
+        # print("the_var", the_var)
 
         var_dimension = the_var["dimension"]
         
@@ -325,7 +325,7 @@ class ManagerSemantic():
         
 
     def insert_operando(self, operando):
-        print("voy a insertar ", operando)
+        # print("voy a insertar ", operando)
         tipo_operando = get_cte_variable(operando)
         if not tipo_operando:
             var = self.directory.get_variable(self.class_id, self.method_id, operando)
@@ -336,11 +336,11 @@ class ManagerSemantic():
 
         self.operandos.add(address)
 
-        print(f"el tipo de {operando} es {tipo_operando}")
+        # print(f"el tipo de {operando} es {tipo_operando}")
         self.tipos.add(tipo_operando)
 
     def insert_operandoArr(self, operando):
-        print("voy a insertar ", operando)
+        # print("voy a insertar ", operando)
         tipo_operando = get_cte_variable(operando)
         if not tipo_operando:
             var = self.directory.get_variable(self.class_id, self.method_id, operando)
@@ -355,11 +355,11 @@ class ManagerSemantic():
 
         self.operandos.add(address)
 
-        print(f"el tipo de {operando} es un arreglo de tipo {tipo_operando}")
+        # print(f"el tipo de {operando} es un arreglo de tipo {tipo_operando}")
         self.tipos.add(tipo_operando)
     
     def insert_operador(self, operador):
-        print("insert operador", operador)
+        # print("insert operador", operador)
         self.operadores.add(operador)
     
     def manage_back_operator(self, create=True):
@@ -369,11 +369,11 @@ class ManagerSemantic():
             self.operadores.pop()
 
     def create_cruadruplo(self, operator, op_izq, op_der, temporal):
-        print("Creando cuadruplo (", operator, op_izq, op_der, temporal,")")
+        # print("Creando cuadruplo (", operator, op_izq, op_der, temporal,")")
         self.cuadruplos.append((operator, op_izq, op_der, temporal))
 
     def create_cruadruplo_no_lin(self, goto, cond, destino):
-        print("Creando cuadruplo nol lineal (", goto, cond, destino,")")
+        # print("Creando cuadruplo nol lineal (", goto, cond, destino,")")
         self.cuadruplos.append((goto, cond, destino))
 
     def primary_arithmetic_operation(self):
@@ -390,7 +390,6 @@ class ManagerSemantic():
     
     def relational_operation(self):
         if self.operadores.peek() in OPER_REL:
-            print("OPER_REL")
             self.arithmetic_ops()
 
     def arithmetic_ops(self):
@@ -400,9 +399,6 @@ class ManagerSemantic():
 
         tipo_der = self.tipos.pop()
         tipo_izq = self.tipos.pop()
-
-        print("ARITHMETIC OPS")
-        print(op, op_izq, op_der, tipo_izq, tipo_der)
 
         operation_type = get_type_operation(tipo_izq, tipo_der, op)
         if operation_type is not ERROR:
@@ -454,7 +450,7 @@ class ManagerSemantic():
         if typeC == BOOLEANO:
             self.create_cruadruplo_no_lin("GotoF", cond, "?")
             Tam = len(self.cuadruplos)
-            print("Tam:", Tam)
+            # print("Tam:", Tam)
             self.saltos.add(Tam-1)
         else:
             raise Exception("Mismatch error")
@@ -507,14 +503,14 @@ class ManagerSemantic():
 
     def gotoWhile(self):
         # self.arithmetic_ops()
-        print("GOTOWHILE")
-        print(self.operandos.print())
-        print(self.cuadruplos)
-        print(self.tipos.print())
+        # print("GOTOWHILE")
+        # print(self.operandos.print())
+        # print(self.cuadruplos)
+        # print(self.tipos.print())
         cond = self.operandos.pop()
         typeC = self.tipos.pop()
 
-        print(cond, typeC)
+        # print(cond, typeC)
         
         
         if typeC == BOOLEANO:
@@ -593,7 +589,7 @@ class ManagerSemantic():
 
 
     def create_asignacionLoop(self):
-            print("Crear asignacion")
+            # print("Crear asignacion")
             res = self.operandos.pop()
             tipo_resultado = self.tipos.pop()
             lado_izq = self.operandos.pop()

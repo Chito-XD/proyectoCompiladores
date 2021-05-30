@@ -30,10 +30,10 @@ class MemoryStack:
         
         self.update_memory_limit( -1 * len(self.cte_memory.keys()) )
 
-        print("")
-        print("== > CTE MEMORY")
-        print(self.cte_memory)
-        print("")
+        # print("")
+        # print("== > CTE MEMORY")
+        # print(self.cte_memory)
+        # print("")
     
     # Mata la memoria actual y despierta la anterior
     def pop_memory_stack(self):

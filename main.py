@@ -22,7 +22,7 @@ if text:
     # for tok in lexer.tokenize(text):
     #     print('type=%r, value=%r' % (tok.type, tok.value))
     if parser.parse(lexer.tokenize(text)):
-        print('Correct syntaxis')
+        # print('Correct syntaxis')
 
         cuadruplos = parser.manager.cuadruplos
         directory = parser.manager.directory

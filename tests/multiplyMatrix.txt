@@ -7,6 +7,22 @@ void funcion mutiplyMatriz()
 variables:
     i, j: entero;
 {
+    i = 0;
+    mientras (i < 3)  hacer {
+        j = 0;
+        mientras (j < 3) hacer {
+            c[i][j] = a[i][j] * b[i][j];
+            escribe(c[i][j]);
+            j = j+1;
+        }
+        i = i+1;
+    }
+}
+
+void funcion multiplyDesde()
+variables: 
+    i, j: entero;
+{
     desde i = 0 hasta 2 hacer {
         desde j = 0 hasta 2 hacer {
             c[i][j] = a[i][j] * b[i][j];
@@ -17,24 +33,27 @@ variables:
 
 principal () {
     a[0][0] = 12;
-    a[0][0] = 7;
-    a[0][0] = 3;
-    a[0][0] = 4;
-    a[0][0] = 5;
-    a[0][0] = 6;
-    a[0][0] = 7;
-    a[0][0] = 8;
-    a[0][0] = 9;
+    a[0][1] = 7;
+    a[0][2] = 3;
+    a[1][0] = 4;
+    a[1][1] = 5;
+    a[1][2] = 6;
+    a[2][0] = 7;
+    a[2][1] = 8;
+    a[2][2] = 9;
 
     b[0][0] = 5;
-    b[0][0] = 8;
-    b[0][0] = 1;
-    b[0][0] = 2;
-    b[0][0] = 6;
-    b[0][0] = 7;
-    b[0][0] = 3;
-    b[0][0] = 0;
-    b[0][0] = 4;
+    b[0][1] = 8;
+    b[0][2] = 1;
+    b[1][0] = 2;
+    b[1][1] = 6;
+    b[1][2] = 7;
+    b[2][0] = 3;
+    b[2][1] = 0;
+    b[2][2] = 4;
 
     mutiplyMatriz();
+    escribe(" ");
+    escribe(" ");
+    multiplyDesde();
 }
