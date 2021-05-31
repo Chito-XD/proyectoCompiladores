@@ -5,21 +5,22 @@ variables:
     i, j: entero;
     n: entero;
     a : entero;
+    b: booleano;
 
-entero funcion findValue(valor: entero)
+booleano funcion findValue(valor: entero)
 {
     i = 0;
     mientras (i < 2)  hacer {
         j = 0;
         mientras (j < 3) hacer {
             si (matrix[i][j] == valor) entonces {
-                regresa(0);
+                regresa(verdadero);
             }
             j = j+1;
         }   
         i = i+1;
     }
-    regresa(1);
+    regresa(falso);
 }
 
 principal () {
@@ -34,8 +35,8 @@ principal () {
 
     escribe("Que numero quieres encontrar");
     lee(n);
-    a = findValue(n);
-    si (a == 0) entonces {
+    b = findValue(n);
+    si (b == verdadero) entonces {
         escribe("lo encontre");
     } sino {
         escribe("no existe");

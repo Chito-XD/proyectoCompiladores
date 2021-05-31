@@ -81,7 +81,7 @@ def get_cte_variable(var: str) -> str:
         return ENTERO
     elif re.search(r'\".*\"', var):
         return CHAR
-    elif re.search(r'(verdadero)|(falso)', var):
+    elif re.search(r'(verdadero|falso)', var):
         return BOOLEANO
     return None
 

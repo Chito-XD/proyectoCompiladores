@@ -232,6 +232,10 @@ class VirtualMachine:
         
     # metodo para ejecutar la operacion aritmetica
     def evaluate_operation(self, op1: str, op2: str, operator:str) -> str:
+
+        op1 = self.change_boolean_var(op1)
+        op2 = self.change_boolean_var(op2)
+
         if operator in OPER_LOG:
             if operator == '&':
                 return (op1 and op2)
@@ -241,3 +245,11 @@ class VirtualMachine:
             if operator == '<>':
                 operator = '!='
             return eval( str(op1) + str(operator) + str(op2) )
+    
+    # metodo para cambiar la variable a boolenao de python en caso de ser necesario
+    def change_boolean_var(self, op:str) -> str:
+        if op == "verdadero":
+            return "True"
+        if op == "falso":
+            return "False"
+        return op
