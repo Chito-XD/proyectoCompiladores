@@ -351,7 +351,7 @@ class Yacc(Parser):
 
     @_('create_lectura :')
     def create_lectura(self, p):
-        self.manager.create_lectura(p[-1])
+        self.manager.create_lectura()
 
     @_('revisar_estatuto :')
     def revisar_estatuto(self, p):

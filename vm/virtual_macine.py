@@ -1,4 +1,5 @@
 # from os import replace
+from typing import List
 from vm.memoryStack import MemoryStack
 
 from utils.types import get_type_from_address, get_cte_variable
@@ -23,22 +24,14 @@ from utils.constants import (
 
 class VirtualMachine:
 
-    def __init__(self, cuad, dirr, cte_memory):
+    def __init__(self, cuad : List[tuple], dirr: dir, cte_memory: dir):
         self.cuadruplos = cuad
         self.directory = dirr
 
         self.memory = MemoryStack(dirr, cte_memory)
 
-        # self.directory.print_directory()
-
-        # a = 0
-        # for i in cuad:
-        #     print(a, i)
-        #     a += 1
-        # print("")
-    
     # metodo para iniciar la ejecución de los cuadruplo
-    def execute(self):
+    def execute(self) -> None:
         # GOTO MAIN
         main_pointer = self.cuadruplos[0][3]
         # añada al stack de memoria
@@ -46,7 +39,7 @@ class VirtualMachine:
         self.run_cuadruplos(main_pointer)
     
     # metodo para leer la direccion de memoria dependiente si es dir-base, apuntador o dirección normal
-    def get_address_format(self, address_pointer):
+    def get_address_format(self, address_pointer: str) -> int:
         if isinstance(address_pointer, str):
             # direccion base
             if "dir-" in address_pointer:
@@ -198,7 +191,7 @@ class VirtualMachine:
 
     # metodo que ejecuta la logica del la llamada de los métodos
     # es específicamente para las llamadas, no para la declaración de los métodos
-    def run_method(self, current_cuadruplo, pointer):
+    def run_method(self, current_cuadruplo: tuple, pointer: int) -> int:
 
         current_pointer = pointer
         param_values = []
@@ -238,7 +231,7 @@ class VirtualMachine:
         return current_pointer
         
     # metodo para ejecutar la operacion aritmetica
-    def evaluate_operation(self, op1, op2, operator):
+    def evaluate_operation(self, op1: str, op2: str, operator:str) -> str:
         if operator in OPER_LOG:
             if operator == '&':
                 return (op1 and op2)

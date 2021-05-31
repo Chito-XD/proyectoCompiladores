@@ -1,23 +1,25 @@
 programa pruebaPrograma ;
 
 variables:
-    matrix[3][4]: flotante;
+    matrix[3][4]: entero;
     i, j: entero;
-    n: flotante;
+    n: entero;
+    a : entero;
 
-void funcion findValue(valor: flotante)
+entero funcion findValue(valor: entero)
 {
     i = 0;
     mientras (i < 2)  hacer {
         j = 0;
         mientras (j < 3) hacer {
             si (matrix[i][j] == valor) entonces {
-                escribe("aqui esta");
+                regresa(0);
             }
             j = j+1;
         }   
         i = i+1;
     }
+    regresa(1);
 }
 
 principal () {
@@ -25,12 +27,17 @@ principal () {
 
     desde i = 0 hasta 2 hacer {
         desde j = 0 hasta 3 hacer {
-            matrix[i][j] = 2.0;
+            matrix[i][j] = 2;
             escribe(matrix[i][j]);
         }
     }
 
     escribe("Que numero quieres encontrar");
     lee(n);
-    findValue(n);
+    a = findValue(n);
+    si (a == 0) entonces {
+        escribe("lo encontre");
+    } sino {
+        escribe("no existe");
+    }
 }

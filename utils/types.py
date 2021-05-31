@@ -22,7 +22,7 @@ from utils.constants import (
 )
 
 # regresa el tipo de operador
-def get_operator_type(operator):
+def get_operator_type(operator: str) -> str:
     if operator in OPER_ARIT_PRIM:
         return ARIT_PRIM
     elif operator in OPER_ARIT_SEC:
@@ -38,7 +38,7 @@ def get_operator_type(operator):
 
 # regresa qué tipo de scope tiene la variable
 # para eso, revisa el rango de las variables
-def get_scope_from_address(address):
+def get_scope_from_address(address: int) -> str:
     for key in GLOBAL_SPACE_ADDRESS.keys():
         if address >= GLOBAL_SPACE_ADDRESS[key]["min"] and address <= GLOBAL_SPACE_ADDRESS[key]["max"]:
             return "GLOBAL"
@@ -55,7 +55,7 @@ def get_scope_from_address(address):
 
 
 # recibe la direccion de memoria, revisa cada scope para determinar si es det ipo entero, flotante, char u objeto
-def get_type_from_address(address):
+def get_type_from_address(address: int)-> str:
     if isinstance(address, str):
         address = address.replace('(', '').replace(')', '').replace('dir-', '')
         address = int(address)
@@ -74,7 +74,7 @@ def get_type_from_address(address):
     raise Exception("-> No memory range found")
 
 # revisa qué tipo de constante es la variable
-def get_cte_variable(var):
+def get_cte_variable(var: str) -> str:
     if re.search(r'([0-9]+)(\.)([0-9]+)', var):
         return FLOTANTE
     elif re.search(r'[0-9]+', var):
@@ -87,11 +87,11 @@ def get_cte_variable(var):
 
 
 # revisa si el tipo de variable es un objeto o no
-def is_object(var):
+def is_object(var: str) -> str:
     return (var not in [FLOTANTE, ENTERO, CHAR, BOOLEANO])
     
 # revisa si la operacion que se quiere hacer da error, sino devolver el tipo resultante
-def get_type_operation(op1, op2, operator):
+def get_type_operation(op1: str, op2: str, operator: str) -> str:
     op = get_operator_type(operator)
 
     if op:

@@ -15,14 +15,14 @@ class MemoryStack:
         self.arrange_cte_memory()
     
     # Metodo que actualiza el stack
-    def update_memory_limit(self, size):
+    def update_memory_limit(self, size: int) -> None:
         self.memory_limit += size
         if self.memory_limit < 0:
             raise Exception("Stack overfloww!!!")
     
     # Organiza el directoria de cte
     # {1: 1001, 2: 1002} => {1001: 1, 1002: 2}
-    def arrange_cte_memory(self):
+    def arrange_cte_memory(self) -> None:
         new_cte = {}
         for key in self.cte_memory.keys():
             new_cte[self.cte_memory[key]] = key
@@ -36,7 +36,7 @@ class MemoryStack:
         # print("")
     
     # Mata la memoria actual y despierta la anterior
-    def pop_memory_stack(self):
+    def pop_memory_stack(self) -> None:
         len_last_stack = len( self.memory_stack[-1].keys() )
         self.update_memory_limit(len_last_stack)
 
@@ -44,7 +44,7 @@ class MemoryStack:
         self.memory_pointer -= 1
     
     # Duerme la memoria actual y crea otra
-    def push_memory_stack(self, clas, function, params=[]):
+    def push_memory_stack(self, clas: str, function: str, params=[]) -> None:
         main_process = self.directory.directory[clas]["proceso_global"]
 
         global_method_vars = self.directory.get_dir_variables(clas, main_process)
@@ -78,7 +78,7 @@ class MemoryStack:
         self.memory_pointer += 1
 
     # Obtener el valor real por medio de la dirección de memoria
-    def get_value_from_address(self, address):
+    def get_value_from_address(self, address: int) -> int:
         if self.cte_memory.get(address) != None:
             return self.cte_memory.get(address)
         elif self.memory_stack[self.memory_pointer].get(address) != None:
@@ -89,12 +89,12 @@ class MemoryStack:
         return None
     
     # asignar el valor de la dirrecion origin a la direcciónn objetivo
-    def assign_value_from_addresses(self, origin_add, target_add):
+    def assign_value_from_addresses(self, origin_add: int, target_add: int) -> None:
         value = self.get_value_from_address(origin_add)
         self.set_value_from_address(target_add, value)
 
     # Asignar el valor dado a la dirreción con base en el scope de la direccion
-    def set_value_from_address(self, address, value):
+    def set_value_from_address(self, address: str, value: int) -> None:
         if isinstance(address, str):
             if address.find('(') != -1:
                 Aux = address.replace('(', '')
@@ -113,12 +113,12 @@ class MemoryStack:
         self.update_memory_limit(-1)
 
     # "Parche guadalupano" para setear el resultado a la variable global
-    def set_return(self, key, value):
+    def set_return(self, key: str, value: int)-> None:
         if not self.global_memory.get(key):
             self.update_memory_limit(-1)
         self.global_memory[key] = value
     
-    def print_memory(self):
+    def print_memory(self) -> None:
         print('--------------')
         print('STACK')
         print(self.memory_stack)
