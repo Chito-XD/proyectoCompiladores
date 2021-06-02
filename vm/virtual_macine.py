@@ -69,7 +69,7 @@ class VirtualMachine:
             # obtiene la operacion del cuadruplo
             operation = current_cuadruplo[0]
 
-            # print(pointer, current_cuadruplo)
+            #print(pointer, current_cuadruplo)
 
             # asinacion
             if operation == ASSIGN:

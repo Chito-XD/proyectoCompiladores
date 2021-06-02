@@ -1,0 +1,36 @@
+programa pruebaPrograma ;
+
+variables:
+
+i : entero;
+
+void funcion hola()
+variables:
+    n[5], m[3][3], j, a, s: entero;
+{
+    s = 0;
+    desde j = 0 hasta 2 hacer{
+        desde a = 0 hasta 2 hacer{
+            m[j][a] = s;
+            s = s + 1;
+        
+        }
+    }
+
+    desde j = 0 hasta 2 hacer{
+        desde a = 0 hasta 2 hacer{
+            escribe(m[j][a]);
+        
+        }
+    }
+
+
+    
+}
+
+principal () {
+
+
+    hola();
+
+}
