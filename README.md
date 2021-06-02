@@ -5,6 +5,19 @@ Integrantes:
 - Néstor Martínez A00819796
 - Edgar Rubén Salazar Lugo A01338798
 
+
+# Link Github
+https://github.com/Chito-XD/proyectoCompiladores
+
+# Link al manual
+https://github.com/Chito-XD/proyectoCompiladores/blob/main/manual.md
+
+# Link al video demo
+https://youtu.be/VtTWrzjSPu0
+
+# Link a la documentacion final del proyecto
+https://docs.google.com/document/d/138oFLWWfGP6kZ9k_BCYM1gZxiAHZcxY2Kp5HNKSER_o/edit?usp=sharing
+
 ## Avance 1
 - Lexer: Archivo que hace un listado de todos los tokens (lex.py)
 - Parser: Archivo que analiza la sintáxis del lenguajes (yacc.py)
